@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function POST(req) {
   try {
     const { username, phone } = await req.json();
-    const hashedUsername = bcrypt.hashSync(username, 10);
+    const hashedUsername = await bcrypt.hashSync(username, 10);
     const newStaff = await prisma.staff.create({
       data: {
         staff_name: hashedUsername,
