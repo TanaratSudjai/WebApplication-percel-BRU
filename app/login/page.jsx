@@ -64,10 +64,10 @@ function login() {
             </div>
           </div>
 
-          <div class="!mt-8">
+          <div className="!mt-8">
             <button
               type="button"
-              class="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+              className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
             >
               Sign in
             </button>
