@@ -16,8 +16,8 @@ generator client {
 }
 
 model Staff {
-  staff_id   Int    @id @default(autoincrement())
-  staff_name String
+  staff_id   Int     @id @default(autoincrement())
+  staff_name String  @unique
   staff_phone String?
   Parcel     Parcel[]
 
@@ -38,7 +38,6 @@ model Status {
   sta_id   Int    @id @default(autoincrement())
   sta_name String
   Parcel   Parcel[]
-
   @@map("status")
 }
 
