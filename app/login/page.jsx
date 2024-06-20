@@ -7,7 +7,7 @@ function login() {
 
        <Image src="/logoreal.png" width={300} height={300} alt="Logo" />
 
-      <div className="p-8 rounded-2xl bg-white shadow-xl w-[50vh]">
+      <div className="p-8 rounded-2xl bg-white shadow-xl w-[50vh] py-10">
 
         <h1 className="text-center text-2xl font-bold">Sign in</h1>
         <form className="mt-8 space-y-4">
