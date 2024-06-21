@@ -1,61 +1,59 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { PrismaClient } from '@prisma/client';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 
 const prisma = new PrismaClient();
 
-export const authOptions = {
+const authOptions = {
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        staff_name: { label: "Username", type: "text", placeholder: "test" },
+        staff_name: { label: 'Username', type: 'text', placeholder: 'Enter your username' }
       },
-      async authorize(credentials, req) {
-        if (!credentials) return null;
+      async authorize(credentials) {
         const user = await prisma.staff.findUnique({
           where: { staff_name: credentials.staff_name },
         });
 
         if (!user) {
-          throw new Error("No user found with this username");
+          throw new Error('No user found with this username');
         }
 
         return {
           id: user.staff_id,
           staff_name: user.staff_name,
+          staff_phone: user.staff_phone
         };
       },
     }),
   ],
   adapter: PrismaAdapter(prisma),
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   callbacks: {
-    jwt: async ({ token, user }) => {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.staff_name = user.staff_name;
+        token.staff_phone = user.staff_phone;
       }
       return token;
     },
-    session: async ({ session, token }) => {
-      if (session.user) {
-        session.user.id = token.id;
-        session.user.staff_name = token.staff_name;
+    async session({ session, token }) {
+      if (token) {
+        session.user = token;
       }
       return session;
     },
   },
   pages: {
-    signIn: "/auth/signin",
-    error: "/auth/error",
+    signIn: '/auth/signin',
+    error: '/auth/error',
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === 'development',
 };
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export default (req, res) => NextAuth(req, res, authOptions);
