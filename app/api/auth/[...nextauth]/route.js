@@ -1,34 +1,24 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { PrismaClient } from '@prisma/client';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 
 const prisma = new PrismaClient();
 
 const authOptions = {
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        staff_name: { label: "Username", type: "text", placeholder: "Enter your username" },
-        staff_phone: { label: "Phone Number", type: "text", placeholder: "Enter your phone number" }
+        staff_name: { label: 'Username', type: 'text', placeholder: 'Enter your username' }
       },
       async authorize(credentials) {
-        if (!credentials) return null;
-        
         const user = await prisma.staff.findUnique({
           where: { staff_name: credentials.staff_name },
         });
 
         if (!user) {
-          throw new Error("No user found with this username");
-        }
-
-        const passwordMatch = await bcrypt.compare(credentials.password, user.password);
-
-        if (!passwordMatch) {
-          throw new Error("Incorrect password");
+          throw new Error('No user found with this username');
         }
 
         return {
@@ -41,7 +31,7 @@ const authOptions = {
   ],
   adapter: PrismaAdapter(prisma),
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -60,10 +50,10 @@ const authOptions = {
     },
   },
   pages: {
-    signIn: "/auth/signin",
-    error: "/auth/error",
+    signIn: '/auth/signin',
+    error: '/auth/error',
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === 'development',
 };
 
 export default (req, res) => NextAuth(req, res, authOptions);

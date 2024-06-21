@@ -1,69 +1,52 @@
-// pages/auth/signin.jsx (หรือ signin.js ถ้าใช้ JavaScript)
-import { useState } from "react";
-import { signIn } from "next-auth/client";
-import { useRouter } from "next/router";
+"use client"
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/client';
 
-const SignIn = () => {
+const SignInPage = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [phone, setPhone] = useState("");
-  const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const result = await signIn("credentials", {
+      const result = await signIn('Credentials', {
         username,
-        phone,
-        redirect: false, // ป้องกันการ redirect โดยอัตโนมัติจาก NextAuth
+        password,
+        redirect: false, // Change as needed
       });
 
       if (result.error) {
-        setError(result.error);
+        // Handle sign-in error
+        console.error('Sign in error:', result.error);
       } else {
-        // ทำการ redirect ไปยังหน้า dashboard หลังจากลงชื่อเข้าใช้เรียบร้อย
-        router.push("/dashboard");
+        // Navigate to success page or handle success
+        router.push('/'); // Example redirect
       }
     } catch (error) {
-      setError("Authentication failed");
-      console.error("Authentication error:", error);
+      console.error('Sign in error:', error);
     }
   };
 
   return (
-    <div>
-      <h1>Sign In</h1>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            Username:
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            Phone Number:
-            <input
-              type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <button type="submit">Sign In</button>
-        </div>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button type="submit">Sign In</button>
+    </form>
   );
 };
 
-export default SignIn;
+export default SignInPage;
