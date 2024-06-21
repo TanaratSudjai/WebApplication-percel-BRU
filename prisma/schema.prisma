@@ -64,7 +64,6 @@ model Delivered {
   deliver_name  String?
   Parcel        Parcel?  @relation(fields: [par_id], references: [par_id])
   Owner         Owner?   @relation(fields: [own_id], references: [own_id])
-
   @@map("delivered")
 }
 
