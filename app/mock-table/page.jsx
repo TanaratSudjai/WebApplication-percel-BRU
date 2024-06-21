@@ -29,8 +29,8 @@ function DashboardPage() {
   }
 
   return (
-    <div className="m-2">
-      <div className="w-full">
+    <div className="m-2 font-[sans-serif]">
+      <div className="w-full ">
         <Navbar />
       </div>
 
@@ -43,6 +43,7 @@ function DashboardPage() {
           {/* Staff Table */}
           <div className="table-container m-2">
             <h2>Staff Table</h2>
+            
             <table className="data-table">
               <thead>
                 <tr>
