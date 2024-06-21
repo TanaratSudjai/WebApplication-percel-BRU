@@ -33,13 +33,21 @@ export async function DELETE(req, { params }) {
   }
 }
 
-export async function PUT(req, {params}){
+export async function PUT(req, { params }){
   try{
     const id = Number(params.id);
-    const {name , phone} = req.body ; 
-    const updateOwner = await prisma.owner.update({
-      where:{own_id:id} , data:{name,phone}
-    })
+    const { ownerName, phone } = req.body;
+    console.table({id ,ownerName , phone});
+
+    const updateOwner = await prisma.owner.update(
+      {
+        where: {own_id: id},
+        data: {
+          own_name: ownerName , 
+          own_phone: phone 
+        }
+      }
+    )
     return Response.json({
       message:"Api update Owner Status 200 Ok ", updateOwner
     })

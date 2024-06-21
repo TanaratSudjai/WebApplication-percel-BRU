@@ -13,7 +13,7 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    const { name, phone } = await  req.json();
+    const { name, phone } = req.json();
     const newOwner = await prisma.owner.create({
       data: {
         own_name: name,
