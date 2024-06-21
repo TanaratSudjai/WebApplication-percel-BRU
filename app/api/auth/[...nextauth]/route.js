@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
-// import bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 const prisma = new PrismaClient();
@@ -12,14 +12,17 @@ export const authOptions = {
       name: "Credentials",
       credentials: {
         staff_name: { label: "Username", type: "text", placeholder: "test" },
-        phone: { label: "Phone", type: "phone" },
       },
       async authorize(credentials, req) {
-
         if (!credentials) return null;
-        const user = await prisma.user.findUnique({
+        const user = await prisma.staff.findUnique({
           where: { staff_name: credentials.staff_name },
         });
+
+        if (!user) {
+          throw new Error("No user found with this username");
+        }
+
         return {
           id: user.staff_id,
           staff_name: user.staff_name,
@@ -47,6 +50,11 @@ export const authOptions = {
       return session;
     },
   },
+  pages: {
+    signIn: "/auth/signin",
+    error: "/auth/error",
+  },
+  debug: process.env.NODE_ENV === "development",
 };
 
 const handler = NextAuth(authOptions);
