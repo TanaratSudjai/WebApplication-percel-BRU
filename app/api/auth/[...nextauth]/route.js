@@ -6,15 +6,17 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 const prisma = new PrismaClient();
 
-export const authOptions = {
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        staff_name: { label: "Username", type: "text", placeholder: "test" },
+        staff_name: { label: "Username", type: "text", placeholder: "Enter your username" },
+        staff_phone: { label: "Phone Number", type: "text", placeholder: "Enter your phone number" }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials) return null;
+        
         const user = await prisma.staff.findUnique({
           where: { staff_name: credentials.staff_name },
         });
@@ -23,9 +25,16 @@ export const authOptions = {
           throw new Error("No user found with this username");
         }
 
+        const passwordMatch = await bcrypt.compare(credentials.password, user.password);
+
+        if (!passwordMatch) {
+          throw new Error("Incorrect password");
+        }
+
         return {
           id: user.staff_id,
           staff_name: user.staff_name,
+          staff_phone: user.staff_phone
         };
       },
     }),
@@ -35,17 +44,17 @@ export const authOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    jwt: async ({ token, user }) => {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.staff_name = user.staff_name;
+        token.staff_phone = user.staff_phone;
       }
       return token;
     },
-    session: async ({ session, token }) => {
-      if (session.user) {
-        session.user.id = token.id;
-        session.user.staff_name = token.staff_name;
+    async session({ session, token }) {
+      if (token) {
+        session.user = token;
       }
       return session;
     },
@@ -57,5 +66,4 @@ export const authOptions = {
   debug: process.env.NODE_ENV === "development",
 };
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export default (req, res) => NextAuth(req, res, authOptions);
