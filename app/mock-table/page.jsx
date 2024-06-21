@@ -29,39 +29,49 @@ function DashboardPage() {
   }
 
   return (
-    <div className="m-2 font-[sans-serif]">
-      <div className="w-full ">
+    <div className="m-2 font-[sans-serif] w-full">
+      <div className="w-full">
         <Navbar />
       </div>
 
-      <div className="flex">
+      <div className="flex mt-3 w-[90%]">
         <Sidebar />
 
-        <div className="dashboard-container border-2">
-          <h1>Dashboard</h1>
+        <div className="dashboard-container bg-black p-4 ">
+          <br />
+          <div className="">
+            <h1 className="text-2xl font-bold ml-2">Dashboard</h1>
+          </div>
 
           {/* Staff Table */}
-          <div className="table-container m-2">
+          <div className="table-container m-2 h-[300px]">
             <h2>Staff Table</h2>
-            
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Phone</th>
-                </tr>
-              </thead>
-              <tbody>
-                {dashboardData.staff.map((staff) => (
-                  <tr key={staff.staff_id}>
-                    <td>{staff.staff_id}</td>
-                    <td>{staff.staff_name}</td>
-                    <td>{staff.staff_phone}</td>
+            <div className="relative h-full overflow-y-auto">
+              <table className="data-table min-w-full">
+                <thead className="bg-gray-100 sticky top-0">
+                  <tr>
+                    <th scope="col" className="px-2 py-2">
+                      ID
+                    </th>
+                    <th scope="col" className="px-2 py-2">
+                      Name
+                    </th>
+                    <th scope="col" className="px-1 py-2">
+                      Phone
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {dashboardData.staff.map((staff) => (
+                    <tr key={staff.staff_id}>
+                      <td className="px-2 py-2">{staff.staff_id}</td>
+                      <td className="px-2 py-2">{staff.staff_name}</td>
+                      <td className="px-1 py-2">{staff.staff_phone}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Owners Table */}
@@ -169,8 +179,8 @@ function DashboardPage() {
               margin-left: 20px;
               margin-top: 20px;
               padding: 20px;
-              width: 90%;
-              display: inline;
+              width: 100%;
+              border: 1px solid gray;
             }
             .table-container {
               margin-bottom: 20px;
