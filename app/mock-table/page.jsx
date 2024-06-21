@@ -126,6 +126,33 @@ function DashboardPage() {
         </table>
       </div>
 
+      {/* delivers Table */}
+      <div className="table-container">
+        <h2>Delivers Table</h2>
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>DELIVERS ID</th>
+              <th>PARCEL ID</th>
+              <th>OWNER ID</th>
+              <th>DATA/TIME</th>
+              <th>MAKE NAME</th>  
+            </tr>
+          </thead>
+          <tbody>
+            {dashboardData.delivers.map((delivered) => (
+              <tr key={delivered.del_id}>
+                <td>{delivered.del_id}</td>
+                <td>{delivered.par_id}</td>
+                <td>{delivered.own_id}</td>
+                <td>{delivered.deliverydate}</td>
+                <td>{delivered.deliver_name}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       <style jsx>{`
         .dashboard-container {
           padding: 20px;
