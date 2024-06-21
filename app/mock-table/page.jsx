@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-
+import Block from '../components/block';
 function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
 
