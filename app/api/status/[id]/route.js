@@ -40,8 +40,8 @@ export async function DELETE(req, { params }) {
 export async function PUT(req, { params }) {
   try {
     const id = Number(params.id);
-    const { statusName } = req.body;
-    console.table({statusName,});
+    const { statusName } = await req.json();
+    console.table({id , statusName});
 
     const updatestatusName = await prisma.status.update({
       where: { sta_id: id },
