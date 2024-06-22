@@ -31,7 +31,7 @@ export async function POST(req) {
         staff_phone: phone,
       },
     });
-    return Response.json({ message: "POST Api Staff !", newStaff });
+    return Response.json({ message: "POST Api Staff ", newStaff });
   } catch (error) {
     return Response.json({ error }, { status: 500 });
   }
