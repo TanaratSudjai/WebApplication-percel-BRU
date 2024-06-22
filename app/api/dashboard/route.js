@@ -27,6 +27,7 @@ export async function GET() {
       //     Delivered: true,
       //   },
       // }
+      
       ();
     const delivers = await prisma.delivered.findMany();
 
