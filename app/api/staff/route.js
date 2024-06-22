@@ -25,7 +25,6 @@ export async function GET() {
 export async function POST(req) {
   try {
     const { name, phone } = req.json();
-    console.table({ name, phone });
     const newStaff = await prisma.staff.create({
       data: {
         staff_name: name,
