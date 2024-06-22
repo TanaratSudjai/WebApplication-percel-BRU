@@ -19,8 +19,6 @@ export async function GET() {
   }
 }
 
-
-
 export async function POST(req) {
   try {
     const { name, phone } = await  req.json();
