@@ -40,10 +40,8 @@ function MasterSignup() {
     }
   };
 
-
   return (
-    <div>
-      <div className="mx-auto mt-10 h-[100%] w-full flex flex-col items-center font-[sans-serif]">
+    <div className="mx-auto mt-10 h-[100%] w-full flex flex-col items-center font-[sans-serif]">
         <Image src="/logoreal.png" width={300} height={300} alt="Logo" />
 
         <div className="p-8 rounded-2xl bg-white shadow-xl w-[50vh] py-10">
@@ -110,7 +108,6 @@ function MasterSignup() {
           </form>
         </div>
       </div>
-    </div>
   );
 }
 
