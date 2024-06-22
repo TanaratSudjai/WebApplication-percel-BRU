@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/sidebar";
@@ -34,16 +33,8 @@ function DashboardPage() {
 
   return (
     <div className="m-2 font-sans w-full">
-      <div className="w-full">
-        <Navbar />
-      </div>
-
       <div className="flex gap-4 mt-3">
-        <div className="w-auto">
-          <Sidebar />
-        </div>
         <div className="h-[90vh] overflow-y-auto w-full">
-
           <div className="grid grid-cols-2 gap-4">
             {/* Staff Table */}
             <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white">
