@@ -135,7 +135,7 @@ function DashboardPage() {
                         <td className="px-4 py-2 border">
                           {parcel.pickupsdate}
                         </td>
-                        <td className="px-4 py-2 border">{parcel.sta_id}</td>
+                        <td className="px-4 py-2 border">{parcel.sta_name}</td>
                       </tr>
                     ))}
                   </tbody>
