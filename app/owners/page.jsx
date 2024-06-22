@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react"; //use client in components 
+import Swal from 'sweetalert2';
+
 
 
 import axios from "axios";
@@ -44,21 +46,50 @@ function Owners() {
   };
 
   const deleteOwner = async (ownerId) => {
-    try {
-      const response = await axios.delete(`/api/owner/${ownerId}`);
-      if (response.status === 200) {
-        setOwnerData((prevData) =>
-          prevData.filter((owner) => owner.own_id !== ownerId)
-        ); //error
-
-        fetchData(); //GET
-      } else {
-        throw new Error("Failed to delete owner");
+    // Show confirmation dialog using SweetAlert
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          
+          const response = await axios.delete(`/api/owner/${ownerId}`);
+          if (response.status === 200) {
+            
+            setOwnerData((prevData) =>
+              Array.isArray(prevData)
+                ? prevData.filter((owner) => owner.own_id !== ownerId)
+                : prevData
+            );
+            
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Your file has been deleted.',
+              icon: 'success'
+            });
+            fetchData(); //GET
+          } else {
+            throw new Error('Failed to delete owner');
+          }
+        } catch (error) {
+          console.error('Error deleting owner:', error);
+          
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to delete owner.',
+            icon: 'error'
+          });
+        }
       }
-    } catch (error) {
-      console.error("Error deleting owner:", error);
-    }
+    });
   };
+  
 
   return (
     <div className="m-2 font-sans w-full border-2 items-center p-4">
@@ -152,9 +183,9 @@ function Owners() {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                     />
                   </svg>
@@ -217,7 +248,7 @@ function Owners() {
                     <path
                       fillRule="evenodd"
                       d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                      clip-rule="evenodd"
+                      clipRule="evenodd"
                     />
                   </svg>
                   Add new owner

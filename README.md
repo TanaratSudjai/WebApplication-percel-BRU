@@ -39,3 +39,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 1.npm i @heroicons/react
 2.npm i @material-tailwind/react
 3.npm i next-navigation
+4.npm install sweetalert2
