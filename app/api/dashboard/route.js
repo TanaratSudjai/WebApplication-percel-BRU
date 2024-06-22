@@ -29,6 +29,14 @@ export async function GET() {
       // }
       ();
     const delivers = await prisma.delivered.findMany();
+
+    const updatedParcels = parcels.map(parcel => ({
+      ...parcel,
+      sta_name:status.find(status => status.sta_id === parcel.sta_id)?.sta_name,
+      own_name:owners.find(owner => owner.own_id === parcel.own_id)?.own_name,
+      staff_name:staff.find(staff => staff.staff_id === parcel.staff_id)?.staff_name,
+    }));
+
     
     console.table(staff);
     console.table(owners);
@@ -40,7 +48,7 @@ export async function GET() {
       staff,
       owners,
       status,
-      parcels,
+      parcels:updatedParcels,
       delivers,
     });
   } catch (error) {

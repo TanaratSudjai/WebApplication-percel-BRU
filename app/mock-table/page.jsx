@@ -116,10 +116,10 @@ function DashboardPage() {
               <tr key={parcel.par_id}>
                 <td>{parcel.par_id}</td>
                 <td>{parcel.par_real_id}</td>
-                <td>{parcel.own_id}</td>
-                <td>{parcel.staff_id}</td>
+                <td>{parcel.own_name}</td>
+                <td>{parcel.staff_name}</td>
                 <td>{parcel.pickupsdate}</td>
-                <td>{parcel.sta_id}</td>
+                <td>{parcel.sta_name}</td>
               </tr>
             ))}
           </tbody>
