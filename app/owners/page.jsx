@@ -1,9 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react"; //use client in components 
-import Swal from 'sweetalert2';
-
-
-
+import React, { useState, useEffect } from "react"; //use client in components
+import Swal from "sweetalert2";
 import axios from "axios";
 
 function Owners() {
@@ -23,7 +20,7 @@ function Owners() {
     }
   };
 
-  useEffect(() => {    
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -46,50 +43,46 @@ function Owners() {
   };
 
   const deleteOwner = async (ownerId) => {
-    // Show confirmation dialog using SweetAlert
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'You won\'t be able to revert this!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          
           const response = await axios.delete(`/api/owner/${ownerId}`);
           if (response.status === 200) {
-            
             setOwnerData((prevData) =>
               Array.isArray(prevData)
                 ? prevData.filter((owner) => owner.own_id !== ownerId)
                 : prevData
             );
-            
+
             Swal.fire({
-              title: 'Deleted!',
-              text: 'Your file has been deleted.',
-              icon: 'success'
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
             });
             fetchData(); //GET
           } else {
-            throw new Error('Failed to delete owner');
+            throw new Error("Failed to delete owner");
           }
         } catch (error) {
-          console.error('Error deleting owner:', error);
-          
+          console.error("Error deleting owner:", error);
+
           Swal.fire({
-            title: 'Error!',
-            text: 'Failed to delete owner.',
-            icon: 'error'
+            title: "Error!",
+            text: "Failed to delete owner.",
+            icon: "error",
           });
         }
       }
     });
   };
-  
 
   return (
     <div className="m-2 font-sans w-full border-2 items-center p-4">
