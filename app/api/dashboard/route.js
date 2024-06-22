@@ -11,33 +11,38 @@ export async function GET() {
     const staff = await prisma.staff.findMany();
     const owners = await prisma.owner.findMany();
     const status = await prisma.status.findMany();
-    const parcels = await prisma.parcel.findMany(
+    const parcels = await prisma.parcel
+      .findMany
 
-    //   where: {
-    //     pickupsdate: {
-    //       gte: today,
-    //       lte: next14Days,
-    //     },
-    //   },
-    //   include: {
-    //     Owner: true,
-    //     Staff: true,
-    //     Status: true,
-    //     Delivered: true,
-    //   },
-    // }
-
-    );
+      //   where: {
+      //     pickupsdate: {
+      //       gte: today,
+      //       lte: next14Days,
+      //     },
+      //   },
+      //   include: {
+      //     Owner: true,
+      //     Staff: true,
+      //     Status: true,
+      //     Delivered: true,
+      //   },
+      // }
+      ();
     const delivers = await prisma.delivered.findMany();
-
+    
+    console.table(staff);
+    console.table(owners);
+    console.table(status);
+    console.table(parcels);
+    console.table(delivers);
+    
     return Response.json({
       staff,
       owners,
       status,
       parcels,
-      delivers
+      delivers,
     });
-    
   } catch (error) {
     return Response.json(
       {
