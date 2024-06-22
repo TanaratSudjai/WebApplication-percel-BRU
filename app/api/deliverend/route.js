@@ -5,7 +5,16 @@ export async function GET() {
   try {
     const dataDelivernd = await prisma.delivered.findMany();
     console.table(dataDelivernd);
-    return Response.json({ dataDelivernd }, { status: 200 });
+
+    const owners = await prisma.owner.findMany();
+
+    // สร้าง queryDeli โดยรวมข้อมูลจาก owner
+    const queryDeli = dataDelivernd.map(delivered => ({
+      ...delivered, // ต้องเป็น delivered ไม่ใช่ dataDelivernd
+      own_name: owners.find(owner => owner.own_id === delivered.own_id)?.own_name,
+    }));
+
+    return Response.json({ dataDelivernd:queryDeli }, { status: 200 });
   } catch (error) {
     return Response.json(
       {
@@ -23,8 +32,7 @@ export async function POST(req) {
     const date = new Date();
     const { parcelID, ownerID, deliver_name } = await req.json();
     console.table({ parcelID, ownerID, deliver_name });
-
-    const newDeliverend = await prisma.delivered.create({
+    const newDelivered = await prisma.delivered.create({
       data: {
         par_id: parcelID,
         own_id: ownerID,
@@ -35,7 +43,7 @@ export async function POST(req) {
 
     return Response.json(
       {
-        newDeliverend,
+        newDelivered,
       },
       { status: 200 }
     );
