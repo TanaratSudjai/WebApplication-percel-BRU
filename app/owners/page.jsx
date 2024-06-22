@@ -1,5 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; //use client in components 
+
+
 import axios from "axios";
 
 function Owners() {
@@ -11,48 +13,52 @@ function Owners() {
   });
 
   const fetchData = async () => {
-      const response = await axios.get("/api/owner").then((res) => {
-        setOwnerData(response.data);
-      }).catch((err) => {
-        console.error("Error fetching data:", err);
-      })
+    try {
+      const res = await axios.get("/api/owner");
+      setOwnerData(res.data);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
   };
 
-  useEffect(() => {
+  useEffect(() => {    
     fetchData();
   }, []);
 
-  // const addOwner = async (newOwnerData) => {
-  //   try {
-  //     const response = await axios.post("/api/owner", newOwnerData);
-  //     setOwnerData((prevData) =>
-  //       Array.isArray(prevData) ? [...prevData, response.data] : [response.data]
-  //     );
-  //     setShowModal(false);
-  //   } catch (error) {
-  //     console.error("Error adding owner:", error);
-  //   }
-  // };
+  const addOwner = async (newOwnerData) => {
+    try {
+      const response = await axios.post("/api/owner", newOwnerData);
+      setOwnerData((prevData) =>
+        Array.isArray(prevData) ? [...prevData, response.data] : [response.data]
+      );
+      setShowModal(false);
+      fetchData(); //GET
+    } catch (error) {
+      console.error("Error adding owner:", error);
+    }
+  };
 
-  // const handleAddOwner = (event) => {
-  //   event.preventDefault();
-  //   addOwner(newOwner);
-  // };
+  const handleAddOwner = (event) => {
+    event.preventDefault();
+    addOwner(newOwner);
+  };
 
-  // const deleteOwner = async (ownerId) => {
-  //   try {
-  //     const response = await axios.delete(`/api/owner/${ownerId}`);
-  //     if (response.status === 200) {
-  //       setOwnerData((prevData) =>
-  //         prevData.filter((owner) => owner.own_id !== ownerId)
-  //       );
-  //     } else {
-  //       throw new Error("Failed to delete owner");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error deleting owner:", error);
-  //   }
-  // };
+  const deleteOwner = async (ownerId) => {
+    try {
+      const response = await axios.delete(`/api/owner/${ownerId}`);
+      if (response.status === 200) {
+        setOwnerData((prevData) =>
+          prevData.filter((owner) => owner.own_id !== ownerId)
+        ); //error
+
+        fetchData(); //GET
+      } else {
+        throw new Error("Failed to delete owner");
+      }
+    } catch (error) {
+      console.error("Error deleting owner:", error);
+    }
+  };
 
   return (
     <div className="m-2 font-sans w-full border-2 items-center p-4">
@@ -61,7 +67,6 @@ function Owners() {
           Owner Manager
         </h1>
       </div>
-
       <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white w-[100%] h-[90%]">
         <div className="m-2 mb-4">
           <button
@@ -93,7 +98,8 @@ function Owners() {
               </tr>
             </thead>
             <tbody>
-              {ownerData.owners && ownerData.owners.map((owner) => (
+              {ownerData.owners &&
+                ownerData.owners.map((owner) => (
                   <tr key={owner.own_id} className="even:bg-gray-50">
                     <td className="px-2 py-2 border w-1/12">{owner.own_id}</td>
                     <td className="px-4 py-2 border w-4/12">
@@ -101,13 +107,13 @@ function Owners() {
                     </td>
                     <td className="px-4 py-2 border w-4/12">
                       {owner.own_phone}
-                    </td> 
+                    </td>
                     <td className="text-center p-2 border px-2 gap-2 w-3/12 ">
                       <button className="bg-amber-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-xl">
                         แก้ไขชื่อ
                       </button>
                       <button
-                        // onClick={() => deleteOwner(owner.own_id)}
+                        onClick={() => deleteOwner(owner.own_id)}
                         className="ml-1 bg-rose-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-xl"
                       >
                         ลบชื่อ
@@ -119,8 +125,6 @@ function Owners() {
           </table>
         </div>
       </div>
-
-      {/* Modal
       {showModal && (
         <div
           id="crud-modal"
@@ -211,7 +215,7 @@ function Owners() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                       clip-rule="evenodd"
                     />
@@ -219,10 +223,10 @@ function Owners() {
                   Add new owner
                 </button>
               </form>
-            </div> */}
-          {/* </div>
-        </div> */}
-      {/* )} */}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
