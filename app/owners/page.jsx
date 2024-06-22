@@ -154,7 +154,7 @@ function Owners() {
           id="crud-modal"
           tabIndex="-1"
           aria-hidden="true"
-          className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-gray-300 bg-opacity-75"
+          className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75"
         >
           <div className="relative p-4 w-full max-w-md">
             <div className="relative bg-white rounded-lg shadow p-4">
