@@ -1,7 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Navbar from "../components/navbar";
-import Sidebar from "../components/sidebar";
 
 function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -19,7 +17,7 @@ function DashboardPage() {
         console.error("Error fetching data:", error);
       }
     }
-
+    
     fetchData();
   }, []);
 
@@ -101,7 +99,7 @@ function DashboardPage() {
             {/* Parcels Table */}
             <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white">
               <h2 className="text-lg font-semibold mb-4">Parcels Table</h2>
-              <div className="table-container h-[360px] overflow-y-auto">
+              <div className="table-container h-[300px] overflow-y-auto">
                 <table className="data-table min-w-full border-collapse">
                   <thead className="bg-gray-100">
                     <tr>
