@@ -1,4 +1,4 @@
-//ลบหลายๆ รายการ เพิ่มเติม
+
 import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -26,36 +26,40 @@ export async function POST(req) {
   }
 }
 
-// export async function DELETE(req, res){
-//     try {
+//ลบหลายๆ รายการ เพิ่มเติม
 
-//       const { ids } = req.query;
-//       console.log(ids);
+export default async function DELETE(req, res) {
+  try {
+    const { ids } = req.query;
 
-//       //เช็ค รายการ id ที่ส่งเข้ามา
-//       if (!ids || ids.length === 0) {
-//         return res.status(400).json({
-//           message: "Ids parameter is required!",
-//         });
-//       }
+    if (!ids) {
+      return res.status(400).json({
+        message: "Ids parameter is required!",
+      });
+    }
 
-//       //map เป็น array
-//       const idArray = ids.split(',').map(id => Number(id.trim()));
-//       const dataDeleteInOwner = await prisma.owner.deleteMany({
-//         where: {
-//           own_id: {
-//             in: idArray,
-//           },
-//         },
-//       });
+    // Split ids by comma and convert to an array of numbers
+    const idArray = ids.split(",").map((id) => Number(id.trim()));
 
-//       return Response.json(
-//         { message: "Owners deleted successfully!", dataDeleteInOwner },
-//         {
-//           status: 200,
-//         }
-//       );
-//     } catch (error) {
-//       return Response.json({ error }, { status: 500 });
-//     }
-// }
+    if (idArray.some(isNaN)) {
+      return res.status(400).json({
+        message: "All ids must be valid numbers!",
+      });
+    }
+
+    const dataDeleteInOwner = await prisma.owner.deleteMany({
+      where: {
+        own_id: {
+          in: idArray,
+        },
+      },
+    });
+
+    return res.status(200).json({
+      message: "Owners deleted successfully!",
+      dataDeleteInOwner,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+}
