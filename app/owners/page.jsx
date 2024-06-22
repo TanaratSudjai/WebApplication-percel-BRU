@@ -85,9 +85,9 @@ function Owners() {
   };
 
   return (
-    <div className="m-2 font-sans w-full border-2 items-center p-4">
+    <div className="m-2 font-sans w-full border-2 items-center p-10 rounded-xl shadow-md bg-gray-100">
       <div className="flex justify-center mb-4">
-        <h1 className="text-[25px] font-semibold text-gray-900 dark:text-black">
+        <h1 className="text-[35px] font-semibold text-gray-900 dark:text-black mt-[-20px]">
           Owner Manager
         </h1>
       </div>
