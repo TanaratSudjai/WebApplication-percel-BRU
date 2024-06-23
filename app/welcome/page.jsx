@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 
 function page() {
   const { data: session, status } = useSession();
-  // console.log("session", session);
-  // console.log("status", status);
+  console.log("session", session);
+  console.log("status", status);
   const router = useRouter();
+  
   useEffect(()=>{
-    if(status === 'authenticated'){
+    if(status === 'unauthenticated'){
       router.push('/');
     }
   },[router, status])
@@ -30,3 +31,4 @@ function page() {
 }
 
 export default page;
+ 
