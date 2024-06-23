@@ -6,7 +6,6 @@ import Navbar from "./navbar";
 import Sidebar from "./sidebar";
 import SessionProvider from "./SessionProvider";
 import { isAuthPage } from "../utils/checkPath";//ตรวจสอบ routh ที่ต้องการแสดง nav และ sidebar
-
 const inter = Inter({ subsets: ["latin"] });
 
 export default function ClientLayout({ session, children }) {

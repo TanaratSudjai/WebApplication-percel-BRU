@@ -1,59 +1,60 @@
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaClient } from '@prisma/client';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import NextAuth from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcrypt'
+import { PrismaAdapter } from '@auth/prisma-adapter'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
-const authOptions = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        staff_name: { label: 'Username', type: 'text', placeholder: 'Enter your username' }
+        email: { label: 'Email', type: 'email', placeholder: 'john@doe.com' },
+        password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        if (!credentials) return null
         const user = await prisma.staff.findUnique({
-          where: { staff_name: credentials.staff_name },
-        });
+          where: { email: credentials.email },
+        })
 
-        if (!user) {
-          throw new Error('No user found with this username');
+        if (
+          user &&
+          (await bcrypt.compare(credentials.password, user.password))
+        ) {
+          return {
+            id: user.id,
+            name: user.staff_name,
+            email: user.email
+          }
+        } else {
+          throw new Error('Invalid email or password')
         }
-
-        return {
-          id: user.staff_id,
-          staff_name: user.staff_name,
-          staff_phone: user.staff_phone
-        };
       },
-    }),
+    })
   ],
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    jwt: async ({ token, user }) => {
       if (user) {
-        token.id = user.id;
-        token.staff_name = user.staff_name;
-        token.staff_phone = user.staff_phone;
+        token.id = user.id
       }
-      return token;
+      return token
     },
-    async session({ session, token }) {
-      if (token) {
-        session.user = token;
+    session: async ({ session, token }) => {
+      if (session.user) {
+        session.user.id = token.id
       }
-      return session;
-    },
+      return session
+    }
   },
-  pages: {
-    signIn: '/auth/signin',
-    error: '/auth/error',
-  },
-  debug: process.env.NODE_ENV === 'development',
-};
+}
 
-export default (req, res) => NextAuth(req, res, authOptions);
+const handler = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }

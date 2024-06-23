@@ -36,7 +36,7 @@ export async function DELETE(req, { params }) {
 export async function PUT(req, { params }){
   try{
     const id = Number(params.id);
-    const { ownerName, phone } = req.body;
+    const { ownerName, phone } = await req.json();
     console.table({id ,ownerName , phone});
 
     const updateOwner = await prisma.owner.update(
