@@ -15,10 +15,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
+
 model Staff {
-  staff_id   Int     @id @default(autoincrement())
-  staff_name String  @unique
+  id   Int     @id @default(autoincrement())
+  staff_name String?
   staff_phone String?
+  email String @unique
+  password String 
   Parcel     Parcel[]
 
   @@map("staff")
@@ -49,7 +52,7 @@ model Parcel {
   pickupsdate  DateTime?
   sta_id       Int?
   Owner        Owner?    @relation(fields: [own_id], references: [own_id])
-  Staff        Staff?    @relation(fields: [staff_id], references: [staff_id])
+  Staff        Staff?    @relation(fields: [staff_id], references: [id])
   Status       Status?   @relation(fields: [sta_id], references: [sta_id])
   Delivered    Delivered?
 
