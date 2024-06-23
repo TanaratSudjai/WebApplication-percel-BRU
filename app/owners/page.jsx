@@ -41,7 +41,6 @@ function Owners() {
     }
   };
 
-
   const handleInputChange = (e) => {
     setEditOwner({
       ...editOwner,
@@ -58,7 +57,7 @@ function Owners() {
       }
       console.log("Updating owner:", editOwner); // Log editOwner before the request
       await axios.put(`/api/owner/${ownerId}`, {
-        name: editOwner.name,
+        ownerName: editOwner.name,
         phone: editOwner.phone,
       });
 
