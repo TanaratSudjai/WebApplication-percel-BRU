@@ -13,9 +13,9 @@ export default function ClientLayout({ session, children }) {
   const pathname = usePathname();
 
   return (
-    <div className="m-2 font-sans w-[full]">
+    <div className="font-sans w-[full]">
       {isAuthPage(pathname) && <Navbar session={session} />} {/*ให้แสดง navbar ใน routh ที่เลือก*/ }
-      <div className="flex gap-4 mt-3">
+      <div className="flex">
         {isAuthPage(pathname) && ( 
           <div>
             <Sidebar session={session} /> {/*ให้แสดง sidebar ใน routh ที่เลือก*/ }

@@ -18,12 +18,12 @@ import {
 
 function sidebar() {
   return (
-    <div className="h-[calc(90vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 border-2 rounded-xl">
-      <div className="m-2 p-3">
-        <h1 className="text-2xl font-bold">Sidebar</h1>
+    <div className="h-[calc(95vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 border-2 ">
+      <div className="mt-2 ml-2">
+        <h1 className="text-xl text-gray-900 font-semibold">Sidebar</h1>
       </div>
 
-      <div className="mb-2 p-4 gap-4">
+      <div className="p-4 gap-4">
         <a href="../mock-table">
         <ListItem className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2">
           <ListItemPrefix>
