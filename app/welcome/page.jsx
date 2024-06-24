@@ -1,39 +1,18 @@
-"use client";
+// "use client";
 
-import React,{useEffect} from "react";
-import { useSession, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import React from "react";
+import AuthWrapper from "../components/authComponents";
 
 
 function Page() {
-  const { data: session, status } = useSession();
-  // console.log("session", session);
-  // console.log("status", status);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-    }
-  }, [router, status]);
-
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
-  if (status === "authenticated" && session.user) {
     return (
+      <AuthWrapper>
       <div>
-        Welcome, {session.user.name}
-        <button
-          class="w-[100px] p-2 rounded-md"
-          onClick={() => signOut({ callbackUrl: "/" })}
-        >
-          LogOut
-        </button>
+        <h1>Hello world</h1>
       </div>
+      </AuthWrapper>
     );
-  }
+  
 }
 
 export default Page;
