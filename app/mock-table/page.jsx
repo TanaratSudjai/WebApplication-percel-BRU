@@ -134,7 +134,7 @@ function DashboardPage() {
                           {parcel.par_real_id}
                         </td>
                         <td className="px-4 py-2 border">{parcel.own_name}</td>
-                        <td className="px-4 py-2 border">{parcel.staff_name}</td>
+                        <td className="px-4 py-2 border w-3/12">{parcel.staff_name}</td>
                         <td className="px-4 py-2 border">
                           {parcel.pickupsdate}
                         </td>
