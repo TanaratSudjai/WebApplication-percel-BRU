@@ -42,10 +42,10 @@ function DashboardPage() {
                   <thead className="bg-gray-100">
                     <tr>
                       <th scope="col" className="px-4 py-2 border">
-                        ID
+                        Name
                       </th>
                       <th scope="col" className="px-4 py-2 border">
-                        Name
+                        email
                       </th>
                       <th scope="col" className="px-4 py-2 border">
                         Phone
@@ -55,8 +55,8 @@ function DashboardPage() {
                   <tbody>
                     {dashboardData.staff.map((staff) => (
                       <tr key={staff.staff_id} className="even:bg-gray-50">
-                        <td className="px-4 py-2 border">{staff.staff_id}</td>
                         <td className="px-4 py-2 border">{staff.staff_name}</td>
+                        <td className="px-4 py-2 border">{staff.email}</td>
                         <td className="px-4 py-2 border">
                           {staff.staff_phone}
                         </td>

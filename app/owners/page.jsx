@@ -41,7 +41,6 @@ function Owners() {
     }
   };
 
-
   const handleInputChange = (e) => {
     setEditOwner({
       ...editOwner,
@@ -58,7 +57,7 @@ function Owners() {
       }
       console.log("Updating owner:", editOwner); // Log editOwner before the request
       await axios.put(`/api/owner/${ownerId}`, {
-        name: editOwner.name,
+        ownerName: editOwner.name,
         phone: editOwner.phone,
       });
 
@@ -318,7 +317,7 @@ function Owners() {
                 <button
                   type="button"
                   className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => setAddShowModal(false)}
                 >
                   <svg
                     className="w-3 h-3"
