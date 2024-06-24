@@ -1,10 +1,12 @@
+"use client"
 import React, { useState } from "react";
 
 function addparcel() {
-  const [parcelData, setPacelData] = useState('')
-  
-
-
+  const [parcelData, setPacelData] = useState({
+    real_id:"",
+    owner: "",
+    staff: "",
+  })
 
 
   return (
