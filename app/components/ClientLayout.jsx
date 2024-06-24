@@ -6,8 +6,8 @@ import { useSession } from "next-auth/react";
 import { Inter } from "next/font/google";
 import Navbar from "./navbar";
 import Sidebar from "./sidebar";
-import { isAuthPage } from "../utils/checkPath"; // ตรวจสอบ route ที่ต้องการแสดง nav และ sidebar
-
+import SessionProvider from "./SessionProvider";
+import { isAuthPage } from "../utils/checkPath"; //ตรวจสอบ routh ที่ต้องการแสดง nav และ sidebar
 const inter = Inter({ subsets: ["latin"] });
 
 export default function ClientLayout({ children }) {
@@ -24,22 +24,25 @@ export default function ClientLayout({ children }) {
   if (status === "loading") {
     return <div>Loading...</div>;
   }
-
-  if (status === "authenticated" && session.user) {
-    return (
-      <div className={`font-sans w-full ${inter.className}`}>
-        {isAuthPage(pathname) && <Navbar session={session} />}
-        <div className="flex">
+  return (
+    <div className="font-sans w-[full]">
+      {" "}
+      {/*ให้แสดง navbar ใน routh ที่เลือก*/}
+      <div className="">
+        <SessionProvider session={session}>
+          <div>{isAuthPage(pathname) && <Navbar session={session} />}</div>
+          <div className="flex">
           {isAuthPage(pathname) && (
             <div>
               <Sidebar session={session} />
+              {/*ให้แสดง sidebar ใน routh ที่เลือก*/}
             </div>
           )}
-          {children}
-        </div>
-      </div>
-    );
-  }
 
-  return null; // or a fallback UI
+          {children}
+          </div>
+        </SessionProvider>
+      </div>
+    </div>
+  );
 }
