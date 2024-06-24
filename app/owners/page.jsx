@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import AuthWrapper from "../components/authComponents";
 
 function Owners() {
   const [ownerData, setOwnerData] = useState([]);
@@ -70,6 +71,8 @@ function Owners() {
 
   useEffect(() => {
     fetchData();
+
+    
   }, []);
 
   const addOwner = async (newOwnerData) => {
@@ -137,6 +140,7 @@ function Owners() {
   };
 
   return (
+    <AuthWrapper>
     <div className="font-sans w-full items-center bg-gray-100 p-5">
       <div className="flex bg-white p-7 w-full items-center mb-3 rounded-xl">
         <h1 className="text-xl text-gray-500 font-semibold dark:text-black mt-[-20px]">
@@ -404,6 +408,7 @@ function Owners() {
         </div>
       )}
     </div>
+    </AuthWrapper>
   );
 }
 

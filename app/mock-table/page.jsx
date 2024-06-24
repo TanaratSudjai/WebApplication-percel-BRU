@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import AuthWrapper from "../components/authComponents";
+
 
 function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -30,6 +32,7 @@ function DashboardPage() {
   }
 
   return (
+    <AuthWrapper>
     <div className="m-2 font-sans w-full">
       <div className="flex gap-4 mt-3">
         <div className="h-[90vh] overflow-y-auto w-full">
@@ -219,6 +222,7 @@ function DashboardPage() {
         </div>
       </div>
     </div>
+    </AuthWrapper>
   );
 }
 

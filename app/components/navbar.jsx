@@ -1,9 +1,12 @@
-import React from "react";
+"use client"
+import React, {useEffect} from "react";
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 
 function navbar() {
-  const { data: session } = useSession();
+  const { data: session , status } = useSession();
   
   return (
     <div className="h-[15%] w-full sticky bg-blue-500">
@@ -20,7 +23,7 @@ function navbar() {
           </button>
         </div>
       ) : (
-        <div>Loading...</div>
+        <div>ไม่อณุญาติใช้งาน</div>
       )}
 
       </div>
