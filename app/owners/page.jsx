@@ -31,7 +31,7 @@ function Owners() {
 
   const handleEditOwner = (id) => {
     const owner = ownerData.owners.find((owner) => owner.own_id === id);
-    console.log('Editing owner:', owner); // Add this line to log the owner data
+    console.log('Editing owner:', owner); 
     if (owner) {
       setEditOwner({
         id: owner.own_id,
