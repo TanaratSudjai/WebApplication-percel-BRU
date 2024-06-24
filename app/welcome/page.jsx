@@ -1,25 +1,25 @@
-// "use client";
+"use client";
 
-import React from "react";
+import React,{useEffect} from "react";
 import { useSession, signOut } from "next-auth/react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 
 function Page() {
   const { data: session, status } = useSession();
   // console.log("session", session);
   // console.log("status", status);
-  // const router = useRouter();
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     router.push("/");
-  //   }
-  // }, [router, status]);
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [router, status]);
 
-  // if (status === "loading") {
-  //   return <div>Loading...</div>;
-  // }
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   if (status === "authenticated" && session.user) {
     return (
@@ -36,4 +36,4 @@ function Page() {
   }
 }
 
-export default withAuth(Page);
+export default Page;
