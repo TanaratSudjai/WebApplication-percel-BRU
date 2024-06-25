@@ -4,9 +4,10 @@ import React, { useState, useEffect } from "react";
 function addparcel() {
   const [staffData, setStaffData] = useState({ staff: [] });
   const [ownData, setOwnData] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [filteredOwners, setFilteredOwners] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [selectedPhoneNumber, setSelectedPhoneNumber] = useState("");
 
   const [parcelData, setPacelData] = useState({
     real_id: "",
@@ -25,7 +26,6 @@ function addparcel() {
         console.error("Error fetching owner data:", error);
       }
     };
-
     fetchOwnData();
   }, []);
 
@@ -41,8 +41,9 @@ function addparcel() {
     }
   }, [inputValue, ownData]);
 
-  const handleSelect = (name) => {
+  const handleSelect = (name, phone) => {
     setInputValue(name);
+    setSelectedPhoneNumber(phone);
     setFilteredOwners([]);
     setDropdownVisible(false);
   };
@@ -60,11 +61,11 @@ function addparcel() {
     // Fetch data from the database
     const fetchStaffData = async () => {
       try {
-        const response = await fetch('/api/staff'); // Replace with your API endpoint
+        const response = await fetch("/api/staff"); // Replace with your API endpoint
         const data = await response.json();
         setStaffData(data); // Ensure data is an array of staff objects
       } catch (error) {
-        console.error('Error fetching staff data:', error);
+        console.error("Error fetching staff data:", error);
       }
     };
 
@@ -178,7 +179,9 @@ function addparcel() {
                   <li
                     key={owner.own_id}
                     className="p-2 cursor-pointer hover:bg-gray-200"
-                    onMouseDown={() => handleSelect(owner.own_name)}
+                    onClick={() =>
+                      handleSelect(owner.own_name, owner.own_phone)
+                    }
                   >
                     {owner.own_name}
                   </li>
@@ -186,35 +189,19 @@ function addparcel() {
               </ul>
             )}
           </div>
-
           <div>
             <label className="text-gray-800 text-sm mb-2 block">
               เบอร์เจ้าของ
             </label>
-
             <div className="relative flex items-center">
               <input
-                name="staff_name"
+                name="owner_phone"
                 type="text"
+                value={selectedPhoneNumber}
                 required
-                // value={formData.staff_name}
-                // onChange={handleChange}
                 className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                 placeholder="กรอกเบอร์โทรเจ้าของ"
               />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#bbb"
-                stroke="#bbb"
-                className="w-4 h-4 absolute right-4"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
-                <path
-                  d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
-                  data-original="#000000"
-                ></path>
-              </svg>
             </div>
           </div>
 
