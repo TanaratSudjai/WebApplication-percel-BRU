@@ -4,8 +4,6 @@ const prisma = new PrismaClient();
 export async function GET() {
   try {
     const dataParcel = await prisma.parcel.findMany();
-    console.table(dataParcel);
-
     return Response.json({ dataParcel }, { status: 200 });
   } catch (error) {
     return Response.json({ error }, { status: 500 });
@@ -17,7 +15,6 @@ export async function POST(req) {
 
     const date = new Date();
     const { real_id, owner, staff, status } = await  req.json();
-    console.table(real_id, owner, staff, status, date);
 
     const newParcel = await prisma.parcel.create({
       data:{
