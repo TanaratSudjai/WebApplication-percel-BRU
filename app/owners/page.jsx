@@ -24,6 +24,7 @@ function Owners() {
     try {
       const res = await axios.get("/api/owner");
       setOwnerData(res.data);
+      
     } catch (err) {
       console.error("Error fetching data:", err);
     }
