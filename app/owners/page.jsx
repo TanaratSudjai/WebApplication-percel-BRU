@@ -212,7 +212,7 @@ function Owners() {
       {/*edit modal*/}
       {showEditModal && (
         <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
-          <div className="relative p-4 w-full max-w-md">
+          <div className="relative p-4 w-full max-w-[550px]">
             <div className="relative bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
@@ -312,7 +312,7 @@ function Owners() {
           aria-hidden="true"
           className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75"
         >
-          <div className="relative p-4 w-full max-w-md">
+          <div className="relative p-4 w-full max-w-[550px]">
             <div className="relative bg-white rounded-lg shadow p-4">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-black">

@@ -2,18 +2,14 @@
 import React, { useState, useEffect } from "react";
 
 function addparcel() {
-  const [staffData, setStaffData] = useState({ staff: [] });
   const [ownData, setOwnData] = useState([]);
+  const [staffData, setStaffData] = useState({ staff: [] });
   const [inputValue, setInputValue] = useState("");
   const [filteredOwners, setFilteredOwners] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [selectedPhoneNumber, setSelectedPhoneNumber] = useState("");
-
-  const [parcelData, setPacelData] = useState({
-    real_id: "",
-    owner: "",
-    staff: "",
-  });
+  const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
+  const [selectedStaff, setSelectedStaff] = useState("");
+  const [parcelCode, setParcelCode] = useState(""); // State for parcel code
 
   useEffect(() => {
     // Fetch data from the database
@@ -26,7 +22,19 @@ function addparcel() {
         console.error("Error fetching owner data:", error);
       }
     };
+
+    const fetchStaffData = async () => {
+      try {
+        const response = await fetch("/api/staff"); // Replace with your API endpoint
+        const data = await response.json();
+        setStaffData(data); // Ensure data is an array of staff objects
+      } catch (error) {
+        console.error("Error fetching staff data:", error);
+      }
+    };
+
     fetchOwnData();
+    fetchStaffData();
   }, []);
 
   useEffect(() => {
@@ -36,14 +44,14 @@ function addparcel() {
           .filter((owner) =>
             owner.own_name.toLowerCase().includes(inputValue.toLowerCase())
           )
-          .slice(0, 3) // Limit to top 3
+          .slice(0, 4) // Limit to top 3
       );
     }
   }, [inputValue, ownData]);
 
-  const handleSelect = (name, phone) => {
+  const handleSelectOwner = (id, name, phone) => {
     setInputValue(name);
-    setSelectedPhoneNumber(phone);
+    setSelectedOwner({ id, phone });
     setFilteredOwners([]);
     setDropdownVisible(false);
   };
@@ -57,150 +65,148 @@ function addparcel() {
     setTimeout(() => setDropdownVisible(false), 100);
   };
 
-  useEffect(() => {
-    // Fetch data from the database
-    const fetchStaffData = async () => {
-      try {
-        const response = await fetch("/api/staff"); // Replace with your API endpoint
-        const data = await response.json();
-        setStaffData(data); // Ensure data is an array of staff objects
-      } catch (error) {
-        console.error("Error fetching staff data:", error);
-      }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const parcelData = {
+      par_real_id: parcelCode, // Use the parcelCode state
+      own_id: selectedOwner.id,
+      staff_id: selectedStaff,
     };
 
-    fetchStaffData();
-  }, []);
+    try {
+      const response = await fetch("/api/parcel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(parcelData),
+      });
+
+      if (response.ok) {
+        console.log("Parcel data submitted successfully");
+      } else {
+        console.error("Failed to submit parcel data");
+      }
+    } catch (error) {
+      console.error("Error submitting parcel data:", error);
+    }
+  };
 
   return (
-    <div className="h-full w-full flex flex-col font-[sans-serif] bg-gray-100">
-      <div className="w-full bg-white">
-        <h1>Add parcel</h1>
-      </div>
-      <div className="p-8 rounded-2xl bg-white shadow-xl w-[50vh] py-10">
-        <h1 className="text-center text-2xl font-bold">รับพัสดุเข้าสู่ระบบ</h1>
-        <form className="mt-6 space-y-4">
-          <div>
-            <label className="text-gray-800 text-sm mb-2 block">
-              รหัสพัสดุ
-            </label>
+    <div className="p-6 bg-gray-100 flex justify-center w-full">
+      <div class="container mx-auto">
+        <h2 class="font-semibold text-xl text-gray-600">Responsive Form</h2>
 
-            <div className="relative flex items-center">
-              <input
-                name="staff_name"
-                type="text"
-                required
-                // value={formData.staff_name}
-                // onChange={handleChange}
-                className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                placeholder="แสกนหรือกรอกรหัสพัสดุ"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-gray-800 text-sm mb-2 block">
-              ชื่อพนักงานที่รับสินค้า
-            </label>
-
-            <div className="relative flex items-center">
-              <select
-                id="staff"
-                name="staffList"
-                form="staffForm"
-                className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-              >
-                {staffData.staff &&
-                  staffData.staff.map((staff) => (
-                    <option key={staff.id} value={staff.id} default={null}>
+        <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+          <h1 className="text-center text-2xl font-bold">
+            รับพัสดุเข้าสู่ระบบ
+          </h1>
+          <div className="lg:col-span-2">
+            <form onSubmit={handleSubmit} className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+              <div className="md:col-span-5">
+                <label className="text-gray-800 text-sm mb-2 block">
+                  รหัสพัสดุ
+                </label>
+                <div className="relative flex items-center">
+                  <input
+                    name="parcel_code"
+                    type="text"
+                    value={parcelCode}
+                    onChange={(e) => setParcelCode(e.target.value)}
+                    required
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    placeholder="แสกนหรือกรอกรหัสพัสดุ"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-gray-800 text-sm mb-2 block">
+                  พนักงาน
+                </label>
+                <select
+                  id="staff"
+                  name="staffList"
+                  form="staffForm"
+                  className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                  value={selectedStaff}
+                  onChange={(e) => setSelectedStaff(e.target.value)}
+                >
+                  <option value="" disabled>
+                    เลือกพนักงาน
+                  </option>
+                  {staffData.staff.map((staff) => (
+                    <option key={staff.id} value={staff.id}>
                       {staff.staff_name}
                     </option>
                   ))}
-              </select>
+                </select>
+              </div>
 
-              {/* <input
-                name="staff_name"
-                type="text"
-                required
-                // value={formData.staff_name}
-                // onChange={handleChange}
-                className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                placeholder="เลือกพนักงาน"
-              /> */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#bbb"
-                stroke="#bbb"
-                className="w-4 h-4 absolute right-4"
-                viewBox="0 0 24 24"
-              >
-                <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
-                <path
-                  d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
-                  data-original="#000000"
-                ></path>
-              </svg>
-            </div>
-          </div>
+              <div>
+                <label className="text-gray-800 text-sm mb-2 block">
+                  ชื่อเจ้าของ
+                </label>
+                <div className="relative flex items-center">
+                  <input
+                    name="own_name"
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
+                    required
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    placeholder="กรอกชื่อเจ้าของ"
+                  />
+                </div>
+                {isDropdownVisible && filteredOwners.length > 0 && (
+                  <ul className="flex flex-col bg-white border border-gray-300 w-full mt-1 rounded-md max-h-60 overflow-y-auto z-10">
+                    {filteredOwners.map((owner) => (
+                      <li
+                        key={owner.own_id}
+                        className="p-2 cursor-pointer hover:bg-gray-200"
+                        onClick={() =>
+                          handleSelectOwner(
+                            owner.own_id,
+                            owner.own_name,
+                            owner.own_phone
+                          )
+                        }
+                      >
+                        {owner.own_name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div>
+                <label className="text-gray-800 text-sm mb-2 block">
+                  เบอร์เจ้าของ
+                </label>
+                <div className="relative flex items-center">
+                  <input
+                    name="owner_phone"
+                    type="text"
+                    value={selectedOwner.phone}
+                    readOnly
+                    required
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    placeholder="กรอกเบอร์โทรเจ้าของ"
+                  />
+                </div>
+              </div>
 
-          <div>
-            <label className="text-gray-800 text-sm mb-2 block">
-              ชื่อเจ้าของ
-            </label>
-            <div className="relative flex items-center">
-              <input
-                name="own_name"
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                required
-                className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                placeholder="กรอกชื่อเจ้าของ"
-              />
-            </div>
-            {isDropdownVisible && filteredOwners.length > 0 && (
-              <ul className="absolute bg-white border border-gray-300 w-full mt-1 rounded-md max-h-60 overflow-y-auto z-10">
-                {filteredOwners.map((owner) => (
-                  <li
-                    key={owner.own_id}
-                    className="p-2 cursor-pointer hover:bg-gray-200"
-                    onClick={() =>
-                      handleSelect(owner.own_name, owner.own_phone)
-                    }
-                  >
-                    {owner.own_name}
-                  </li>
-                ))}
-              </ul>
-            )}
+              <div className="!mt-8">
+                <button
+                  type="submit"
+                  className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
+                >
+                  เพิ่มพัสดุ
+                </button>
+              </div>
+            </form>
           </div>
-          <div>
-            <label className="text-gray-800 text-sm mb-2 block">
-              เบอร์เจ้าของ
-            </label>
-            <div className="relative flex items-center">
-              <input
-                name="owner_phone"
-                type="text"
-                value={selectedPhoneNumber}
-                required
-                className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                placeholder="กรอกเบอร์โทรเจ้าของ"
-              />
-            </div>
-          </div>
-
-          <div className="!mt-8">
-            <button
-              type="submit"
-              className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
-            >
-              เพิ่มพัสดุ
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );
