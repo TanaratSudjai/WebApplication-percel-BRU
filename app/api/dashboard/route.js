@@ -11,8 +11,7 @@ export async function GET() {
     const staff = await prisma.staff.findMany();
     const owners = await prisma.owner.findMany();
     const status = await prisma.status.findMany();
-    const parcels = await prisma.parcel
-      .findMany
+    const parcels = await prisma.parcel.findMany
 
       //   where: {
       //     pickupsdate: {
