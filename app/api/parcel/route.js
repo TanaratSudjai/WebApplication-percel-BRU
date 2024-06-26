@@ -3,41 +3,26 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-
     const dataParcel = await prisma.parcel.findMany({
       include: {
         Owner: true,
         Staff: true,
-        Status: true // ระบุให้รวมข้อมูลจาก relation Owner
+        Status: true, // ระบุให้รวมข้อมูลจาก relation Owner
       },
     });
 
-    const parcelsWithPhone = dataParcel.map(parcel => {
+    const parcelsWithPhone = dataParcel.map((parcel) => {
       return {
         ...parcel,
         own_phone: parcel.Owner && parcel.Owner.own_phone,
-      };
-    });
-
-    const parcelsWithStatus = dataParcel.map(parcel => {
-      return {
-        ...parcel,
-        sta_name: parcel.Status && parcel.Status.sta_name,
-      };
-    });
-
-    const parcelsWithStaff = dataParcel.map(parcel => {
-      return {
-        ...parcel,
         staff_name: parcel.Staff && parcel.Staff.staff_name,
+        sta_name: parcel.Status && parcel.Status.sta_name
       };
     });
 
+    console.table(parcelsWithPhone);
 
-    console.log(parcelsWithPhone, parcelsWithStatus, parcelsWithStaff);
-
-    return Response.json({ dataParcel }, { status: 200 });
-
+    return Response.json({ dataParcel:parcelsWithPhone }, { status: 200 });
   } catch (error) {
     return Response.json({ error }, { status: 500 });
   }
