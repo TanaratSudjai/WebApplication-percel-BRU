@@ -6,19 +6,35 @@ export async function GET() {
 
     const dataParcel = await prisma.parcel.findMany({
       include: {
-        Owner: true, // ระบุให้รวมข้อมูลจาก relation Owner
+        Owner: true,
+        Staff: true,
+        Status: true // ระบุให้รวมข้อมูลจาก relation Owner
       },
     });
 
     const parcelsWithPhone = dataParcel.map(parcel => {
       return {
         ...parcel,
-        own_phone: parcel.Owner && parcel.Owner.own_phone, // เพิ่ม own_phone จาก Owner
+        own_phone: parcel.Owner && parcel.Owner.own_phone,
+      };
+    });
+
+    const parcelsWithStatus = dataParcel.map(parcel => {
+      return {
+        ...parcel,
+        sta_name: parcel.Status && parcel.Status.sta_name,
+      };
+    });
+
+    const parcelsWithStaff = dataParcel.map(parcel => {
+      return {
+        ...parcel,
+        staff_name: parcel.Staff && parcel.Staff.staff_name,
       };
     });
 
 
-    console.log(parcelsWithPhone);
+    console.log(parcelsWithPhone, parcelsWithStatus, parcelsWithStaff);
 
     return Response.json({ dataParcel }, { status: 200 });
 
