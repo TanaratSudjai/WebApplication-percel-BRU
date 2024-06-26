@@ -1,13 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 function AddParcel() {
   const [ownData, setOwnData] = useState([]);
   const [staffData, setStaffData] = useState({ staff: [] });
-
   const [inputValue, setInputValue] = useState("");
-
   const [filteredOwners, setFilteredOwners] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
@@ -15,6 +14,7 @@ function AddParcel() {
   const [parcelCode, setParcelCode] = useState(""); // State for parcel code
 
   useEffect(() => {
+    // Fetch data from the database using Axios
     const fetchOwnData = async () => {
       try {
         const response = await axios.get("/api/owner"); // Replace with your API endpoint
@@ -65,12 +65,35 @@ function AddParcel() {
     setTimeout(() => setDropdownVisible(false), 100);
   };
 
+  const handleAddOwner = async (name, phone) => {
+    try {
+      const response = await axios.post("/api/owner", {
+        name: name,
+        phone: phone,
+      });
+      setInputValue(name);
+      return response.data; // Assuming the response includes the new owner data
+    } catch (error) {
+      console.error("Error adding new owner:", error);
+      return null;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let ownerId = selectedOwner.id;
+    if (!ownerId) {
+      const newOwner = await handleAddOwner(inputValue, selectedOwner.phone);
+      if (newOwner) {
+        ownerId = newOwner.id;
+      }
+    }
+
     const parcelData = {
       Rid: parcelCode, // Use the parcelCode state
-      owner: selectedOwner.id,
-      staff: parseInt(selectedStaff),
+      owner: ownerId,
+      staff: parseInt(selectedStaff), // Ensure staff is sent as a number
       sta_id: 1, // Assuming sta_id is always 1 for this form submission
     };
 
@@ -79,12 +102,20 @@ function AddParcel() {
 
       if (response.status === 200) {
         console.log("Parcel data submitted successfully");
+        reset();
       } else {
         console.error("Failed to submit parcel data");
       }
     } catch (error) {
       console.error("Error submitting parcel data:", error);
     }
+  };
+
+  const reset = () => {
+    setInputValue("");
+    setSelectedOwner({ id: "", phone: "" });
+    setSelectedStaff("");
+    setParcelCode("");
   };
 
   return (
@@ -148,34 +179,34 @@ function AddParcel() {
                   <input
                     name="own_name"
                     type="text"
+                    required
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
-                    required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     placeholder="กรอกชื่อเจ้าของ"
                   />
+                  {isDropdownVisible && filteredOwners.length > 0 && (
+                    <ul className="flex flex-col z-10 w-full bg-white border border-gray-300 mt-1 rounded-md">
+                      {filteredOwners.map((owner) => (
+                        <li
+                          key={owner.own_id}
+                          onClick={() =>
+                            handleSelectOwner(
+                              owner.own_id,
+                              owner.own_name,
+                              owner.own_phone
+                            )
+                          }
+                          className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                        >
+                          {owner.own_name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-                {isDropdownVisible && filteredOwners.length > 0 && (
-                  <ul className="flex flex-col bg-white border border-gray-300 w-full mt-1 rounded-md max-h-60 overflow-y-auto z-10">
-                    {filteredOwners.map((owner) => (
-                      <li
-                        key={owner.own_id}
-                        className="p-2 cursor-pointer hover:bg-gray-200"
-                        onClick={() =>
-                          handleSelectOwner(
-                            owner.own_id,
-                            owner.own_name,
-                            owner.own_phone
-                          )
-                        }
-                      >
-                        {owner.own_name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
               </div>
               <div>
                 <label className="text-gray-800 text-sm mb-2 block">
@@ -183,11 +214,16 @@ function AddParcel() {
                 </label>
                 <div className="relative flex items-center">
                   <input
-                    name="owner_phone"
+                    name="own_phone"
                     type="text"
-                    value={selectedOwner.phone}
-                    readOnly
                     required
+                    value={selectedOwner.phone}
+                    onChange={(e) =>
+                      setSelectedOwner({
+                        ...selectedOwner,
+                        phone: e.target.value,
+                      })
+                    }
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     placeholder="กรอกเบอร์โทรเจ้าของ"
                   />
@@ -200,6 +236,14 @@ function AddParcel() {
                   className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
                 >
                   เพิ่มพัสดุ
+                </button>
+              </div>
+              <div className="!mt-8">
+                <button
+                  onClick={reset}
+                  className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
+                >
+                  รีเซ็ต
                 </button>
               </div>
             </form>
