@@ -12,18 +12,18 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-
     const date = new Date();
-    const { real_id, owner, staff, status } = await  req.json();
-
+    const status = 1;
+    const { Rid, owner, staff } = await req.json();
+    console.table({ Rid, owner, staff });
     const newParcel = await prisma.parcel.create({
-      data:{
-        par_real_id: real_id,
+      data: {
+        par_real_id: Rid,
         own_id: owner,
         staff_id: staff,
         sta_id: status,
-        pickupsdate:date,
-      }
+        pickupsdate: date,
+      },
     });
 
     return Response.json(
@@ -31,7 +31,7 @@ export async function POST(req) {
         newParcel,
       },
       {
-        status:200
+        status: 200,
       }
     );
   } catch (error) {
