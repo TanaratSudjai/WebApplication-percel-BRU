@@ -133,6 +133,9 @@ function page() {
                         Staff ID
                       </th>
                       <th scope="col" className="px-4 py-2 border">
+                        phone
+                      </th>
+                      <th scope="col" className="px-4 py-2 border">
                         Pickup Date
                       </th>
                       <th scope="col" className="px-4 py-2 border">
@@ -148,10 +151,13 @@ function page() {
                           {parcel.par_real_id}
                         </td>
                         <td className="px-4 py-2 border">{parcel.own_name}</td>
-                        <td className="px-4 py-2 border w-3/12">
+                        <td className="px-4 py-2 border">
                           {parcel.staff_name}
                         </td>
-                        <td className="px-4 py-2 border">
+                        <td className="px-4 py-2 border w-2/12">
+                          {parcel.own_phone}
+                        </td>
+                        <td className="px-4 py-2 border w-2/12">
                           {parcel.pickupsdate}
                         </td>
                         <td className="px-4 py-2 border">{parcel.sta_name}</td>
