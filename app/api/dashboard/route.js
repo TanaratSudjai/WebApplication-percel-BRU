@@ -35,7 +35,7 @@ export async function GET() {
       ...parcel,
       sta_name:status.find(status => status.sta_id === parcel.sta_id)?.sta_name,
       own_name:owners.find(owner => owner.own_id === parcel.own_id)?.own_name,
-      staff_name:staff.find(staff => staff.id === parcel.id)?.staff_name,
+      staff_name:staff.find(staff => staff.id === parcel.staff_id)?.staff_name,
     }));
 
     
