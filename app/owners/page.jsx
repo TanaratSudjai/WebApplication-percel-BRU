@@ -142,12 +142,11 @@ function Owners() {
 
   return (
     <AuthWrapper>
-    <div className="font-sans w-full items-center bg-gray-100 p-5">
-      <div className="flex bg-white p-7 w-full items-center mb-3 rounded-xl">
+    <div className="p-6 bg-gray-100 flex justify-center w-full">
+    <div class="container mx-auto">
         <h1 className="text-xl text-gray-500 font-semibold dark:text-black mt-[-20px]">
           Owner Manager
         </h1>
-      </div>
       <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white w-[100%] h-[90%] ">
         <div className="m-2 mb-4">
           <button
@@ -406,8 +405,10 @@ function Owners() {
               </form>
             </div>
           </div>
+          
         </div>
       )}
+      </div>
     </div>
     </AuthWrapper>
   );
