@@ -71,13 +71,25 @@ function AddParcel() {
         name: name,
         phone: phone,
       });
-      setInputValue(name);
-      return response.data; // Assuming the response includes the new owner data
+  
+      console.log("API Response:", response.data); // Log the response to inspect it
+  
+      // Check if the response indicates success and extract the owner ID
+      if (response.status === 200 || response.status === 201) {
+        const newOwner = response.data; // Assuming response.data contains the new owner object
+        console.log("New owner has been added:", newOwner);
+  
+        return newOwner; // Return the new owner object or the part containing the ID
+      } else {
+        console.error("Failed to add new owner.");
+        return null;
+      }
     } catch (error) {
       console.error("Error adding new owner:", error);
       return null;
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,7 +98,9 @@ function AddParcel() {
     if (!ownerId) {
       const newOwner = await handleAddOwner(inputValue, selectedOwner.phone);
       if (newOwner) {
-        ownerId = newOwner.id;
+        ownerId = newOwner.own_id;
+        console.log();
+        console.log("new owner has been added");
       }
     }
 
@@ -175,7 +189,7 @@ function AddParcel() {
                 <label className="text-gray-800 text-sm mb-2 block">
                   ชื่อเจ้าของ
                 </label>
-                <div className="relative flex items-center">
+                <div className="relative flex flex-col items-center">
                   <input
                     name="own_name"
                     type="text"
