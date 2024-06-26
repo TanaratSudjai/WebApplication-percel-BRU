@@ -30,11 +30,13 @@ export default function SignIn() {
   };
 
   return (
-    <div className="mx-auto mt-10 h-[100%] w-full flex flex-col items-center font-[sans-serif]">
-      <Image src="/logoreal.png" width={300} height={300} alt="Logo" />
+    <div className="mx-auto mt-10 h-[80vh] w-full flex flex-col items-center justify-center font-[sans-serif]">
+      
 
-      <div className="p-8 rounded-2xl bg-white shadow-xl w-[50vh] py-10">
-        <h1 className="text-center text-2xl font-bold">Log in</h1>
+      <div className="p-8 rounded-2xl bg-white shadow-xl w-[50vh] py-10 ">
+        <div className="flex justify-center">
+      <Image src="/realogo.png" width={300} height={500} alt="Logo" />
+      </div>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="mb-4">
             <label className="text-gray-800 text-sm mb-2 block">Email</label>
@@ -81,7 +83,7 @@ export default function SignIn() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded mb-4"
+            className="w-full bg-[#60d0ac] hover:bg-[#469e80] text-white py-3 rounded mb-4"
           >
             Sign In
           </button>{" "}

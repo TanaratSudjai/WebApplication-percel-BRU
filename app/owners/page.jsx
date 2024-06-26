@@ -100,13 +100,13 @@ function Owners() {
 
   const deleteOwner = async (ownerId) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "คุณแน่ใจว่าจะลบหรือไม่?",
+      text: "คุณจะไม่สามารถนำมันกลับมาได้อีก!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "#60d0ac",
+      cancelButtonColor: "#e11d48",
+      confirmButtonText: "ใช่ ลบไปเลย!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -119,9 +119,10 @@ function Owners() {
             );
 
             Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
+              title: "ลบออกเรียบร้อย!",
+              text: "ไฟล์ของคุณได้ถูกลบออกไปแล้ว.",
               icon: "success",
+              confirmButtonColor: "#60d0ac"
             });
             fetchData(); // GET
           } else {
@@ -150,7 +151,7 @@ function Owners() {
       <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white w-[100%] h-[90%] ">
         <div className="m-2 mb-4">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+            className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
             onClick={() => setAddShowModal(true)}
           >
             เพิ่มชื่อ
@@ -190,7 +191,7 @@ function Owners() {
                     </td>
                     <td className="text-center p-2 border px-2 gap-2 w-3/12 ">
                       <button
-                        className="bg-amber-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-md"
+                        className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
                         onClick={() => handleEditOwner(owner.own_id)}
                       >
                         แก้ไขชื่อ
@@ -282,7 +283,7 @@ function Owners() {
                 </div>
                 <button
                   type="submit"
-                  className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="text-white inline-flex items-center bg-[#60d0ac] hover:bg-[#469e80] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
                   <svg
                     className="me-1 -ms-1 w-5 h-5"
@@ -386,7 +387,7 @@ function Owners() {
                 </div>
                 <button
                   type="submit"
-                  className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  className="text-white inline-flex items-center bg-[#60d0ac] hover:bg-[#469e80] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 >
                   <svg
                     className="me-1 -ms-1 w-5 h-5"

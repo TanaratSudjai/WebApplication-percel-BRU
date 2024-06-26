@@ -11,14 +11,14 @@ function AddParcel() {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
   const [selectedStaff, setSelectedStaff] = useState("");
-  const [parcelCode, setParcelCode] = useState(""); // State for parcel code
+  const [parcelCode, setParcelCode] = useState(""); 
 
   useEffect(() => {
-    // Fetch data from the database using Axios
+    
     const fetchOwnData = async () => {
       try {
-        const response = await axios.get("/api/owner"); // Replace with your API endpoint
-        setOwnData(response.data.owners); // Access the 'owners' array in the response
+        const response = await axios.get("/api/owner"); 
+        setOwnData(response.data.owners); 
       } catch (error) {
         console.error("Error fetching owner data:", error);
       }
@@ -26,8 +26,8 @@ function AddParcel() {
 
     const fetchStaffData = async () => {
       try {
-        const response = await axios.get("/api/staff"); // Replace with your API endpoint
-        setStaffData(response.data); // Ensure data is an array of staff objects
+        const response = await axios.get("/api/staff"); 
+        setStaffData(response.data); 
       } catch (error) {
         console.error("Error fetching staff data:", error);
       }
@@ -61,7 +61,6 @@ function AddParcel() {
   };
 
   const handleInputBlur = () => {
-    // Delay hiding to allow click event on dropdown items
     setTimeout(() => setDropdownVisible(false), 100);
   };
 
@@ -71,8 +70,18 @@ function AddParcel() {
         name: name,
         phone: phone,
       });
-      setInputValue(name);
-      return response.data; // Assuming the response includes the new owner data
+
+      console.log("API Response:", response.data); // Log the response to inspect it
+
+      if (response.status === 200 || response.status === 201) {
+        const newOwner = response.data; // Assuming response.data contains the new owner object
+        console.log("New owner has been added:", newOwner);
+
+        return newOwner; // Return the new owner object or the part containing the ID
+      } else {
+        console.error("Failed to add new owner.");
+        return null;
+      }
     } catch (error) {
       console.error("Error adding new owner:", error);
       return null;
@@ -85,16 +94,18 @@ function AddParcel() {
     let ownerId = selectedOwner.id;
     if (!ownerId) {
       const newOwner = await handleAddOwner(inputValue, selectedOwner.phone);
-      if (newOwner) {
-        ownerId = newOwner.id;
+      console.log("New owner:", newOwner); // Log the entire newOwner object
+      if (newOwner && newOwner.newOwner && newOwner.newOwner.own_id) {
+        ownerId = newOwner.newOwner.own_id; // Access own_id from newOwner.newOwner
+        console.log("New owner ID:", ownerId);
       }
     }
 
     const parcelData = {
-      Rid: parcelCode, // Use the parcelCode state
+      Rid: parcelCode, 
       owner: ownerId,
-      staff: parseInt(selectedStaff), // Ensure staff is sent as a number
-      sta_id: 1, // Assuming sta_id is always 1 for this form submission
+      staff: parseInt(selectedStaff), 
+      sta_id: 1,
     };
 
     try {
@@ -108,6 +119,9 @@ function AddParcel() {
       }
     } catch (error) {
       console.error("Error submitting parcel data:", error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
     }
   };
 
@@ -175,7 +189,7 @@ function AddParcel() {
                 <label className="text-gray-800 text-sm mb-2 block">
                   ชื่อเจ้าของ
                 </label>
-                <div className="relative flex items-center">
+                <div className="relative flex flex-col items-center">
                   <input
                     name="own_name"
                     type="text"
@@ -233,19 +247,35 @@ function AddParcel() {
               <div className="!mt-8">
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
+                  className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-[#60d0ac] hover:bg-emerald-600 focus:outline-none"
                 >
                   เพิ่มพัสดุ
                 </button>
               </div>
-              <div className="!mt-8">
-                <button
-                  onClick={reset}
-                  className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-400 hover:bg-blue-500 focus:outline-none"
-                >
-                  รีเซ็ต
-                </button>
-              </div>
+              
+                <div className="mt-8">
+                  <button
+                    onClick={reset}
+                    className="w-[100] py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-rose-600 hover:bg-red-700 focus:outline-none"
+                  >
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      className="size-6 "
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                      />
+                    </svg>
+                    
+                  </button>
+                </div>
+              
             </form>
           </div>
         </div>
