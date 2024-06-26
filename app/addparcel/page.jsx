@@ -71,14 +71,14 @@ function AddParcel() {
         name: name,
         phone: phone,
       });
-  
+
       console.log("API Response:", response.data); // Log the response to inspect it
-  
+
       // Check if the response indicates success and extract the owner ID
       if (response.status === 200 || response.status === 201) {
         const newOwner = response.data; // Assuming response.data contains the new owner object
         console.log("New owner has been added:", newOwner);
-  
+
         return newOwner; // Return the new owner object or the part containing the ID
       } else {
         console.error("Failed to add new owner.");
@@ -89,7 +89,6 @@ function AddParcel() {
       return null;
     }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -97,10 +96,10 @@ function AddParcel() {
     let ownerId = selectedOwner.id;
     if (!ownerId) {
       const newOwner = await handleAddOwner(inputValue, selectedOwner.phone);
-      if (newOwner) {
-        ownerId = newOwner.own_id;
-        console.log();
-        console.log("new owner has been added");
+      console.log("New owner:", newOwner); // Log the entire newOwner object
+      if (newOwner && newOwner.newOwner && newOwner.newOwner.own_id) {
+        ownerId = newOwner.newOwner.own_id; // Access own_id from newOwner.newOwner
+        console.log("New owner ID:", ownerId);
       }
     }
 
@@ -122,6 +121,9 @@ function AddParcel() {
       }
     } catch (error) {
       console.error("Error submitting parcel data:", error);
+      if (error.response) {
+        console.error("Server Response:", error.response.data);
+      }
     }
   };
 
