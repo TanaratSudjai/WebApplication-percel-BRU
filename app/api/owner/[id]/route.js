@@ -5,9 +5,15 @@ export async function GET(req, { params }) {
   try {
     const id = Number(params.id);
     const ownerById = await prisma.owner.findUnique({ where: { own_id: id } });
+
+
+    // get for qurey on Object 
+    // console.info(ownerById.own_phone);
+
     return Response.json({
       ownerById,
     });
+
   } catch (error) {
     return Response.json(
       {
@@ -19,6 +25,7 @@ export async function GET(req, { params }) {
     );
   }
 }
+
 
 export async function DELETE(req, { params }) {
   try {
