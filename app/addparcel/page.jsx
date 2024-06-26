@@ -1,10 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-function addparcel() {
+function AddParcel() {
   const [ownData, setOwnData] = useState([]);
   const [staffData, setStaffData] = useState({ staff: [] });
+
   const [inputValue, setInputValue] = useState("");
+
   const [filteredOwners, setFilteredOwners] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
@@ -12,12 +15,10 @@ function addparcel() {
   const [parcelCode, setParcelCode] = useState(""); // State for parcel code
 
   useEffect(() => {
-    // Fetch data from the database
     const fetchOwnData = async () => {
       try {
-        const response = await fetch("/api/owner"); // Replace with your API endpoint
-        const data = await response.json();
-        setOwnData(data.owners); // Access the 'owners' array in the response
+        const response = await axios.get("/api/owner"); // Replace with your API endpoint
+        setOwnData(response.data.owners); // Access the 'owners' array in the response
       } catch (error) {
         console.error("Error fetching owner data:", error);
       }
@@ -25,9 +26,8 @@ function addparcel() {
 
     const fetchStaffData = async () => {
       try {
-        const response = await fetch("/api/staff"); // Replace with your API endpoint
-        const data = await response.json();
-        setStaffData(data); // Ensure data is an array of staff objects
+        const response = await axios.get("/api/staff"); // Replace with your API endpoint
+        setStaffData(response.data); // Ensure data is an array of staff objects
       } catch (error) {
         console.error("Error fetching staff data:", error);
       }
@@ -44,7 +44,7 @@ function addparcel() {
           .filter((owner) =>
             owner.own_name.toLowerCase().includes(inputValue.toLowerCase())
           )
-          .slice(0, 4) // Limit to top 3
+          .slice(0, 3) // Limit to top 3
       );
     }
   }, [inputValue, ownData]);
@@ -68,21 +68,16 @@ function addparcel() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const parcelData = {
-      par_real_id: parcelCode, // Use the parcelCode state
-      own_id: selectedOwner.id,
-      staff_id: selectedStaff,
+      Rid: parcelCode, // Use the parcelCode state
+      owner: selectedOwner.id,
+      staff: parseInt(selectedStaff),
+      sta_id: 1, // Assuming sta_id is always 1 for this form submission
     };
 
     try {
-      const response = await fetch("/api/parcel", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(parcelData),
-      });
+      const response = await axios.post("/api/parcel", parcelData);
 
-      if (response.ok) {
+      if (response.status === 200) {
         console.log("Parcel data submitted successfully");
       } else {
         console.error("Failed to submit parcel data");
@@ -102,7 +97,10 @@ function addparcel() {
             รับพัสดุเข้าสู่ระบบ
           </h1>
           <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5">
+            <form
+              onSubmit={handleSubmit}
+              className="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-5"
+            >
               <div className="md:col-span-5">
                 <label className="text-gray-800 text-sm mb-2 block">
                   รหัสพัสดุ
@@ -212,4 +210,4 @@ function addparcel() {
   );
 }
 
-export default addparcel;
+export default AddParcel;
