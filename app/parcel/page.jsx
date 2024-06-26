@@ -79,7 +79,7 @@ function page() {
                     {parcelData.dataParcel &&
                       Array.isArray(parcelData.dataParcel) &&
                       parcelData.dataParcel.map((parcel) => (
-                        <tr key={parcel.par_id} className="even:bg-gray-50">
+                        <tr key={parcel.par_id} className="even:bg-gray-50 text-center">
                           <td className="px-4 py-2 border">{parcel.par_id}</td>
                           <td className="px-4 py-2 border">
                             {parcel.par_real_id}
@@ -95,10 +95,11 @@ function page() {
                           </td>
                           <td className="px-4 py-2 border w-2/12">
                             {formatDateTime(parcel.pickupsdate)}
-                            
                           </td>
-                          <td className="px-4 py-2 border">
+                          <td className="px-4 py-2 border w-2/12">
+                            <div className="flex items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                             {parcel.Status?.sta_name || "N/A"}
+                            </div>
                           </td>
                         </tr>
                       ))}
