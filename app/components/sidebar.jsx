@@ -32,27 +32,29 @@ function sidebar() {
           Dashboard
         </ListItem>
         </a>
-
+        <a href="../addparcel">
         <ListItem className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2">
           <ListItemPrefix>
             <ShoppingBagIcon className="h-5 w-5" />
           </ListItemPrefix>
           Add parcel
         </ListItem>
-
+        </a>
+        <a href="../parcel">
         <ListItem className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2">
           <ListItemPrefix>
             <InboxIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Inbox
+          ManageParcel
           <ListItemSuffix></ListItemSuffix>
         </ListItem>
+        </a>
         <a href="../owners">
         <ListItem className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2">
           <ListItemPrefix>
             <UserCircleIcon className="h-5 w-5" />
           </ListItemPrefix>
-          Owers
+          Owners
         </ListItem>
         </a>
 
