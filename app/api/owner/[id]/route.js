@@ -44,7 +44,7 @@ export async function PUT(req, { params }){
   try{
     const id = Number(params.id);
     const { ownerName, phone } = await req.json();
-    console.table({id ,ownerName , phone});
+    // console.table({id ,ownerName , phone});
 
     const updateOwner = await prisma.owner.update(
       {
