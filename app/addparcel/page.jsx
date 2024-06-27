@@ -7,18 +7,18 @@ function AddParcel() {
   const [ownData, setOwnData] = useState([]);
   const [staffData, setStaffData] = useState({ staff: [] });
   const [inputValue, setInputValue] = useState("");
+  const [phoneValue, setPhoneValue] = useState(""); // State for phone number input
   const [filteredOwners, setFilteredOwners] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
   const [selectedStaff, setSelectedStaff] = useState("");
-  const [parcelCode, setParcelCode] = useState(""); 
+  const [parcelCode, setParcelCode] = useState("");
 
   useEffect(() => {
-    
     const fetchOwnData = async () => {
       try {
-        const response = await axios.get("/api/owner"); 
-        setOwnData(response.data.owners); 
+        const response = await axios.get("/api/owner");
+        setOwnData(response.data.owners);
       } catch (error) {
         console.error("Error fetching owner data:", error);
       }
@@ -26,8 +26,8 @@ function AddParcel() {
 
     const fetchStaffData = async () => {
       try {
-        const response = await axios.get("/api/staff"); 
-        setStaffData(response.data); 
+        const response = await axios.get("/api/staff");
+        setStaffData(response.data);
       } catch (error) {
         console.error("Error fetching staff data:", error);
       }
@@ -44,13 +44,25 @@ function AddParcel() {
           .filter((owner) =>
             owner.own_name.toLowerCase().includes(inputValue.toLowerCase())
           )
-          .slice(0, 3) // Limit to top 3
+          .slice(0, 3)
       );
     }
   }, [inputValue, ownData]);
 
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+    setSelectedOwner({ id: "", phone: "" });
+    setPhoneValue("");
+  };
+
+  const handlePhoneChange = (e) => {
+    setPhoneValue(e.target.value);
+    setSelectedOwner({ id: "", phone: "" });
+  };
+
   const handleSelectOwner = (id, name, phone) => {
     setInputValue(name);
+    setPhoneValue(phone);
     setSelectedOwner({ id, phone });
     setFilteredOwners([]);
     setDropdownVisible(false);
@@ -71,13 +83,13 @@ function AddParcel() {
         phone: phone,
       });
 
-      console.log("API Response:", response.data); // Log the response to inspect it
+      console.log("API Response:", response.data);
 
       if (response.status === 200 || response.status === 201) {
-        const newOwner = response.data; // Assuming response.data contains the new owner object
+        const newOwner = response.data;
         console.log("New owner has been added:", newOwner);
 
-        return newOwner; // Return the new owner object or the part containing the ID
+        return newOwner;
       } else {
         console.error("Failed to add new owner.");
         return null;
@@ -93,18 +105,18 @@ function AddParcel() {
 
     let ownerId = selectedOwner.id;
     if (!ownerId) {
-      const newOwner = await handleAddOwner(inputValue, selectedOwner.phone);
-      console.log("New owner:", newOwner); // Log the entire newOwner object
+      const newOwner = await handleAddOwner(inputValue, phoneValue);
+      console.log("New owner:", newOwner);
       if (newOwner && newOwner.newOwner && newOwner.newOwner.own_id) {
-        ownerId = newOwner.newOwner.own_id; // Access own_id from newOwner.newOwner
+        ownerId = newOwner.newOwner.own_id;
         console.log("New owner ID:", ownerId);
       }
     }
 
     const parcelData = {
-      Rid: parcelCode, 
+      Rid: parcelCode,
       owner: ownerId,
-      staff: parseInt(selectedStaff), 
+      staff: parseInt(selectedStaff),
       sta_id: 1,
     };
 
@@ -127,6 +139,7 @@ function AddParcel() {
 
   const reset = () => {
     setInputValue("");
+    setPhoneValue("");
     setSelectedOwner({ id: "", phone: "" });
     setSelectedStaff("");
     setParcelCode("");
@@ -193,9 +206,8 @@ function AddParcel() {
                   <input
                     name="own_name"
                     type="text"
-                    required
                     value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
+                    onChange={handleInputChange}
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
@@ -230,14 +242,8 @@ function AddParcel() {
                   <input
                     name="own_phone"
                     type="text"
-                    required
-                    value={selectedOwner.phone}
-                    onChange={(e) =>
-                      setSelectedOwner({
-                        ...selectedOwner,
-                        phone: e.target.value,
-                      })
-                    }
+                    value={phoneValue}
+                    onChange={handlePhoneChange}
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     placeholder="กรอกเบอร์โทรเจ้าของ"
                   />
@@ -252,30 +258,28 @@ function AddParcel() {
                   เพิ่มพัสดุ
                 </button>
               </div>
-              
-                <div className="mt-8">
-                  <button
-                    onClick={reset}
-                    className="w-[100] py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-rose-600 hover:bg-red-700 focus:outline-none"
+
+              <div className="mt-8">
+                <button
+                  onClick={reset}
+                  className="w-[100] py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-rose-600 hover:bg-red-700 focus:outline-none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="size-6 "
                   >
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="size-6 "
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-                      />
-                    </svg>
-                    
-                  </button>
-                </div>
-              
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                    />
+                  </svg>
+                </button>
+              </div>
             </form>
           </div>
         </div>
