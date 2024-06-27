@@ -150,7 +150,7 @@ function AddParcel() {
       <div class="container mx-auto">
         <h2 class="font-semibold text-xl text-gray-600">Responsive Form</h2>
 
-        <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+        <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6 h-[75vh]">
           <h1 className="text-center text-2xl font-bold">
             รับพัสดุเข้าสู่ระบบ
           </h1>
