@@ -9,6 +9,9 @@ export async function GET() {
         Staff: true,
         Status: true, // ระบุให้รวมข้อมูลจาก relation Owner
       },
+      orderBy: {
+        par_id:'desc'
+      }
     });
 
     const parcelsWithPhone = dataParcel.map((parcel) => {
@@ -27,6 +30,7 @@ export async function GET() {
     return Response.json({ error }, { status: 500 });
   }
 }
+
 
 export async function POST(req) {
   try {
