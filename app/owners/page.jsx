@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -8,6 +8,17 @@ function Owners() {
   const [ownerData, setOwnerData] = useState([]);
   const [showAddModal, setAddShowModal] = useState(false);
   const [showEditModal, setEditShowModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredOwners = Array.isArray(ownerData)
+  ? ownerData.filter((owner) =>
+      owner.own_name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  : [];
 
   const [newOwner, setNewOwner] = useState({
     name: "",
@@ -24,7 +35,6 @@ function Owners() {
     try {
       const res = await axios.get("/api/owner");
       setOwnerData(res.data);
-      
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -32,7 +42,7 @@ function Owners() {
 
   const handleEditOwner = (id) => {
     const owner = ownerData.owners.find((owner) => owner.own_id === id);
-    console.log('Editing owner:', owner); 
+    console.log("Editing owner:", owner);
     if (owner) {
       setEditOwner({
         id: owner.own_id,
@@ -72,8 +82,6 @@ function Owners() {
 
   useEffect(() => {
     fetchData();
-
-    
   }, []);
 
   const addOwner = async (newOwnerData) => {
@@ -122,7 +130,7 @@ function Owners() {
               title: "ลบออกเรียบร้อย!",
               text: "ไฟล์ของคุณได้ถูกลบออกไปแล้ว.",
               icon: "success",
-              confirmButtonColor: "#60d0ac"
+              confirmButtonColor: "#60d0ac",
             });
             fetchData(); // GET
           } else {
@@ -143,274 +151,311 @@ function Owners() {
 
   return (
     <AuthWrapper>
-    <div className="p-6 bg-gray-100 flex justify-center w-full">
-    <div class="container mx-auto">
-        <h1 className="text-xl text-gray-500 font-semibold dark:text-black mt-[-20px]">
-          Owner Manager
-        </h1>
-      <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white w-[100%] h-[90%] ">
-        <div className="m-2 mb-4">
-          <button
-            className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
-            onClick={() => setAddShowModal(true)}
-          >
-            เพิ่มชื่อ
-          </button>
-        </div>
+      <div className="p-6 bg-gray-100 flex justify-center w-full">
+        <div class="container mx-auto">
+          <h1 className="text-xl text-gray-500 font-semibold dark:text-black mt-[-20px]">
+            Owner Manager
+          </h1>
+          <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white w-[100%] h-[90%] ">
+            <div className="m-2 mb-4">
+              <button
+                className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
+                onClick={() => setAddShowModal(true)}
+              >
+                เพิ่มชื่อ
+              </button>
+            </div>
 
-        <h2 className="text-lg font-semibold mb-4">Owners Table</h2>
+            <div className="flex w-full mb-3 justify-end gap-2 relative">
+              <div>
+                <h1 className="mt-2">ค้นหาชื่อเจ้าของ : </h1>
+              </div>
 
-        <div className="table-container h-[540px] overflow-y-auto relative">
-          <table className="data-table min-w-full border-collapse">
-            <thead className="bg-gray-100 sticky top-[-3px]">
-              <tr>
-                <th scope="col" className="px-4 py-3 border w-1/12">
-                  ID
-                </th>
-                <th scope="col" className="px-4 py-3 border w-4/12">
-                  Name
-                </th>
-                <th scope="col" className="px-4 py-3 border w-4/12">
-                  Phone
-                </th>
-                <th scope="col" className="px-4 py-3 border w-3/12">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {ownerData.owners &&
-                ownerData.owners.map((owner) => (
-                  <tr key={owner.own_id} className="even:bg-gray-50">
-                    <td className="px-2 py-2 border w-1/12">{owner.own_id}</td>
-                    <td className="px-4 py-2 border w-4/12">
-                      {owner.own_name}
-                    </td>
-                    <td className="px-4 py-2 border w-4/12">
-                      {owner.own_phone}
-                    </td>
-                    <td className="text-center p-2 border px-2 gap-2 w-3/12 ">
-                      <button
-                        className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
-                        onClick={() => handleEditOwner(owner.own_id)}
-                      >
-                        แก้ไขชื่อ
-                      </button>
-                      <button
-                        onClick={() => deleteOwner(owner.own_id)}
-                        className="ml-1 bg-rose-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md"
-                      >
-                        ลบชื่อ
-                      </button>
-                    </td>
+              <div class="relative">
+                <input
+                  type="search"
+                  class="focus:border-blue-500 focus:border-2 relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                  placeholder="Search"
+                  aria-label="Search"
+                  id="exampleFormControlInput2"
+                  aria-describedby="button-addon2"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+                <span
+                  class="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
+                  id="button-addon2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                    />
+                  </svg>
+                </span>
+              </div>
+            </div>
+
+            <h2 className="text-lg font-semibold mb-4">Owners Table</h2>
+
+            <div className="table-container h-[540px] overflow-y-auto relative">
+              <table className="data-table min-w-full border-collapse">
+                <thead className="bg-gray-100 sticky top-[-3px]">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 border w-1/12">
+                      ID
+                    </th>
+                    <th scope="col" className="px-4 py-3 border w-4/12">
+                      Name
+                    </th>
+                    <th scope="col" className="px-4 py-3 border w-4/12">
+                      Phone
+                    </th>
+                    <th scope="col" className="px-4 py-3 border w-3/12">
+                      Action
+                    </th>
                   </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/*edit modal*/}
-      {showEditModal && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
-          <div className="relative p-4 w-full max-w-[550px]">
-            <div className="relative bg-white rounded-lg shadow p-4">
-              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                  Edit Owner
-                </h3>
-                <button
-                  type="button"
-                  className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
-                  onClick={() => setEditShowModal(false)}
-                >
-                  <svg
-                    className="w-3 h-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 14 14"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                    />
-                  </svg>
-                  <span className="sr-only">Close modal</span>
-                </button>
-              </div>
-              <form className="p-4 md:p-5" onSubmit={handleInsertOwner}>
-                <div className="grid gap-4 mb-4 grid-cols-2">
-                  <div className="col-span-2">
-                    <label
-                      htmlFor="name"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                    >
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="Type owner name"
-                      required
-                      value={editOwner.name}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="col-span-2">
-                    <label
-                      htmlFor="phone"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                    >
-                      Phone
-                    </label>
-                    <input
-                      type="text"
-                      name="phone"
-                      id="phone"
-                      className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="Type owner phone"
-                      required
-                      value={editOwner.phone}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="text-white inline-flex items-center bg-[#60d0ac] hover:bg-[#469e80] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                >
-                  <svg
-                    className="me-1 -ms-1 w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Update Owner
-                </button>
-              </form>
+                </thead>
+                <tbody>
+                  {filteredOwners.map((owner) => (
+                      <tr key={owner.own_id} className="even:bg-gray-50">
+                        <td className="px-2 py-2 border w-1/12">
+                          {owner.own_id}
+                        </td>
+                        <td className="px-4 py-2 border w-4/12">
+                          {owner.own_name}
+                        </td>
+                        <td className="px-4 py-2 border w-4/12">
+                          {owner.own_phone}
+                        </td>
+                        <td className="text-center p-2 border px-2 gap-2 w-3/12 ">
+                          <button
+                            className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
+                            onClick={() => handleEditOwner(owner.own_id)}
+                          >
+                            แก้ไขชื่อ
+                          </button>
+                          <button
+                            onClick={() => deleteOwner(owner.own_id)}
+                            className="ml-1 bg-rose-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md"
+                          >
+                            ลบชื่อ
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
-      )}
 
-      {/*add modal*/}
-      {showAddModal && (
-        <div
-          id="crud-modal"
-          tabIndex="-1"
-          aria-hidden="true"
-          className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75"
-        >
-          <div className="relative p-4 w-full max-w-[550px]">
-            <div className="relative bg-white rounded-lg shadow p-4">
-              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                  Create New Owner
-                </h3>
-                <button
-                  type="button"
-                  className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
-                  onClick={() => setAddShowModal(false)}
-                >
-                  <svg
-                    className="w-3 h-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 14 14"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                    />
-                  </svg>
-                  <span className="sr-only">Close modal</span>
-                </button>
-              </div>
-              <form className="p-4 md:p-5" onSubmit={handleAddOwner}>
-                <div className="grid gap-4 mb-4 grid-cols-2">
-                  <div className="col-span-2">
-                    <label
-                      htmlFor="name"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+          {/*edit modal*/}
+          {showEditModal && (
+            <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
+              <div className="relative p-4 w-full max-w-[550px]">
+                <div className="relative bg-white rounded-lg shadow p-4">
+                  <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
+                      Edit Owner
+                    </h3>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
+                      onClick={() => setEditShowModal(false)}
                     >
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="Type owner name"
-                      required
-                      value={newOwner.name}
-                      onChange={(e) =>
-                        setNewOwner({ ...newOwner, name: e.target.value })
-                      }
-                    />
+                      <svg
+                        className="w-3 h-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 14 14"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                        />
+                      </svg>
+                      <span className="sr-only">Close modal</span>
+                    </button>
                   </div>
-                  <div className="col-span-2">
-                    <label
-                      htmlFor="phone"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                  <form className="p-4 md:p-5" onSubmit={handleInsertOwner}>
+                    <div className="grid gap-4 mb-4 grid-cols-2">
+                      <div className="col-span-2">
+                        <label
+                          htmlFor="name"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                        >
+                          Name
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          id="name"
+                          className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          placeholder="Type owner name"
+                          required
+                          value={editOwner.name}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <label
+                          htmlFor="phone"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                        >
+                          Phone
+                        </label>
+                        <input
+                          type="text"
+                          name="phone"
+                          id="phone"
+                          className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          placeholder="Type owner phone"
+                          required
+                          value={editOwner.phone}
+                          onChange={handleInputChange}
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      className="text-white inline-flex items-center bg-[#60d0ac] hover:bg-[#469e80] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                     >
-                      Phone
-                    </label>
-                    <input
-                      type="text"
-                      name="phone"
-                      id="phone"
-                      className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="Type owner phone"
-                      required
-                      value={newOwner.phone}
-                      onChange={(e) =>
-                        setNewOwner({ ...newOwner, phone: e.target.value })
-                      }
-                    />
-                  </div>
+                      <svg
+                        className="me-1 -ms-1 w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Update Owner
+                    </button>
+                  </form>
                 </div>
-                <button
-                  type="submit"
-                  className="text-white inline-flex items-center bg-[#60d0ac] hover:bg-[#469e80] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                >
-                  <svg
-                    className="me-1 -ms-1 w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Add new owner
-                </button>
-              </form>
+              </div>
             </div>
-          </div>
-          
+          )}
+
+          {/*add modal*/}
+          {showAddModal && (
+            <div
+              id="crud-modal"
+              tabIndex="-1"
+              aria-hidden="true"
+              className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75"
+            >
+              <div className="relative p-4 w-full max-w-[550px]">
+                <div className="relative bg-white rounded-lg shadow p-4">
+                  <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
+                      Create New Owner
+                    </h3>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
+                      onClick={() => setAddShowModal(false)}
+                    >
+                      <svg
+                        className="w-3 h-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 14 14"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                        />
+                      </svg>
+                      <span className="sr-only">Close modal</span>
+                    </button>
+                  </div>
+                  <form className="p-4 md:p-5" onSubmit={handleAddOwner}>
+                    <div className="grid gap-4 mb-4 grid-cols-2">
+                      <div className="col-span-2">
+                        <label
+                          htmlFor="name"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                        >
+                          Name
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          id="name"
+                          className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          placeholder="Type owner name"
+                          required
+                          value={newOwner.name}
+                          onChange={(e) =>
+                            setNewOwner({ ...newOwner, name: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <label
+                          htmlFor="phone"
+                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                        >
+                          Phone
+                        </label>
+                        <input
+                          type="text"
+                          name="phone"
+                          id="phone"
+                          className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          placeholder="Type owner phone"
+                          required
+                          value={newOwner.phone}
+                          onChange={(e) =>
+                            setNewOwner({ ...newOwner, phone: e.target.value })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="submit"
+                      className="text-white inline-flex items-center bg-[#60d0ac] hover:bg-[#469e80] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                    >
+                      <svg
+                        className="me-1 -ms-1 w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Add new owner
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      )}
       </div>
-    </div>
     </AuthWrapper>
   );
 }
