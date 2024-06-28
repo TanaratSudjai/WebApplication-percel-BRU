@@ -4,7 +4,11 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const owners = await prisma.owner.findMany();
+    const owners = await prisma.owner.findMany({
+      orderBy: {
+        own_id:'desc'
+      }
+    });
     return Response.json({ message: "Get Api Owner !", owners });
   } catch (error) {
     return Response.json({ error }, { status: 500 });
