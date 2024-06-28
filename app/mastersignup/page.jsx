@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import AuthWrapper from "../components/authComponents";
 
 function MasterSignup() {
   const [formData, setFormData] = useState({
@@ -55,6 +56,7 @@ function MasterSignup() {
   };
 
   return (
+    <AuthWrapper>
     <div className="mx-auto mt-10 h-[100%] w-full flex flex-col items-center font-[sans-serif]">
       <Image src="/logoreal.png" width={300} height={300} alt="Logo" />
 
@@ -188,6 +190,7 @@ function MasterSignup() {
         </form>
       </div>
     </div>
+    </AuthWrapper>
   );
 }
 

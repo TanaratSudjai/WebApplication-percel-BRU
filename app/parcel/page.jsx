@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-
+import AuthWrapper from "../components/authComponents";
 function page() {
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
 
@@ -39,6 +39,7 @@ function page() {
   };
 
   return (
+    <AuthWrapper>
     <div className="p-6 bg-gray-100 flex justify-center w-full">
       <div class="container mx-auto">
         <h2 class="font-semibold text-xl text-gray-600">Responsive Form</h2>
@@ -111,6 +112,7 @@ function page() {
         </div>
       </div>
     </div>
+    </AuthWrapper>
   );
 }
 
