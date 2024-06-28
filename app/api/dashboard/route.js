@@ -42,7 +42,7 @@ export async function GET() {
     const unitDelivers = await prisma.delivered.count();
     
 
-    console.table({unitStaff,unitOwners,unitParcels,unitParcelsSuccess, unitDelivers})
+    // console.table({unitStaff,unitOwners,unitParcels,unitParcelsSuccess, unitDelivers})
 
     // console.table(staff);
     // console.table(owners);
@@ -56,6 +56,11 @@ export async function GET() {
       status,
       parcels:updatedParcels,
       delivers,
+      unitStaff,
+      unitOwners,
+      unitParcels,
+      unitParcelsSuccess,
+      unitDelivers
     });
   } catch (error) {
     return Response.json(
