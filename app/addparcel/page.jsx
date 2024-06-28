@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import AuthWrapper from "../components/authComponents";
 
 function AddParcel() {
   const [ownData, setOwnData] = useState([]);
@@ -119,6 +120,7 @@ function AddParcel() {
   };
 
   return (
+    <AuthWrapper>
     <div className="p-6 bg-gray-100 flex justify-center w-full">
       <div class="container mx-auto">
         <h2 class="font-semibold text-xl text-gray-600">Responsive Form</h2>
@@ -251,6 +253,7 @@ function AddParcel() {
         </div>
       </div>
     </div>
+    </AuthWrapper>
   );
 }
 
