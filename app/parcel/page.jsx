@@ -2,20 +2,23 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import AuthWrapper from "../components/authComponents";
+import Swal from "sweetalert2";
+
 function page() {
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
   const [searchQuery, setSearchQuery] = useState("");
 
+  const fetchParcelData = async () => {
+    try {
+      const response = await axios.get("/api/parcel"); // Replace with your API endpoint
+      const data = response.data;
+      setParcelData(data); // Ensure data matches the structure of your response
+    } catch (error) {
+      console.error("Error fetching parcel data:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchParcelData = async () => {
-      try {
-        const response = await axios.get("/api/parcel"); // Replace with your API endpoint
-        const data = response.data;
-        setParcelData(data); // Ensure data matches the structure of your response
-      } catch (error) {
-        console.error("Error fetching parcel data:", error);
-      }
-    };
 
     fetchParcelData();
   }, []);
@@ -49,6 +52,53 @@ function page() {
       )
     : [];
 
+  const deleteParcel = async (parcelId) => {
+    Swal.fire({
+      title: "Are you sure you want to delete this?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#60d0ac",
+      cancelButtonColor: "#e11d48",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete(`/api/parcel/${parcelId}`);
+          if (response.status === 200) {
+            setParcelData((prevData) => ({
+              ...prevData,
+              parcels: prevData.dataParcel.filter(
+                (parcel) => parcel.par_id !== parcelId
+              ),
+            }));
+
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
+              confirmButtonColor: "#60d0ac",
+            });
+            fetchParcelData(); // Refresh data
+          } else {
+            fetchParcelData();
+            throw new Error("Failed to delete parcel");
+            
+          }
+        } catch (error) {
+          console.error("Error deleting parcel:", error);
+          fetchParcelData();
+
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to delete parcel.",
+            icon: "error",
+          });
+        }
+      }
+    });
+  };
+
   return (
     <AuthWrapper>
       <div className="p-6 bg-gray-100 flex justify-center w-full">
@@ -57,14 +107,14 @@ function page() {
 
           <div className="h-[90%] bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
             <div className="flex w-full mb-3 justify-end gap-2 relative">
-            <div>
-              <h1 className="mt-2">ค้นหาชื่อเจ้าของ : </h1>
+              <div>
+                <h1 className="mt-2">ค้นหาชื่อเจ้าของ : </h1>
               </div>
-            
+
               <div class="relative">
                 <input
                   type="search"
-                  class="focus:border-blue-500 focus:border-2 relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                  class="focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
                   placeholder="Search"
                   aria-label="Search"
                   id="exampleFormControlInput2"
@@ -102,7 +152,7 @@ function page() {
                     <thead className="bg-gray-100">
                       <tr>
                         <th scope="col" className="px-4 py-2 border">
-                          ID
+                          Action
                         </th>
                         <th scope="col" className="px-4 py-2 border">
                           Real ID
@@ -130,7 +180,17 @@ function page() {
                           key={parcel.par_id}
                           className="even:bg-gray-50 text-center"
                         >
-                          <td className="px-4 py-2 border">{parcel.par_id}</td>
+                          <td className="px-4 py-2 border">
+                            
+                            <div className="flex gap-2 justify-center">
+                              <button
+                                onClick={() => deleteParcel(parcel.par_id)}
+                                className="w-[100] py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-rose-600 hover:bg-red-700 focus:outline-none"
+                              ></button>
+                            
+                              <button className="w-[100] py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-amber-600 hover:bg-red-700 focus:outline-none"></button>
+                            </div>
+                          </td>
                           <td className="px-4 py-2 border">
                             {parcel.par_real_id}
                           </td>

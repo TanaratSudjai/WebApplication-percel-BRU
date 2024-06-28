@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import AuthWrapper from "../components/authComponents";
 
 function Owners() {
-  const [ownerData, setOwnerData] = useState([]);
+  const [ownerData, setOwnerData] = useState({ owners: [] });
   const [showAddModal, setAddShowModal] = useState(false);
   const [showEditModal, setEditShowModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,11 +14,11 @@ function Owners() {
     setSearchQuery(e.target.value);
   };
 
-  const filteredOwners = Array.isArray(ownerData)
-  ? ownerData.filter((owner) =>
-      owner.own_name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  : [];
+  const filteredOwners = Array.isArray(ownerData.owners)
+    ? ownerData.owners.filter((owner) =>
+        owner.own_name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
   const [newOwner, setNewOwner] = useState({
     name: "",
@@ -157,24 +157,20 @@ function Owners() {
             Owner Manager
           </h1>
           <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white w-[100%] h-[90%] ">
-            <div className="m-2 mb-4">
-              <button
-                className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
-                onClick={() => setAddShowModal(true)}
-              >
-                เพิ่มชื่อ
-              </button>
-            </div>
-
-            <div className="flex w-full mb-3 justify-end gap-2 relative">
-              <div>
-                <h1 className="mt-2">ค้นหาชื่อเจ้าของ : </h1>
+            <div className="flex w-full mb-3 justify-between gap-2 relative">
+              <div className="m-2 mb-4">
+                <button
+                  className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
+                  onClick={() => setAddShowModal(true)}
+                >
+                  เพิ่มชื่อ
+                </button>
               </div>
 
-              <div class="relative">
+              <div class="relative mt-2">
                 <input
                   type="search"
-                  class="focus:border-blue-500 focus:border-2 relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                  class="focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
                   placeholder="Search"
                   aria-label="Search"
                   id="exampleFormControlInput2"
@@ -225,32 +221,32 @@ function Owners() {
                 </thead>
                 <tbody>
                   {filteredOwners.map((owner) => (
-                      <tr key={owner.own_id} className="even:bg-gray-50">
-                        <td className="px-2 py-2 border w-1/12">
-                          {owner.own_id}
-                        </td>
-                        <td className="px-4 py-2 border w-4/12">
-                          {owner.own_name}
-                        </td>
-                        <td className="px-4 py-2 border w-4/12">
-                          {owner.own_phone}
-                        </td>
-                        <td className="text-center p-2 border px-2 gap-2 w-3/12 ">
-                          <button
-                            className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
-                            onClick={() => handleEditOwner(owner.own_id)}
-                          >
-                            แก้ไขชื่อ
-                          </button>
-                          <button
-                            onClick={() => deleteOwner(owner.own_id)}
-                            className="ml-1 bg-rose-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md"
-                          >
-                            ลบชื่อ
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    <tr key={owner.own_id} className="even:bg-gray-50">
+                      <td className="px-2 py-2 border w-1/12">
+                        {owner.own_id}
+                      </td>
+                      <td className="px-4 py-2 border w-4/12">
+                        {owner.own_name}
+                      </td>
+                      <td className="px-4 py-2 border w-4/12">
+                        {owner.own_phone}
+                      </td>
+                      <td className="text-center p-2 border px-2 gap-2 w-3/12 ">
+                        <button
+                          className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
+                          onClick={() => handleEditOwner(owner.own_id)}
+                        >
+                          แก้ไขชื่อ
+                        </button>
+                        <button
+                          onClick={() => deleteOwner(owner.own_id)}
+                          className="ml-1 bg-rose-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md"
+                        >
+                          ลบชื่อ
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
