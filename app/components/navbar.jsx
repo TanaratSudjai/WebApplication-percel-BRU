@@ -11,7 +11,7 @@ function navbar() {
   return (
     <div className="h-[15%] w-full sticky  ">
       <div className="w-full items-center flex justify-between p-3 ml-5">
-          <Image src="/realogo.png" width={200} height={200}/>
+          <Image src="/realogo.png" width={200} height={200} alt=""/>
       </div>
       <div>
        <hr />
