@@ -1,6 +1,19 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import AuthWrapper from "../components/authComponents";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
 function DashboardPage() {
   const [dashboardData, setDashboardData] = useState([]);
@@ -25,7 +38,7 @@ function DashboardPage() {
     unitOwners,
     unitParcels,
     unitParcelsSuccess,
-    unitDelivers
+    unitDelivers,
   } = dashboardData;
 
   if (!dashboardData) {
@@ -36,33 +49,79 @@ function DashboardPage() {
     );
   }
 
+  const data = [
+    {
+      name: "ข้อมูลทั้งหมด",
+      ส่งเจ้าของเเล้ว: unitParcelsSuccess,
+      ยังไม่ส่งคืน: unitParcels,
+      พัสดุทั้งหมด: sumParcel,
+      เจ้าของพัสดุ: unitOwners,
+    },
+  ];
+
   return (
     <AuthWrapper>
-      <div className="container mx-auto p-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold">จำนวนพนักงาน</h2>
-            <p className="text-2xl">{unitStaff}</p>
+      <div className="container mx-auto p-4 w-full h-[100vh] border">
+        <div className="grid grid-cols-3 gap-4">
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">จำนวนพนักงาน</h2>
+              <p className="text-md">{unitStaff}</p>
+            </div>
+            <div className="bg-blue-200 mt-2 h-2 rounded"></div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold">จำนวนเจ้าของพัสดุ</h2>
-            <p className="text-2xl">{unitOwners}</p>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">จำนวนเจ้าของพัสดุ</h2>
+              <p className="text-md">{unitOwners}</p>
+            </div>
+            <div className="bg-green-200 mt-2 h-2 rounded"></div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold">รายการรับพัสดุทั้งหมด</h2>
-            <p className="text-2xl">{sumParcel}</p>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">รายการรับพัสดุทั้งหมด</h2>
+              <p className="text-md">{sumParcel}</p>
+            </div>
+            <div className="bg-red-200 mt-2 h-2 rounded"></div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold">พัสดุที่ยังไม่ได้ส่งเจ้าของ</h2>
-            <p className="text-2xl">{sumParcel}</p>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">พัสดุที่ยังไม่ได้ส่งเจ้าของ</h2>
+              <p className="text-md">{unitParcels}</p>
+            </div>
+            <div className="bg-yellow-200 mt-2 h-2 rounded"></div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold">พัสดุที่ส่งเจ้าของเเล้ว</h2>
-            <p className="text-2xl">{unitParcelsSuccess}</p>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">พัสดุที่ส่งเจ้าของเเล้ว</h2>
+              <p className="text-md">{unitParcelsSuccess}</p>
+            </div>
+            <div className="bg-purple-200 mt-2 h-2 rounded"></div>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold">รายการพัสดุส่งคืนเจ้าของ</h2>
-            <p className="text-2xl">{unitDelivers}</p>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">รายการพัสดุส่งคืนเจ้าของ</h2>
+              <p className="text-md">{unitDelivers}</p>
+            </div>
+            <div className="bg-orange-200 mt-2 h-2 rounded"></div>
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <div className="h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="ส่งเจ้าของเเล้ว" fill="#00C49F" barSize={75} />
+                <Bar dataKey="ยังไม่ส่งคืน" fill="#f73030" barSize={75} />
+                <Bar dataKey="พัสดุทั้งหมด" fill="#5dbfe3" barSize={75} />
+                <Bar dataKey="เจ้าของพัสดุ" fill="#ffa341" barSize={75} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
