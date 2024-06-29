@@ -148,11 +148,9 @@ function AddParcel() {
 
   return (
     <AuthWrapper>
-    <div className="p-6 bg-gray-100 flex justify-center w-full">
+    <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
       <div class="container mx-auto">
-        <h2 class="font-semibold text-xl text-gray-600">Responsive Form</h2>
-
-        <div className="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6 h-[80vh]">
+        <div className="bg-white rounded p-4 px-4 md:p-8 mb-6 h-[80vh]">
           <h1 className="text-center text-2xl font-bold">
             รับพัสดุเข้าสู่ระบบ
           </h1>

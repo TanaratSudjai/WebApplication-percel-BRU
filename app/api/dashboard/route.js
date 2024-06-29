@@ -11,23 +11,7 @@ export async function GET() {
     const staff = await prisma.staff.findMany();
     const owners = await prisma.owner.findMany();
     const status = await prisma.status.findMany();
-    const parcels = await prisma.parcel.findMany
-
-      //   where: {
-      //     pickupsdate: {
-      //       gte: today,
-      //       lte: next14Days,
-      //     },
-      //   },
-      //   include: {
-      //     Owner: true,
-      //     Staff: true,
-      //     Status: true,
-      //     Delivered: true,
-      //   },
-      // }
-      
-      ();
+    const parcels = await prisma.parcel.findMany();
     const delivers = await prisma.delivered.findMany();
 
     const updatedParcels = parcels.map(parcel => ({
@@ -37,7 +21,30 @@ export async function GET() {
       staff_name:staff.find(staff => staff.id === parcel.staff_id)?.staff_name,
     }));
 
+
+    const unitStaff = await prisma.staff.count();
+    const unitOwners = await prisma.owner.count();
+    const unitParcels = await prisma.parcel.count(
+      {
+        where:{
+          sta_id:1
+        }
+      }
+    );
+    const unitParcelsSuccess = await prisma.parcel.count(
+      {
+        where:{
+          sta_id:2
+        }
+      }
+    );
+
+    const sumParcel = await prisma.parcel.count();
+    const unitDelivers = await prisma.delivered.count();
     
+
+    // console.table({unitStaff,unitOwners,unitParcels,unitParcelsSuccess, unitDelivers})
+
     // console.table(staff);
     // console.table(owners);
     // console.table(status);
@@ -50,6 +57,12 @@ export async function GET() {
       status,
       parcels:updatedParcels,
       delivers,
+      sumParcel,
+      unitStaff,
+      unitOwners,
+      unitParcels,
+      unitParcelsSuccess,
+      unitDelivers
     });
   } catch (error) {
     return Response.json(

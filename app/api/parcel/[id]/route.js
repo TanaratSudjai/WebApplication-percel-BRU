@@ -39,9 +39,10 @@ export async function DELETE(req, { params }) {
 
 export async function PUT(req, { params }) {
   try {
+
     const id = Number(params.id);
+
     const { real_id, owner, staff, status } = await req.json();
-    console.table({real_id, owner, staff, status});
 
     const updateParcel = await prisma.parcel.update({
       where: { par_id: id },
@@ -56,6 +57,36 @@ export async function PUT(req, { params }) {
       message: "Api update Parcel Status 200 Ok ",
       updateParcel,
     });
+
+  } catch (error) {
+    return Response.json(
+      {
+        error,
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+
+export async function PATCH(req, { params }) {
+  try {
+
+    const id = Number(params.id);
+    const status = 2 ; 
+    const updateParcel = await prisma.parcel.update({
+      where: { par_id: id },
+      data: {
+        sta_id: status,
+      }
+    });
+    return Response.json({
+      message: "Api update Parcel Status 200 Ok ",
+      updateParcel,
+    });
+
   } catch (error) {
     return Response.json(
       {

@@ -35,3 +35,29 @@ export async function DELETE(req, { params }) {
     return Response.json({ error }, { status: 500 });
   }
 }
+
+
+export async function PUT(req, {params}){
+  try{
+
+    const id = Number(params.id);
+    const updateStatus = await prisma.delivered.update(
+      {
+        where:{del_id:id},
+        data:{
+          sta_id:2
+        }
+      }
+    );
+
+  }catch(error){
+    return Response.json(
+      {
+        error
+      },
+      {
+        status:500
+      }
+    )
+  }
+}

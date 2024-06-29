@@ -2,7 +2,6 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
 import React from "react";
 import {
   ListItem,
@@ -14,15 +13,17 @@ import {
   PresentationChartBarIcon,
   ShoppingBagIcon,
   UserCircleIcon,
-  Cog6ToothIcon,
+  DocumentTextIcon,
   InboxIcon,
   PowerIcon,
+  HomeIcon
 } from "@heroicons/react/24/solid";
 
 function sidebar() {
   const { data: session, status } = useSession();
+
   return (
-    <div className="h-[calc(95vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 ">
+    <div className="h-[calc(80vh-2rem)] w-full max-w-[20rem] p-4">
       <div className="mt-2 ml-2 flex justify-center items-center gap-2">
         {session ? (
           <div className="flex justify-center items-center gap-2">
@@ -72,12 +73,14 @@ function sidebar() {
           </ListItem>
         </a>
 
-        <ListItem className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2">
-          <ListItemPrefix>
-            <Cog6ToothIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          Settings
-        </ListItem>
+        <a href="/welcome">
+          <ListItem className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2">
+            <ListItemPrefix>
+              <HomeIcon className="h-5 w-5" />
+            </ListItemPrefix>
+            หน้าเเรก
+          </ListItem>
+        </a>
 
         <ListItem
           className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2"
