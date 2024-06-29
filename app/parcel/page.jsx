@@ -40,14 +40,12 @@ function page() {
 
   return (
     <AuthWrapper>
-    <div className="p-6 bg-gray-100 flex justify-center w-full">
+    <div className="p-6 bg-white h-[100vh] border flex justify-center w-full">
       <div class="container mx-auto">
-        <h2 class="font-semibold text-xl text-gray-600">Responsive Form</h2>
-
-        <div className="h-[90%] bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-          <div class="shadow-lg rounded-lg overflow-hidden mx-4 md:mx-10">
+        <div className="">
+          <div class="rounded-lg overflow-hidden mx-4 md:mx-10">
             {/* Parcels Table */}
-            <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white">
+            <div className="dashboard-container rounded-xl border p-4 bg-white">
               <h2 className="text-lg font-semibold mb-4">Parcels Table</h2>
               <div className="table-container h-[500px] overflow-y-auto">
                 <table className="data-table min-w-full border-collapse">

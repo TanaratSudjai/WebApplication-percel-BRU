@@ -39,6 +39,7 @@ export async function GET() {
       }
     );
 
+    const sumParcel = await prisma.parcel.count();
     const unitDelivers = await prisma.delivered.count();
     
 
@@ -56,6 +57,7 @@ export async function GET() {
       status,
       parcels:updatedParcels,
       delivers,
+      sumParcel,
       unitStaff,
       unitOwners,
       unitParcels,

@@ -143,12 +143,9 @@ function Owners() {
 
   return (
     <AuthWrapper>
-    <div className="p-6 bg-gray-100 flex justify-center w-full">
+    <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
     <div class="container mx-auto">
-        <h1 className="text-xl text-gray-500 font-semibold dark:text-black mt-[-20px]">
-          Owner Manager
-        </h1>
-      <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white w-[100%] h-[90%] ">
+      <div className="dashboard-container rounded-xl  p-4 bg-white w-[100%] h-[90%] ">
         <div className="m-2 mb-4">
           <button
             className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
