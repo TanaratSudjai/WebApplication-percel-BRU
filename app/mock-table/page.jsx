@@ -1,17 +1,27 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import AuthWrapper from "../components/authComponents";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
 function DashboardPage() {
-  const [dashboardData, setDashboardData] = useState(null);
+  const [dashboardData, setDashboardData] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await fetch("/api/dashboard");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
         const data = await response.json();
         setDashboardData(data);
       } catch (error) {
@@ -22,219 +32,96 @@ function DashboardPage() {
     fetchData();
   }, []);
 
+  const {
+    sumParcel,
+    unitStaff,
+    unitOwners,
+    unitParcels,
+    unitParcelsSuccess,
+    unitDelivers,
+  } = dashboardData;
+
   if (!dashboardData) {
     return (
-      <div className="mx-auto flex h-[100vh] justify-center items-center w-full text-2xl">
-        Loading...
+      <div className="mx-auto flex h-[90vh] justify-center items-center w-full text-2xl">
+        กำลังโหลดข้อมูล
       </div>
     );
   }
 
+  const data = [
+    {
+      name: "ข้อมูลทั้งหมด",
+      ส่งเจ้าของเเล้ว: unitParcelsSuccess,
+      ยังไม่ส่งคืน: unitParcels,
+      พัสดุทั้งหมด: sumParcel,
+      เจ้าของพัสดุ: unitOwners,
+    },
+  ];
+
   return (
     <AuthWrapper>
-      <div className="m-2 font-sans w-full">
-        <div className="flex gap-4 mt-3">
-          <div className="h-[90vh] overflow-y-auto w-full">
-            <div className="grid grid-cols-2 gap-4">
-              {/* Staff Table */}
-              <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white">
-                <h2 className="text-lg font-semibold mb-4">Staff Table</h2>
-                <div className="table-container h-[150px] overflow-y-auto">
-                  <table className="data-table min-w-full border-collapse">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th scope="col" className="px-4 py-2 border">
-                          Name
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          email
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Phone
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {dashboardData.staff.map((staff) => (
-                        <tr key={staff.staff_id} className="even:bg-gray-50">
-                          <td className="px-4 py-2 border">
-                            {staff.staff_name}
-                          </td>
-                          <td className="px-4 py-2 border">{staff.email}</td>
-                          <td className="px-4 py-2 border">
-                            {staff.staff_phone}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Status Table */}
-              <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white">
-                <h2 className="text-lg font-semibold mb-4">Status Table</h2>
-                <div className="table-container overflow-y-auto">
-                  <table className="data-table min-w-full border-collapse">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th scope="col" className="px-4 py-2 border">
-                          ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Name
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {dashboardData.status.map((status) => (
-                        <tr key={status.sta_id} className="even:bg-gray-50">
-                          <td className="px-4 py-2 border">{status.sta_id}</td>
-                          <td className="px-4 py-2 border">
-                            {status.sta_name}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Parcels Table */}
-              <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white">
-                <h2 className="text-lg font-semibold mb-4">Parcels Table</h2>
-                <div className="table-container h-[300px] overflow-y-auto">
-                  <table className="data-table min-w-full border-collapse">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th scope="col" className="px-4 py-2 border">
-                          ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Real ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Owner ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Staff ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Pickup Date
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Status ID
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {dashboardData.parcels.map((parcel) => (
-                        <tr key={parcel.par_id} className="even:bg-gray-50">
-                          <td className="px-4 py-2 border">{parcel.par_id}</td>
-                          <td className="px-4 py-2 border">
-                            {parcel.par_real_id}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {parcel.own_name}
-                          </td>
-                          <td className="px-4 py-2 border w-3/12">
-                            {parcel.staff_name}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {parcel.pickupsdate}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {parcel.sta_name}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Delivers Table */}
-              <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white">
-                <h2 className="text-lg font-semibold mb-4">Delivers Table</h2>
-                <div className="table-container h-[360px] overflow-y-auto">
-                  <table className="data-table min-w-full border-collapse">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th scope="col" className="px-4 py-2 border">
-                          DELIVERS ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          PARCEL ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          OWNER ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          DATE/TIME
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          NAME
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {dashboardData.delivers.map((delivered) => (
-                        <tr key={delivered.del_id} className="even:bg-gray-50">
-                          <td className="px-4 py-2 border">
-                            {delivered.del_id}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {delivered.par_id}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {delivered.own_id}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {delivered.deliverydate}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {delivered.deliver_name}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Owners Table */}
-              <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white">
-                <h2 className="text-lg font-semibold mb-4">Owners Table</h2>
-                <div className="table-container h-[150px] overflow-y-auto">
-                  <table className="data-table min-w-full border-collapse">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th scope="col" className="px-4 py-2 border">
-                          ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Name
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Phone
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {dashboardData.owners.map((owner) => (
-                        <tr key={owner.own_id} className="even:bg-gray-50">
-                          <td className="px-4 py-2 border">{owner.own_id}</td>
-                          <td className="px-4 py-2 border">{owner.own_name}</td>
-                          <td className="px-4 py-2 border">
-                            {owner.own_phone}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+      <div className="container mx-auto p-4 w-full h-[100vh] border">
+        <div className="grid grid-cols-3 gap-4">
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">จำนวนพนักงาน</h2>
+              <p className="text-md">{unitStaff}</p>
             </div>
+            <div className="bg-blue-200 mt-2 h-2 rounded"></div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">จำนวนเจ้าของพัสดุ</h2>
+              <p className="text-md">{unitOwners}</p>
+            </div>
+            <div className="bg-green-200 mt-2 h-2 rounded"></div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">รายการรับพัสดุทั้งหมด</h2>
+              <p className="text-md">{sumParcel}</p>
+            </div>
+            <div className="bg-red-200 mt-2 h-2 rounded"></div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">พัสดุที่ยังไม่ได้ส่งเจ้าของ</h2>
+              <p className="text-md">{unitParcels}</p>
+            </div>
+            <div className="bg-yellow-200 mt-2 h-2 rounded"></div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">พัสดุที่ส่งเจ้าของเเล้ว</h2>
+              <p className="text-md">{unitParcelsSuccess}</p>
+            </div>
+            <div className="bg-purple-200 mt-2 h-2 rounded"></div>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+            <div className="flex gap-4 items-center">
+              <h2 className="text-sm font-bold">รายการพัสดุส่งคืนเจ้าของ</h2>
+              <p className="text-md">{unitDelivers}</p>
+            </div>
+            <div className="bg-orange-200 mt-2 h-2 rounded"></div>
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <div className="h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="ส่งเจ้าของเเล้ว" fill="#00C49F" barSize={75} />
+                <Bar dataKey="ยังไม่ส่งคืน" fill="#f73030" barSize={75} />
+                <Bar dataKey="พัสดุทั้งหมด" fill="#5dbfe3" barSize={75} />
+                <Bar dataKey="เจ้าของพัสดุ" fill="#ffa341" barSize={75} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>

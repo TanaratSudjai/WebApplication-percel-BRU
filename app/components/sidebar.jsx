@@ -22,7 +22,7 @@ import {
 function sidebar() {
   const { data: session, status } = useSession();
   return (
-    <div className="h-[calc(95vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 ">
+    <div className="h-[calc(80vh-2rem)] w-full max-w-[20rem] p-4">
       <div className="mt-2 ml-2 flex justify-center items-center gap-2">
         {session ? (
           <div className="flex justify-center items-center gap-2">

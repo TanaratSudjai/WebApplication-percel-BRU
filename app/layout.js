@@ -15,7 +15,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ClientLayout>{children}</ClientLayout>
+        <ClientLayout><div className="w-full h-full">{children}</div></ClientLayout>
       </body>
     </html>
   );
