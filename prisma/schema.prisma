@@ -33,7 +33,6 @@ model Owner {
   own_phone String?
   Parcel    Parcel[]
   Delivered Delivered[]
-
   @@map("owner")
 }
 
