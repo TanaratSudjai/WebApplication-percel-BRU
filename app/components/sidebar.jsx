@@ -1,5 +1,3 @@
-"use client";
-
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -16,11 +14,20 @@ import {
   DocumentTextIcon,
   InboxIcon,
   PowerIcon,
-  HomeIcon
+  HomeIcon,
 } from "@heroicons/react/24/solid";
 
-function sidebar() {
+function Sidebar() {
   const { data: session, status } = useSession();
+  const router = useRouter();
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (!session || session.user.role !== "staff") {
+    return router.push('/');
+  }
 
   return (
     <div className="h-[calc(80vh-2rem)] w-full max-w-[20rem] p-4">
@@ -60,8 +67,7 @@ function sidebar() {
             <ListItemPrefix>
               <InboxIcon className="h-5 w-5" />
             </ListItemPrefix>
-            ManageParcel
-            <ListItemSuffix></ListItemSuffix>
+            Manage Parcel
           </ListItem>
         </a>
         <a href="../owners">
@@ -73,14 +79,16 @@ function sidebar() {
           </ListItem>
         </a>
 
-        <a href="/welcome">
-          <ListItem className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2">
-            <ListItemPrefix>
-              <HomeIcon className="h-5 w-5" />
-            </ListItemPrefix>
-            หน้าเเรก
-          </ListItem>
-        </a>
+        {session && session.staff && (
+          <a href="/welcome">
+            <ListItem className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2">
+              <ListItemPrefix>
+                <HomeIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              หน้าเเรก
+            </ListItem>
+          </a>
+        )}
 
         <ListItem
           className="hover:bg-slate-100 hover:text-slate-900 flex gap-2 text-1xl font-plain m-1 p-2"
@@ -96,4 +104,4 @@ function sidebar() {
   );
 }
 
-export default sidebar;
+export default Sidebar;
