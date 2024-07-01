@@ -15,7 +15,7 @@ const AuthWrapper = ({ children }) => {
     } else if (status === "authenticated") {
       if (session) {
         if (session.user.role === "staff") {
-          router.push("/welcome");
+          return;
         } else if (session.user.role === "owner") {
           router.push("/ownerManage");
         }
