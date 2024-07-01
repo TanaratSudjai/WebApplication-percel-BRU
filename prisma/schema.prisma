@@ -1,71 +1,71 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+  // This is your Prisma schema file,
+  // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+  // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+  // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-// prisma/schema.prisma
+  // prisma/schema.prisma
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+  datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+  }
 
-generator client {
-  provider = "prisma-client-js"
-}
+  generator client {
+    provider = "prisma-client-js"
+  }
 
 
-model Staff {
-  id   Int     @id @default(autoincrement())
-  staff_name String?
-  staff_phone String?
-  email String @unique
-  password String 
-  Parcel     Parcel[]
+  model Staff {
+    id   Int     @id @default(autoincrement())
+    staff_name String?
+    staff_phone String?
+    email String @unique
+    password String 
+    Parcel     Parcel[]
 
-  @@map("staff")
-}
+    @@map("staff")
+  }
 
-model Owner {
-  own_id    Int    @id @default(autoincrement())
-  own_name  String
-  own_phone String?
-  Parcel    Parcel[]
-  Delivered Delivered[]
-  @@map("owner")
-}
+  model Owner {
+    own_id    Int    @id @default(autoincrement())
+    own_name  String
+    own_phone String?
+    Parcel    Parcel[]
+    Delivered Delivered[]
+    @@map("owner")
+  }
 
-model Status {
-  sta_id   Int    @id @default(autoincrement())
-  sta_name String
-  Parcel   Parcel[]
-  @@map("status")
-}
+  model Status {
+    sta_id   Int    @id @default(autoincrement())
+    sta_name String
+    Parcel   Parcel[]
+    @@map("status")
+  }
 
-model Parcel {
-  par_id       Int      @id @default(autoincrement())
-  par_real_id  String
-  own_id       Int?
-  staff_id     Int?
-  pickupsdate  DateTime?
-  sta_id       Int?
-  Owner        Owner?    @relation(fields: [own_id], references: [own_id])
-  Staff        Staff?    @relation(fields: [staff_id], references: [id])
-  Status       Status?   @relation(fields: [sta_id], references: [sta_id])
-  Delivered    Delivered?
+  model Parcel {
+    par_id       Int      @id @default(autoincrement())
+    par_real_id  String
+    own_id       Int?
+    staff_id     Int?
+    pickupsdate  DateTime?
+    sta_id       Int?
+    Owner        Owner?    @relation(fields: [own_id], references: [own_id])
+    Staff        Staff?    @relation(fields: [staff_id], references: [id])
+    Status       Status?   @relation(fields: [sta_id], references: [sta_id])
+    Delivered    Delivered?
 
-  @@map("parcel")
-}
+    @@map("parcel")
+  }
 
-model Delivered {
-  del_id        Int      @id @default(autoincrement())
-  par_id        Int?     @unique
-  own_id        Int?
-  deliverydate  DateTime?
-  deliver_name  String?
-  Parcel        Parcel?  @relation(fields: [par_id], references: [par_id])
-  Owner         Owner?   @relation(fields: [own_id], references: [own_id])
-  @@map("delivered")
-}
+  model Delivered {
+    del_id        Int      @id @default(autoincrement())
+    par_id        Int?     @unique
+    own_id        Int?
+    deliverydate  DateTime?
+    deliver_name  String?
+    Parcel        Parcel?  @relation(fields: [par_id], references: [par_id])
+    Owner         Owner?   @relation(fields: [own_id], references: [own_id])
+    @@map("delivered")
+  }
 

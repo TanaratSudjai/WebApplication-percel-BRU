@@ -22,7 +22,8 @@
     "react": "^18",
     "react-dom": "^18",
     "recharts": "^2.12.7",
-    "sweetalert2": "^11.12.1"
+    "sweetalert2": "^11.12.1",
+    "twilio": "^5.2.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
