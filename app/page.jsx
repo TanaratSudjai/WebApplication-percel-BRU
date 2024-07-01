@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await signIn("credentials", {
+      const result = await signIn("staff-login", {
         redirect: false,
         email,
         password,
@@ -31,15 +32,13 @@ export default function SignIn() {
 
   return (
     <div className="mx-auto mt-10 h-[80vh] w-full flex flex-col items-center justify-center font-[sans-serif]">
-      
-
       <div className="p-8 rounded-2xl bg-white shadow-xl w-[50vh] py-10 ">
         <div className="flex justify-center">
-      <Image src="/realogo.png" width={300} height={500} alt="Logo" />
-      </div>
+          <Image src="/realogo.png" width={300} height={500} alt="Logo" />
+        </div>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="mb-4">
-            <label className="text-gray-800 text-sm mb-2 block">Email</label>
+            <label className="text-gray-800 text-sm mb-2 block">อีเมล</label>
             <div className="relative flex items-center">
               <input
                 id="email"
@@ -48,7 +47,7 @@ export default function SignIn() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600" // Added border
-                placeholder="Enter Email"
+                placeholder="กรุณากรอกอีเมลเพื่อเข้าสู่ระบบ"
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +66,7 @@ export default function SignIn() {
           </div>
           <div className="mb-4">
             <label className="text-gray-800 text-sm mb-2 block">
-              Enter Password
+              รหัสผ่าน
             </label>
             <div className="relative flex items-center">
               <input
@@ -77,7 +76,7 @@ export default function SignIn() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600" // Added border
-                placeholder="Enter Password"
+                placeholder="กรุณากรอกรหัสผ่านเพื่อเข้าสู่ระบบ"
               />
             </div>
           </div>
@@ -85,8 +84,11 @@ export default function SignIn() {
             type="submit"
             className="w-full bg-[#60d0ac] hover:bg-[#469e80] text-white py-3 rounded mb-4"
           >
-            Sign In
+            เข้าสู่ระบบพนักงาน
           </button>{" "}
+          <div className="w-full text-center">
+            <Link href="/ownerLogin"><span className="text-blue-400 text-sm">เข้าสู่ระบบสำหรับเจ้าของพัสดุ</span></Link>
+          </div>
         </form>
       </div>
     </div>

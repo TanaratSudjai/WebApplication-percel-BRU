@@ -11,10 +11,14 @@ const AuthWrapper = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/');
+    if (status === "unauthenticated") {
+      router.push("/");
+    } else if (status === "authenticated") {
+      if (session && session.user.role === "owner") {
+        router.push("/");
+      }
     }
-  }, [router, status]);
+  }, [router, session, status]);
 
   return children;
 };
