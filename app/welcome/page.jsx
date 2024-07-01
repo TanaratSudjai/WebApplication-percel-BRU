@@ -7,10 +7,15 @@ import Image from "next/image";
 function Page() {
   return (
     <AuthWrapper>
-      <div className="container border-spacing-1 p-4 w-full h-[100vh] overflow-hidden">
-          <div className="h-[80vh] flex justify-center items-center">
-            <Image src="/realogo.png" width={500} height={500} />
+      <div className="container mx-auto p-4">
+        <div className="w-full h-screen flex justify-center items-center">
+          <div className="max-w-md w-full">
+            <div className="flex justify-center mb-6">
+              <Image src="/realogo.png" width={300} height={300} alt="Logo" />
+            </div>
+            <div className="border border-gray-200 bg-white p-6 rounded-lg shadow-lg"></div>
           </div>
+        </div>
       </div>
     </AuthWrapper>
   );
