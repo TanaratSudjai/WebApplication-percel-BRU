@@ -18,7 +18,7 @@ const OwnerLoginPage = () => {
       if (result.error) {
         console.error(result.error);
       } else {
-        router.push("/ownerManage");
+        window.location.href = '/ownerManage';
       }
     } catch (error) {
       console.log("error", error);

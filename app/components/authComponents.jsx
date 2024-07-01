@@ -1,11 +1,10 @@
-// // components/AuthWrapper.js
+// components/AuthWrapper.js
 
 "use client";
 
 import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-
 const AuthWrapper = ({ children }) => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -14,8 +13,12 @@ const AuthWrapper = ({ children }) => {
     if (status === "unauthenticated") {
       router.push("/");
     } else if (status === "authenticated") {
-      if (session && session.user.role === "owner") {
-        router.push("/");
+      if (session) {
+        if (session.user.role === "staff") {
+          router.push("/welcome");
+        } else if (session.user.role === "owner") {
+          router.push("/ownerManage");
+        }
       }
     }
   }, [router, session, status]);

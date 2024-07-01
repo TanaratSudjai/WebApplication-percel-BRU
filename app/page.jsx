@@ -23,7 +23,7 @@ export default function SignIn() {
       if (result.error) {
         console.error(result.error);
       } else {
-        router.push("/welcome");
+        window.location.href = "/welcome";
       }
     } catch (error) {
       console.log("error", error);
@@ -65,9 +65,7 @@ export default function SignIn() {
             </div>
           </div>
           <div className="mb-4">
-            <label className="text-gray-800 text-sm mb-2 block">
-              รหัสผ่าน
-            </label>
+            <label className="text-gray-800 text-sm mb-2 block">รหัสผ่าน</label>
             <div className="relative flex items-center">
               <input
                 id="password"
@@ -87,7 +85,11 @@ export default function SignIn() {
             เข้าสู่ระบบพนักงาน
           </button>{" "}
           <div className="w-full text-center">
-            <Link href="/ownerLogin"><span className="text-blue-400 text-sm">เข้าสู่ระบบสำหรับเจ้าของพัสดุ</span></Link>
+            <Link href="/ownerLogin">
+              <span className="text-blue-400 text-sm">
+                เข้าสู่ระบบสำหรับเจ้าของพัสดุ
+              </span>
+            </Link>
           </div>
         </form>
       </div>

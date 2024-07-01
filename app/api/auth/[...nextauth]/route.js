@@ -6,9 +6,8 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 const prisma = new PrismaClient();
 
-export const authOptions = {
+const authOptions = {
   providers: [
-    // Staff login with email and password
     CredentialsProvider({
       name: "Staff",
       id: "staff-login",
@@ -37,7 +36,6 @@ export const authOptions = {
       },
     }),
 
-    // Owner login with phone number
     CredentialsProvider({
       name: "Owner",
       id: "owner-login",
@@ -93,9 +91,8 @@ export const authOptions = {
       } else if (user?.role === "owner") {
         return `${baseUrl}/helloowner`;
       } else {
-        return `${baseUrl}/`; // redirect ไปหลังจากล็อกอินถูกยกเลิก
+        return `${baseUrl}/`;
       }
-      return baseUrl;
     },
   },
   pages: {
