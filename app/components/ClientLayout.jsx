@@ -19,13 +19,6 @@ export default function ClientLayout({ session, children }) {
         <SessionProvider session={session}>
           <div>{isAuthPage(pathname) && <Navbar session={session} />}</div>
           <div className="flex">
-          {isAuthPage(pathname) && (
-            <div>
-              <Sidebar session={session} />
-              {/*ให้แสดง sidebar ใน routh ที่เลือก*/}
-            </div>
-          )}
-
           {children}
           </div>
         </SessionProvider>

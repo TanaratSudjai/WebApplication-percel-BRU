@@ -225,8 +225,140 @@ function page() {
 
   return (
     <AuthWrapper>
-      <div className="p-6 bg-gray-100 flex justify-center w-full">
+      <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
         <div class="container mx-auto">
+          <div className="bg-white rounded p-4 px-4 md:p-8 mb-6 h-[80vh]">
+            <h1 className="text-center text-2xl font-bold">
+              จัดการพัสดุในระบบ
+            </h1>
+            <div class="relative mt-4">
+              <input
+                type="search"
+                class="w-[250px] focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                placeholder="ค้นหาชื่อเจ้าของพัสดุ"
+                aria-label="Search"
+                id="exampleFormControlInput2"
+                aria-describedby="button-addon2"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+              <span
+                class="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
+                id="button-addon2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="2"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                  />
+                </svg>
+              </span>
+            </div>
+            <div className="md:container md:mx-auto">
+              <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs text-gray-700 uppercase bg-white text-center">
+                    <tr>
+                      <th scope="col" class="px-2 py-3">
+                        จัดการ
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                        รหัสพัสดุ
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                        ชื่อเจ้าของ
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                        ชื่อพนักงาน
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                        เบอร์ติดต่อ
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                        เวลารับสินค้า
+                      </th>
+                      <th scope="col" class="px-6 py-3">
+                        สถานะ
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-center">
+                    {filteredParcels.map((parcel) => (
+                      <tr key={parcel.par_id}>
+                        <td className="px-6 py-4 ">
+                          <div className="flex w-[150px] items-center justify-between px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                          <a
+                            className="font-medium bg-red-100 text-rose-600 rounded-full w-[50px] cursor-pointer select-none"
+                            onClick={() => deleteParcel(parcel.par_id)}
+                            
+                          >
+                            ลบ
+                          </a>
+
+                          <a
+                            class="font-medium bg-red-100 text-rose-600 rounded-full w-[75px]"
+                            onClick={
+                              parcel.Status?.sta_id === 2
+                                ? () => handleReceiveDetail(parcel.par_id)
+                                : () => handleReceiver(parcel.par_id)
+                            }
+                            className={`font-medium rounded-full w-[75px] ${
+                              parcel.Status?.sta_id === 2
+                                ? "bg-green-100 text-[#60d0ac] cursor-pointer select-none"
+                                : "bg-amber-100 text-amber-500 cursor-pointer select-none"
+                            }`}
+                          >
+                            {parcel.Status?.sta_id === 2
+                              ? "รายละเอียด"
+                              : "กดรับสินค้า"}
+                          </a>
+                          </div>
+                        </td>
+
+                        <th
+                          scope="row"
+                          class="px-6 py-4 font-medium text-black whitespace-nowrap"
+                        >
+                          {parcel.par_real_id}
+                        </th>
+
+                        <td class="px-6 py-4"> {parcel.Owner?.own_name}</td>
+                        <td class="px-6 py-4">
+                          {parcel.Staff?.staff_name || "N/A"}
+                        </td>
+                        <td class="px-6 py-4">{parcel.Owner?.own_phone}</td>
+                        <td class="px-6 py-4">
+                          {" "}
+                          {formatDateTime(parcel.pickupsdate)}
+                        </td>
+                        <td class="px-6 py-4">
+                          <div
+                            className={`flex w-[75px] items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              parcel.Status?.sta_id === 1
+                                ? "bg-red-100 text-rose-600 select-none"
+                                : parcel.Status?.sta_id === 2
+                                ? "bg-green-100 text-[#60d0ac] select-none"
+                                : "bg-gray-100 text-gray-800 select-none"
+                            }`}
+                          >
+                            {parcel.Status?.sta_name || "N/A"}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
           {/* Detail Receive Modal */}
           {showDetailReceiveModal && (
             <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
@@ -395,147 +527,6 @@ function page() {
               </div>
             </div>
           )}
-
-          <h2 class="font-semibold text-xl text-gray-600">Responsive Form</h2>
-
-          <div className="h-[90%] bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
-            <div className="flex w-full mb-3 justify-end gap-2 relative">
-              <div>
-                <h1 className="mt-2">ค้นหาชื่อเจ้าของ : </h1>
-              </div>
-
-              <div class="relative">
-                <input
-                  type="search"
-                  class="focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
-                  placeholder="Search"
-                  aria-label="Search"
-                  id="exampleFormControlInput2"
-                  aria-describedby="button-addon2"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                />
-                <span
-                  class="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
-                  id="button-addon2"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                    />
-                  </svg>
-                </span>
-              </div>
-            </div>
-
-            <div class="shadow-lg rounded-lg overflow-hidden mx-4 md:mx-10">
-              {/* Parcels Table */}
-              <div className="dashboard-container rounded-xl border-2 shadow-md p-4 bg-white">
-                <h2 className="text-lg font-semibold mb-4">Parcels Table</h2>
-                <div className="table-container h-[500px] overflow-y-auto">
-                  <table className="data-table min-w-full border-collapse">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th scope="col" className="px-4 py-2 border">
-                          Action
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Real ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Owner ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Staff ID
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          phone
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Pickup Date
-                        </th>
-                        <th scope="col" className="px-4 py-2 border">
-                          Status ID
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredParcels.map((parcel) => (
-                        <tr
-                          key={parcel.par_id}
-                          className="even:bg-gray-50 text-center"
-                        >
-                          <td className="px-4 py-2 border">
-                            <div className="flex gap-2 justify-center">
-                              <button
-                                onClick={() => deleteParcel(parcel.par_id)}
-                                className="w-[100] px-3 text-sm tracking-wide rounded-lg text-white bg-rose-600 hover:bg-red-700 focus:outline-none"
-                              >
-                                ลบ
-                              </button>
-
-                              <button
-                                onClick={
-                                  parcel.Status?.sta_id === 2
-                                    ? () => handleReceiveDetail(parcel.par_id)
-                                    : () => handleReceiver(parcel.par_id)
-                                }
-                                className={`w-[100] px-3 text-sm tracking-wide rounded-lg text-white focus:outline-none ${
-                                  parcel.Status?.sta_id === 2
-                                    ? "bg-green-600 hover:bg-green-700"
-                                    : "bg-amber-600 hover:bg-red-700"
-                                }`}
-                              >
-                                {parcel.Status?.sta_id === 2
-                                  ? "รายละเอียด"
-                                  : "รับสินค้า"}
-                              </button>
-                            </div>
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {parcel.par_real_id}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {parcel.Owner?.own_name}
-                          </td>
-                          <td className="px-4 py-2 border">
-                            {parcel.Staff?.staff_name || "N/A"}
-                          </td>
-                          <td className="px-4 py-2 border w-2/12">
-                            {parcel.Owner?.own_phone}
-                          </td>
-                          <td className="px-4 py-2 border w-2/12">
-                            {formatDateTime(parcel.pickupsdate)}
-                          </td>
-                          <td className="px-4 py-2 border w-2/12">
-                            <div
-                              className={`flex items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                parcel.Status?.sta_id === 1
-                                  ? "bg-red-100 text-rose-600"
-                                  : parcel.Status?.sta_id === 2
-                                  ? "bg-green-100 text-[#60d0ac]"
-                                  : "bg-gray-100 text-gray-800"
-                              }`}
-                            >
-                              {parcel.Status?.sta_name || "N/A"}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </AuthWrapper>
