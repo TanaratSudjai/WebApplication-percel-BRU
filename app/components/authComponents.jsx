@@ -23,6 +23,18 @@ const AuthWrapper = ({ children }) => {
     }
   }, [router, session, status]);
 
+  // const Relofresh = async () => {
+  //   useEffect(() => {
+  //     const interval = setInterval(() => {
+  //       window.location.reload();
+  //     }, 10000);
+
+  //     return () => clearInterval(interval);
+  //   }, []);
+  //   return null;
+  // };
+  // Relofresh();
+
   return children;
 };
 

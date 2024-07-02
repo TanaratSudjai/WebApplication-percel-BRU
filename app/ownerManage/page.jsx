@@ -55,6 +55,13 @@ const HelloOwnerPage = () => {
     fetchDelivereData();
     fetchParcelData();
     fetchParcelData1();
+
+    const interval = setInterval(() => {
+      fetchDelivereData();
+      fetchParcelData();
+      fetchParcelData1();
+    }, 1000);
+    return () => clearInterval(interval);
   }, [session]);
 
   if (status === "loading") {

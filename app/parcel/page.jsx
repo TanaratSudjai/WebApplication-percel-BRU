@@ -17,7 +17,6 @@ function page() {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [ownerName, setOwnerName] = useState("");
 
-
   const fetchParcelData = async () => {
     try {
       const response = await axios.get("/api/parcel"); // Replace with your API endpoint
@@ -40,6 +39,11 @@ function page() {
   useEffect(() => {
     fetchParcelData();
     fetchDelivereData();
+    const interval = setInterval(() => {
+      fetchParcelData();
+      fetchDelivereData();
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   if (!parcelData) {
