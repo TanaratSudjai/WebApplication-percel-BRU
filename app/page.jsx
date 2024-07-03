@@ -31,14 +31,22 @@ export default function SignIn() {
   };
 
   return (
-    <div className="mx-auto mt-10 h-[80vh] w-full flex flex-col items-center justify-center font-[sans-serif]">
-      <div className="p-8 rounded-2xl bg-white shadow-xl w-[50vh] py-10 ">
+    <div className="flex items-center justify-center min-h-screen px-4 py-12 sm:px-6 lg:px-8">
+      <div className="p-6 sm:p-8 rounded-2xl bg-white shadow-xl w-full max-w-md">
         <div className="flex justify-center">
-          <Image src="/realogo.png" width={300} height={500} alt="Logo" />
+          <Image
+            src="/realogo.png"
+            width={200}
+            height={333}
+            alt="Logo"
+            className="w-48 sm:w-64"
+          />
         </div>
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="mb-4">
-            <label className="text-gray-800 text-sm mb-2 block">อีเมล</label>
+            <label htmlFor="email" className="text-gray-800 text-sm mb-2 block">
+              อีเมล
+            </label>
             <div className="relative flex items-center">
               <input
                 id="email"
@@ -46,7 +54,7 @@ export default function SignIn() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600" // Added border
+                className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                 placeholder="กรุณากรอกอีเมลเพื่อเข้าสู่ระบบ"
               />
               <svg
@@ -65,7 +73,12 @@ export default function SignIn() {
             </div>
           </div>
           <div className="mb-4">
-            <label className="text-gray-800 text-sm mb-2 block">รหัสผ่าน</label>
+            <label
+              htmlFor="password"
+              className="text-gray-800 text-sm mb-2 block"
+            >
+              รหัสผ่าน
+            </label>
             <div className="relative flex items-center">
               <input
                 id="password"
@@ -73,20 +86,20 @@ export default function SignIn() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600" // Added border
+                className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                 placeholder="กรุณากรอกรหัสผ่านเพื่อเข้าสู่ระบบ"
               />
             </div>
           </div>
           <button
             type="submit"
-            className="w-full bg-[#60d0ac] hover:bg-[#469e80] text-white py-3 rounded mb-4"
+            className="w-full bg-[#60d0ac] hover:bg-[#469e80] text-white py-3 rounded-md mb-4 transition duration-300 ease-in-out"
           >
             เข้าสู่ระบบพนักงาน
-          </button>{" "}
+          </button>
           <div className="w-full text-center">
             <Link href="/ownerLogin">
-              <span className="text-blue-400 text-sm">
+              <span className="text-blue-400 text-sm hover:underline">
                 เข้าสู่ระบบสำหรับเจ้าของพัสดุ
               </span>
             </Link>

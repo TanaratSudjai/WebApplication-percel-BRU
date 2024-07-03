@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 export async function GET() {
   try {
     const dataDelivernd = await prisma.delivered.findMany();
-    console.table(dataDelivernd);
+    // console.table(dataDelivernd);
 
     const owners = await prisma.owner.findMany();
 
@@ -31,7 +31,7 @@ export async function POST(req) {
   try {
     const date = new Date();
     const { parcelID, ownerID, deliver_name } = await req.json();
-    console.table({ parcelID, ownerID, deliver_name });
+    // console.table({ parcelID, ownerID, deliver_name });
     const newDelivered = await prisma.delivered.create({
       data: {
         par_id: parcelID,

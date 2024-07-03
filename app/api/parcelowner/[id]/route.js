@@ -8,6 +8,21 @@ export async function GET(req, { params }) {
       where: {
         own_id: id_owner,
       },
+      orderBy:{
+        par_id:'desc'
+      },
+      include: {
+        Owner: true,
+        Staff: true,
+        Status: true,
+      },
+    });
+
+    const parcelOwnerStatusOne = await prisma.parcel.findMany({
+      where: {
+        own_id: id_owner,
+        sta_id:1
+      },
       include: {
         Owner: true,
         Staff: true,
@@ -18,6 +33,7 @@ export async function GET(req, { params }) {
     return Response.json(
       {
         parcelOwner,
+        parcelOwnerStatusOne
       },
       {
         status: 200,
