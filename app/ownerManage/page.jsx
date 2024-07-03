@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const HelloOwnerPage = () => {
   const { data: session, status } = useSession();
@@ -13,7 +14,7 @@ const HelloOwnerPage = () => {
   const [receiverName, setReceiverName] = useState("");
   const [selectedParcelId, setSelectedParcelId] = useState(null);
 
-  const [delivereData, setDelivereData] = useState({ dataDelivere: [] });
+  const [delivereData, setDelivereData] = useState({ dataDelivernd: [] });
 
   const [showDetailReceiveModal, setDetailReceiveModal] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState("");
@@ -24,13 +25,13 @@ const HelloOwnerPage = () => {
       try {
         const response = await axios.get(`/api/parcel`);
         const data = response.data;
-
         setParcelData1(data);
       } catch (error) {
         console.error("Error fetching parcel data:", error);
       }
     }
   };
+
   const fetchParcelData = async () => {
     if (session) {
       try {
@@ -51,6 +52,7 @@ const HelloOwnerPage = () => {
       console.error("Error fetching delivery data:", error);
     }
   };
+
   useEffect(() => {
     fetchDelivereData();
     fetchParcelData();
@@ -65,7 +67,7 @@ const HelloOwnerPage = () => {
   }, [session]);
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return 
   }
 
   if (!session) {
@@ -188,98 +190,112 @@ const HelloOwnerPage = () => {
     fetchDelivereData();
   };
 
+  const router = useRouter();
+  const handleLogout = async (e) => {
+    return router.push("/ownerLogin");
+  };
+
+  const handleViewUnreceived = async () => {
+    try {
+      const response = await axios.get(`/api/parcelOwnerStatusOne`);
+      if (!response.data || response.data.length === 0) {
+        Swal.fire({
+          title: "Warning!",
+          text: "ไม่พบสินค้าที่ยังไม่ได้รับ",
+          icon: "warning",
+          confirmButtonColor: "#60d0ac",
+        });
+      } else {
+        // Handle displaying unreceived parcels as needed
+      }
+    } catch (error) {
+      console.error("Error fetching unreceived parcels:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "เกิดข้อผิดพลาดในการดึงข้อมูลสินค้าที่ยังไม่ได้รับ",
+        icon: "error",
+        confirmButtonColor: "#60d0ac",
+      });
+    }
+  };
+
   return (
-    <div className="min-h-screen w-[100%] flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-[100%] ">
-        <h1 className="text-2xl font-bold mb-4">Hello, {session.user.name}!</h1>
-        <p>Phone: {session.user.phone}</p>
-        <div className="dashboard-container w-[100%] rounded-xl border-2 shadow-md p-4 bg-white">
-          <h2 className="text-lg font-semibold mb-4">Parcels Table</h2>
-          <div className="table-container h-[500px] overflow-y-auto">
-            <table className="data-table w-[100%] border-collapse">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th scope="col" className="px-4 py-2 border">
-                    Action
-                  </th>
-                  <th scope="col" className="px-4 py-2 border">
-                    Real ID
-                  </th>
-                  <th scope="col" className="px-4 py-2 border">
-                    Owner Name
-                  </th>
-                  <th scope="col" className="px-4 py-2 border">
-                    Owner Phone
-                  </th>
-                  <th scope="col" className="px-4 py-2 border">
-                    Staff Name
-                  </th>
-                  <th scope="col" className="px-4 py-2 border">
-                    Pickup Date
-                  </th>
-                  <th scope="col" className="px-4 py-2 border">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="w-[100%]">
-                {parcelData.parcelOwner &&
-                  parcelData.parcelOwner.map((parcel) => (
-                    <tr
-                      key={parcel.par_id}
-                      className="even:bg-gray-50 text-center"
+    <div className="min-h-screen w-full flex items-center justify-center">
+      <div className="p-8 rounded w-full max-w-screen-lg">
+        <h1 className="text-2xl font-bold mb-4">
+          สวัสดีครับ : {session.user.name}
+        </h1>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+          <p>เบอร์โทร: {session.user.phone}</p>
+          <button
+            onClick={handleLogout}
+            className="text-white bg-red-400 hover:bg-red-600 px-3 py-1 rounded-lg focus:outline-none self-start sm:self-center"
+          >
+            ออกจากระบบ
+          </button>
+          <button
+            onClick={handleViewUnreceived}
+            className="text-white bg-blue-400 hover:bg-blue-600 px-3 py-1 rounded-lg focus:outline-none self-start sm:self-center"
+          >
+            ดูสินค้าที่ยังไม่ได้รับ
+          </button>
+        </div>
+        <div className="dashboard-container mt-4 w-full rounded-xl border-2 p-4">
+          <h2 className="text-lg font-semibold mb-4">
+            รายการพัสดุของคุณ: {session.user.name}
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {parcelData.parcelOwner &&
+              parcelData.parcelOwner.map((parcel) => (
+                <div
+                  key={parcel.par_id}
+                  className="bg-white rounded-lg shadow p-4 flex flex-col"
+                >
+                  <div className="flex justify-between  items-center mb-2">
+                    <button
+                      onClick={
+                        parcel.Status?.sta_id === 2
+                          ? () => handleReceiveDetail(parcel.par_id)
+                          : () => handleReceiver(parcel.par_id)
+                      }
+                      className={`px-3 py-1 text-sm tracking-wide  rounded-lg  focus:outline-none ${
+                        parcel.Status?.sta_id === 2
+                          ? "bg-green-100 text-black cursor-pointer select-none"
+                          : "bg-amber-100 text-rose-600 cursor-pointer select-none"
+                      }`}
                     >
-                      <td className="px-4 py-2 border">
-                        <div className="flex gap-2 justify-center">
-                          {/* Add your actions here */}
-                          <button
-                            onClick={
-                              parcel.Status?.sta_id === 2
-                                ? () => handleReceiveDetail(parcel.par_id)
-                                : () => handleReceiver(parcel.par_id)
-                            }
-                            className={`w-[100] px-3 text-sm tracking-wide rounded-lg text-white focus:outline-none ${
-                              parcel.Status?.sta_id === 2
-                                ? "bg-green-600 hover:bg-green-700"
-                                : "bg-amber-600 hover:bg-red-700"
-                            }`}
-                          >
-                            {parcel.Status?.sta_id === 2
-                              ? "รายละเอียด"
-                              : "รับสินค้า"}
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2 border">{parcel.par_real_id}</td>
-                      <td className="px-4 py-2 border">
-                        {parcel.Owner.own_name}
-                      </td>
-                      <td className="px-4 py-2 border">
-                        {parcel.Owner.own_phone}
-                      </td>
-                      <td className="px-4 py-2 border">
-                        {parcel.Staff?.staff_name || "N/A"}
-                      </td>
-                      <td className="px-4 py-2 border w-2/12">
-                        {formatDateTime(parcel.pickupsdate)}
-                      </td>
-                      <td className="px-4 py-2 border w-2/12">
-                        <div
-                          className={`flex items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            parcel.Status?.sta_id === 1
-                              ? "bg-red-100 text-rose-600"
-                              : parcel.Status?.sta_id === 2
-                              ? "bg-green-100 text-[#60d0ac]"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {parcel.Status?.sta_name || "N/A"}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                      {parcel.Status?.sta_id === 2 ? "รายละเอียด" : "รับสินค้า"}
+                    </button>
+                  </div>
+                  <div className="flex-grow">
+                    <p className="mb-1">
+                      <strong>รหัสพัสดุ:</strong> {parcel.par_real_id}
+                    </p>
+                    <p className="mb-1">
+                      <strong>พนักงานผู้รับ:</strong>{" "}
+                      {parcel.Staff?.staff_name || "N/A"}
+                    </p>
+                    <p className="mb-1">
+                      <strong>วันที่/เวลา:</strong>{" "}
+                      {formatDateTime(parcel.pickupsdate)}
+                    </p>
+                    <p className="mb-1">
+                      <strong>สถานะ:</strong>
+                      <span
+                        className={`ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          parcel.Status?.sta_id === 1
+                            ? "bg-red-100 text-rose-600"
+                            : parcel.Status?.sta_id === 2
+                            ? "bg-green-100 text-[#60d0ac]"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {parcel.Status?.sta_name || "N/A"}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
       </div>
