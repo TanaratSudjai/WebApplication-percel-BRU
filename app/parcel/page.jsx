@@ -77,13 +77,13 @@ function page() {
 
   const deleteParcel = async (parcelId) => {
     Swal.fire({
-      title: "Are you sure you want to delete this?",
-      text: "You won't be able to revert this!",
+      title: "คุณแน่ใจว่าจะลบหรือไม่?",
+      text: "คุณจะไม่สามารถนำมันกลับมาได้อีก!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#60d0ac",
       cancelButtonColor: "#e11d48",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "ใช่ ลบไปเลย!",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -96,8 +96,8 @@ function page() {
               ),
             }));
             Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
+              title: "ลบออกเรียบร้อย!!",
+              text: "ไฟล์ของคุณได้ถูกลบออกไปแล้ว.",
               icon: "success",
               confirmButtonColor: "#60d0ac",
             });
@@ -183,8 +183,8 @@ function page() {
 
         if (deliveredResponse.status === 200) {
           Swal.fire({
-            title: "Updated!",
-            text: "Parcel status and delivery record updated successfully.",
+            title: "รับสินค้าเรียบร้อย!",
+            text: `พัสดุหมายเลข ${selectedParcel.par_real_id} ได้ถูกรับไปแล้ว.`,
             icon: "success",
             confirmButtonColor: "#60d0ac",
           });
@@ -202,6 +202,7 @@ function page() {
           setParcelData({ dataParcel: updatedData });
           setReceiveModal(false);
           fetchParcelData();
+          
         } else {
           throw new Error("Failed to create delivery record");
         }
@@ -221,20 +222,21 @@ function page() {
     }
     fetchParcelData();
     fetchDelivereData();
+    
   };
 
   return (
     <AuthWrapper>
       <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
-        <div class="container mx-auto">
+        <div className="container mx-auto">
           <div className="bg-white rounded p-4 px-4 md:p-8 mb-6 h-[80vh]">
             <h1 className="text-center text-2xl font-bold">
               จัดการพัสดุในระบบ
             </h1>
-            <div class="relative mt-4">
+            <div className="relative mt-4">
               <input
                 type="search"
-                class="w-[250px] focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                className="w-[250px] focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
                 placeholder="ค้นหาชื่อเจ้าของพัสดุ"
                 aria-label="Search"
                 id="exampleFormControlInput2"
@@ -243,7 +245,7 @@ function page() {
                 onChange={handleSearchChange}
               />
               <span
-                class="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
+                className="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
                 id="button-addon2"
               >
                 <svg
@@ -262,29 +264,29 @@ function page() {
               </span>
             </div>
             <div className="md:container md:mx-auto">
-              <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead class="text-xs text-gray-700 uppercase bg-white text-center">
+              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 uppercase bg-white text-center">
                     <tr>
-                      <th scope="col" class="px-2 py-3">
+                      <th scope="col" className="px-2 py-3">
                         จัดการ
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th scope="col" className="px-6 py-3">
                         รหัสพัสดุ
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th scope="col" className="px-6 py-3">
                         ชื่อเจ้าของ
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th scope="col" className="px-6 py-3">
                         ชื่อพนักงาน
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th scope="col" className="px-6 py-3">
                         เบอร์ติดต่อ
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th scope="col" className="px-6 py-3">
                         เวลารับสินค้า
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th scope="col" className="px-6 py-3">
                         สถานะ
                       </th>
                     </tr>
@@ -294,51 +296,49 @@ function page() {
                       <tr key={parcel.par_id}>
                         <td className="px-6 py-4 ">
                           <div className="flex w-[150px] items-center justify-between px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                          <a
-                            className="font-medium bg-red-100 text-rose-600 rounded-full w-[50px] cursor-pointer select-none"
-                            onClick={() => deleteParcel(parcel.par_id)}
-                            
-                          >
-                            ลบ
-                          </a>
+                            <a
+                              className="font-medium bg-red-100 text-rose-600 rounded-full w-[50px] cursor-pointer select-none"
+                              onClick={() => deleteParcel(parcel.par_id)}
+                            >
+                              ลบ
+                            </a>
 
-                          <a
-                            class="font-medium bg-red-100 text-rose-600 rounded-full w-[75px]"
-                            onClick={
-                              parcel.Status?.sta_id === 2
-                                ? () => handleReceiveDetail(parcel.par_id)
-                                : () => handleReceiver(parcel.par_id)
-                            }
-                            className={`font-medium rounded-full w-[75px] ${
-                              parcel.Status?.sta_id === 2
-                                ? "bg-green-100 text-[#60d0ac] cursor-pointer select-none"
-                                : "bg-amber-100 text-amber-500 cursor-pointer select-none"
-                            }`}
-                          >
-                            {parcel.Status?.sta_id === 2
-                              ? "รายละเอียด"
-                              : "กดรับสินค้า"}
-                          </a>
+                            <a
+                              className={`font-medium rounded-full w-[75px] ${
+                                parcel.Status?.sta_id === 2
+                                  ? "bg-green-100 text-[#60d0ac] cursor-pointer select-none"
+                                  : "bg-amber-100 text-amber-500 cursor-pointer select-none"
+                              }`}
+                              onClick={
+                                parcel.Status?.sta_id === 2
+                                  ? () => handleReceiveDetail(parcel.par_id)
+                                  : () => handleReceiver(parcel.par_id)
+                              }
+                            >
+                              {parcel.Status?.sta_id === 2
+                                ? "รายละเอียด"
+                                : "กดรับสินค้า"}
+                            </a>
                           </div>
                         </td>
 
                         <th
                           scope="row"
-                          class="px-6 py-4 font-medium text-black whitespace-nowrap"
+                          className="px-6 py-4 font-medium text-black whitespace-nowrap"
                         >
                           {parcel.par_real_id}
                         </th>
 
-                        <td class="px-6 py-4"> {parcel.Owner?.own_name}</td>
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4"> {parcel.Owner?.own_name}</td>
+                        <td className="px-6 py-4">
                           {parcel.Staff?.staff_name || "N/A"}
                         </td>
-                        <td class="px-6 py-4">{parcel.Owner?.own_phone}</td>
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">{parcel.Owner?.own_phone}</td>
+                        <td className="px-6 py-4">
                           {" "}
                           {formatDateTime(parcel.pickupsdate)}
                         </td>
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           <div
                             className={`flex w-[75px] items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                               parcel.Status?.sta_id === 1
@@ -458,7 +458,7 @@ function page() {
                 <div className="relative bg-white rounded-lg shadow p-4">
                   <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                      Receive Form
+                      ฟอร์มการรับสินค้า
                     </h3>
                     <button
                       type="button"
@@ -490,7 +490,7 @@ function page() {
                           htmlFor="name"
                           className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                         >
-                          Name
+                          ชื่อผู้รับ
                         </label>
                         <input
                           type="text"
@@ -520,7 +520,7 @@ function page() {
                           clipRule="evenodd"
                         />
                       </svg>
-                      Update Owner
+                      ยืนยันการรับ
                     </button>
                   </form>
                 </div>

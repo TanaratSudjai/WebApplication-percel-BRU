@@ -21,7 +21,7 @@ export async function GET(req, { params }) {
     const parcelOwnerStatusOne = await prisma.parcel.findMany({
       where: {
         own_id: id_owner,
-        sta_id:1
+        sta_id: 1
       },
       include: {
         Owner: true,

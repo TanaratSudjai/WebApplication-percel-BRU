@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -22,11 +23,19 @@ export default function SignIn() {
 
       if (result.error) {
         console.error(result.error);
+        Swal.fire({
+          title: "รหัสผ่านหรืออีเมลไม่ถูกต้อง",
+          text: "กรุณาเช็คความถูกต้องก่อนเข้าสู่ระบบ",
+          icon: "question",
+          confirmButtonColor: "#60d0ac",
+          confirmButtonText: "รับทราบ!"
+        });
       } else {
         window.location.href = "/welcome";
       }
     } catch (error) {
       console.log("error", error);
+      
     }
   };
 

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 const HelloOwnerPage = () => {
   const { data: session, status } = useSession();
   const [parcelData, setParcelData] = useState({ parcelOwner: [] });
+  const [oneParcelData, setOneParcelData] = useState({ parcelOwnerStatusOne: [] });
   const [parcelData1, setParcelData1] = useState({ dataParcel: [] });
 
   const [showReceiveModal, setReceiveModal] = useState(false);
@@ -60,7 +61,7 @@ const HelloOwnerPage = () => {
 
     const interval = setInterval(() => {
       fetchDelivereData();
-      fetchParcelData();
+      // fetchParcelData();
       fetchParcelData1();
     }, 1000);
     return () => clearInterval(interval);
@@ -197,14 +198,16 @@ const HelloOwnerPage = () => {
 
   const handleViewUnreceived = async () => {
     try {
-      const response = await axios.get(`/api/parcelOwnerStatusOne`);
-      if (!response.data || response.data.length === 0) {
+      const response = await axios.get(`/api/parcelowner/${session.user.id}`);
+      setParcelData({ parcelOwner: response.data.parcelOwnerStatusOne });
+      if (!response.data.parcelOwnerStatusOne || response.data.parcelOwnerStatusOne.length === 0) {
         Swal.fire({
           title: "Warning!",
           text: "ไม่พบสินค้าที่ยังไม่ได้รับ",
           icon: "warning",
           confirmButtonColor: "#60d0ac",
         });
+        fetchParcelData();
       } else {
         // Handle displaying unreceived parcels as needed
       }
@@ -216,6 +219,7 @@ const HelloOwnerPage = () => {
         icon: "error",
         confirmButtonColor: "#60d0ac",
       });
+      
     }
   };
 
@@ -238,6 +242,12 @@ const HelloOwnerPage = () => {
             className="text-white bg-blue-400 hover:bg-blue-600 px-3 py-1 rounded-lg focus:outline-none self-start sm:self-center"
           >
             ดูสินค้าที่ยังไม่ได้รับ
+          </button>
+          <button
+            onClick={fetchParcelData}
+            className="text-white bg-green-300 hover:bg-green-600 px-3 py-1 rounded-lg focus:outline-none self-start sm:self-center"
+          >
+            ดูสินค้าทั้งหมด
           </button>
         </div>
         <div className="dashboard-container mt-4 w-full rounded-xl border-2 p-4">

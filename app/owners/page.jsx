@@ -50,6 +50,7 @@ function Owners() {
         phone: owner.own_phone,
       });
       setEditShowModal(true);
+      
     }
   };
 
@@ -75,6 +76,13 @@ function Owners() {
 
       fetchData(); // Refresh the owner data
       setEditShowModal(false); // Close modal after successful update
+      Swal.fire({
+        position: "top-mid",
+        icon: "success",
+        title: "รายชื่อได้ถูกแก้ไขแล้ว",
+        showConfirmButton: false,
+        timer: 1500
+      });
     } catch (err) {
       console.error("Error updating owner:", err);
     }
@@ -94,6 +102,13 @@ function Owners() {
       setNewOwner({
         name: "",
         phone: "",
+      });
+      Swal.fire({
+        position: "top-mid",
+        icon: "success",
+        title: "รายชื่อได้ถูกเพิ่มไปยังระบบแล้ว",
+        showConfirmButton: false,
+        timer: 1500
       });
       fetchData(); // GET
     } catch (error) {
@@ -152,7 +167,7 @@ function Owners() {
   return (
     <AuthWrapper>
       <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
-        <div class="container mx-auto">
+        <div className="container mx-auto">
           <div className="bg-white rounded p-4 px-4 md:p-8 mb-6 h-[80vh]">
             <h1 className="text-center text-2xl font-bold">
               จัดการรายชื่อเจ้าของ
@@ -161,7 +176,7 @@ function Owners() {
               <div className="relative mt-4">
                 <input
                   type="search"
-                  class="focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                  className="focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
                   placeholder="ค้นหาชื่อเจ้าของ"
                   aria-label="Search"
                   id="exampleFormControlInput2"
@@ -170,7 +185,7 @@ function Owners() {
                   onChange={handleSearchChange}
                 />
                 <span
-                  class="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
+                  className="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
                   id="button-addon2"
                 >
                   <svg
@@ -190,27 +205,27 @@ function Owners() {
               </div>
 
               <div className="mt-4">
-                <button
-                  className="bg-[#60d0ac] hover:bg-[#469e80] text-white font-bold py-2 px-4 rounded-md"
+                <a
+                  className="font-medium bg-green-300 text-white rounded-full w-[200px] cursor-pointer select-none px-4 py-1"
                   onClick={() => setAddShowModal(true)}
                 >
-                  เพิ่มชื่อ
-                </button>
+                  เพิ่มชื่อรายชื่อ
+                </a>
               </div>
             </div>
 
             <div className="md:container md:mx-auto">
-              <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead class="text-xs text-gray-700 uppercase bg-white text-center">
+              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead className="text-xs text-gray-700 uppercase bg-white text-center">
                     <tr>
-                      <th scope="col" class="px-2 py-3">
+                      <th scope="col" className="px-2 py-3">
                         จัดการ
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th scope="col" className="px-6 py-3">
                         ชื่อเจ้าของ
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th scope="col" className="px-6 py-3">
                         เบอร์ติดต่อ
                       </th>
                     </tr>
@@ -252,7 +267,7 @@ function Owners() {
               <div className="relative bg-white rounded-lg shadow p-4">
                 <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                    Edit Owner
+                    ฟอร์มแก้ไขชื่อเจ้าของ
                   </h3>
                   <button
                     type="button"
@@ -284,7 +299,7 @@ function Owners() {
                         htmlFor="name"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                       >
-                        Name
+                       ชื่อ
                       </label>
                       <input
                         type="text"
@@ -302,7 +317,7 @@ function Owners() {
                         htmlFor="phone"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                       >
-                        Phone
+                        เบอร์โทรศัพท์
                       </label>
                       <input
                         type="text"
@@ -332,7 +347,7 @@ function Owners() {
                         clipRule="evenodd"
                       />
                     </svg>
-                    Update Owner
+                    ยืนยันการแก้ไข
                   </button>
                 </form>
               </div>
@@ -352,7 +367,7 @@ function Owners() {
               <div className="relative bg-white rounded-lg shadow p-4">
                 <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                    Create New Owner
+                    ฟอร์มเพิ่มชื่อเจ้าของ
                   </h3>
                   <button
                     type="button"
@@ -384,7 +399,7 @@ function Owners() {
                         htmlFor="name"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                       >
-                        Name
+                        ชื่อ
                       </label>
                       <input
                         type="text"
@@ -404,7 +419,7 @@ function Owners() {
                         htmlFor="phone"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                       >
-                        Phone
+                        เบอร์โทรศัพท์
                       </label>
                       <input
                         type="text"
@@ -436,7 +451,7 @@ function Owners() {
                         clipRule="evenodd"
                       />
                     </svg>
-                    Add new owner
+                    ยืนยันการเพิ่มชื่อเจ้าของ
                   </button>
                 </form>
               </div>

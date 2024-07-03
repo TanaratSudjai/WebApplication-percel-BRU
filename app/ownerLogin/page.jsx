@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import Swal from "sweetalert2";
 
 const OwnerLoginPage = () => {
   const [phone, setPhone] = useState("");
@@ -19,6 +20,13 @@ const OwnerLoginPage = () => {
 
       if (result.error) {
         console.error(result.error);
+        Swal.fire({
+          title: "ไม่พบหมายเลขนี้",
+          text: "กรุณาเช็คความถูกต้องก่อนรับสินค้า",
+          icon: "question",
+          confirmButtonColor: "#60d0ac",
+          confirmButtonText: "รับทราบ!"
+        });
       } else {
         window.location.href = "/ownerManage";
       }

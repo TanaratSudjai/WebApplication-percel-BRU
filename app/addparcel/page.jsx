@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import AuthWrapper from "../components/authComponents";
+import Swal from "sweetalert2";
 
 function AddParcel() {
   const [ownData, setOwnData] = useState([]);
@@ -136,6 +137,13 @@ function AddParcel() {
         console.error("Server Response:", error.response.data);
       }
     }
+    Swal.fire({
+      position: "top",
+      icon: "success",
+      title: "Your work has been saved",
+      showConfirmButton: false,
+      timer: 500
+    });
   };
 
   const reset = () => {
