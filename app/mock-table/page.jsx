@@ -47,8 +47,8 @@ function DashboardPage() {
 
   if (!dashboardData) {
     return (
-      <div className="mx-auto flex h-[90vh] justify-center items-center w-full text-2xl">
-        กำลังโหลดข้อมูล
+      <div>
+        <LoadingPage />
       </div>
     );
   }

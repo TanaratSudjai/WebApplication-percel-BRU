@@ -4,11 +4,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import LoadingPage from "../components/lodding";
 
 const HelloOwnerPage = () => {
   const { data: session, status } = useSession();
   const [parcelData, setParcelData] = useState({ parcelOwner: [] });
-  const [oneParcelData, setOneParcelData] = useState({ parcelOwnerStatusOne: [] });
+  const [oneParcelData, setOneParcelData] = useState({
+    parcelOwnerStatusOne: [],
+  });
   const [parcelData1, setParcelData1] = useState({ dataParcel: [] });
 
   const [showReceiveModal, setReceiveModal] = useState(false);
@@ -61,14 +64,17 @@ const HelloOwnerPage = () => {
 
     const interval = setInterval(() => {
       fetchDelivereData();
-      // fetchParcelData();
       fetchParcelData1();
     }, 1000);
     return () => clearInterval(interval);
   }, [session]);
 
   if (status === "loading") {
-    return 
+    return (
+      <div>
+        <LoadingPage />
+      </div>
+    );
   }
 
   if (!session) {
@@ -200,7 +206,10 @@ const HelloOwnerPage = () => {
     try {
       const response = await axios.get(`/api/parcelowner/${session.user.id}`);
       setParcelData({ parcelOwner: response.data.parcelOwnerStatusOne });
-      if (!response.data.parcelOwnerStatusOne || response.data.parcelOwnerStatusOne.length === 0) {
+      if (
+        !response.data.parcelOwnerStatusOne ||
+        response.data.parcelOwnerStatusOne.length === 0
+      ) {
         Swal.fire({
           title: "Warning!",
           text: "ไม่พบสินค้าที่ยังไม่ได้รับ",
@@ -219,7 +228,6 @@ const HelloOwnerPage = () => {
         icon: "error",
         confirmButtonColor: "#60d0ac",
       });
-      
     }
   };
 
