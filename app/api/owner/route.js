@@ -1,4 +1,3 @@
-
 import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -6,8 +5,8 @@ export async function GET() {
   try {
     const owners = await prisma.owner.findMany({
       orderBy: {
-        own_id:'desc'
-      }
+        own_id: "desc",
+      },
     });
     return Response.json({ message: "Get Api Owner !", owners });
   } catch (error) {
@@ -18,13 +17,23 @@ export async function GET() {
 export async function POST(req) {
   try {
     const { name, phone } = await req.json();
-    const newOwner = await prisma.owner.create({
-      data: {
-        own_name: name,
+
+    const checkphone = await prisma.owner.count({
+      where: {
         own_phone: phone,
       },
     });
-    return Response.json({ message: "POST Api Owner !", newOwner });
+
+    if (checkphone == 0) {
+      const newOwner = await prisma.owner.create({
+        data: {
+          own_name: name,
+          own_phone: phone,
+        },
+      });
+      return Response.json({ message: "POST Api Owner !", newOwner });
+    }
+    return;
   } catch (error) {
     return Response.json({ error }, { status: 500 });
   }
