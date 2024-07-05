@@ -25,7 +25,7 @@ const OwnerLoginPage = () => {
           text: "กรุณาเช็คความถูกต้องก่อนรับสินค้า",
           icon: "question",
           confirmButtonColor: "#60d0ac",
-          confirmButtonText: "รับทราบ!"
+          confirmButtonText: "รับทราบ!",
         });
       } else {
         window.location.href = "/ownerManage";
