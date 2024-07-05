@@ -177,11 +177,11 @@ function Owners() {
             <h1 className="text-center text-2xl font-bold">
               จัดการรายชื่อเจ้าของ
             </h1>
-            <div className="flex justify-between">
-              <div className="relative mt-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 mb-[-5] space-y-2 sm:space-y-0 mb-4">
+              <div className="relative flex items-center">
                 <input
                   type="search"
-                  className="focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                  className="w-[250px] sm:w-[250px] focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
                   placeholder="ค้นหาชื่อเจ้าของ"
                   aria-label="Search"
                   id="exampleFormControlInput2"
@@ -208,13 +208,12 @@ function Owners() {
                   </svg>
                 </span>
               </div>
-
-              <div className="mt-4">
+              <div className="relative">
                 <a
-                  className="font-medium bg-green-300 text-white rounded-full w-[200px] cursor-pointer select-none px-4 py-1"
+                  className="font-medium bg-green-300 text-white rounded-full w-full sm:w-[150px] cursor-pointer select-none px-3 py-1"
                   onClick={() => setAddShowModal(true)}
                 >
-                  เพิ่มชื่อรายชื่อ
+                  เพิ่มรายชื่อ
                 </a>
               </div>
             </div>

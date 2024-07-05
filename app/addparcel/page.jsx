@@ -7,18 +7,15 @@ import Swal from "sweetalert2";
 function AddParcel() {
   const [ownData, setOwnData] = useState([]);
   const [staffData, setStaffData] = useState({ staff: [] });
-  const [comData, setComData] = useState([]);
+  const [companyData, setCompanyData] = useState({ datacompany: [] });
   const [inputValue, setInputValue] = useState("");
-  const [phoneValue, setPhoneValue] = useState("");
+  const [phoneValue, setPhoneValue] = useState(""); // State for phone number input
   const [filteredOwners, setFilteredOwners] = useState([]);
-  const [isOwnerDropdownVisible, setOwnerDropdownVisible] = useState(false);
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
   const [selectedStaff, setSelectedStaff] = useState("");
-  const [parcelCode, setParcelCode] = useState("");
-  const [comInputValue, setComInputValue] = useState("");
-  const [filteredCompanies, setFilteredCompanies] = useState([]);
-  const [isComDropdownVisible, setComDropdownVisible] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState("");
+  const [parcelCode, setParcelCode] = useState("");
 
   const fetchOwnData = async () => {
     try {
@@ -38,20 +35,21 @@ function AddParcel() {
     }
   };
 
-  const fetchComData = async () => {
+  const fetchCompanyData = async () => {
     try {
       const response = await axios.get("/api/company");
-      setComData(response.data.datacompany);
+      setCompanyData(response.data);
     } catch (error) {
       console.error("Error fetching company data:", error);
     }
   };
   useEffect(() => {
+
     fetchOwnData();
     fetchStaffData();
-    fetchComData();
+    fetchCompanyData();
   }, []);
-
+  
   useEffect(() => {
     if (Array.isArray(ownData)) {
       setFilteredOwners(
@@ -63,18 +61,6 @@ function AddParcel() {
       );
     }
   }, [inputValue, ownData]);
-
-  useEffect(() => {
-    if (Array.isArray(comData)) {
-      setFilteredCompanies(
-        comData
-          .filter((company) =>
-            company.com_name.toLowerCase().includes(comInputValue.toLowerCase())
-          )
-          .slice(0, 3)
-      );
-    }
-  }, [comInputValue, comData]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -92,35 +78,15 @@ function AddParcel() {
     setPhoneValue(phone);
     setSelectedOwner({ id, phone });
     setFilteredOwners([]);
-    setOwnerDropdownVisible(false);
+    setDropdownVisible(false);
   };
 
   const handleInputFocus = () => {
-    setOwnerDropdownVisible(true);
+    setDropdownVisible(true);
   };
 
   const handleInputBlur = () => {
-    setTimeout(() => setOwnerDropdownVisible(false), 100);
-  };
-
-  const handleComInputChange = (e) => {
-    setComInputValue(e.target.value);
-    setSelectedCompany("");
-  };
-
-  const handleSelectCompany = (id, name) => {
-    setComInputValue(name);
-    setSelectedCompany(id);
-    setFilteredCompanies([]);
-    setComDropdownVisible(false);
-  };
-
-  const handleComInputFocus = () => {
-    setComDropdownVisible(true);
-  };
-
-  const handleComInputBlur = () => {
-    setTimeout(() => setComDropdownVisible(false), 100);
+    setTimeout(() => setDropdownVisible(false), 100);
   };
 
   const handleAddOwner = async (name, phone) => {
@@ -130,8 +96,12 @@ function AddParcel() {
         phone: phone,
       });
 
+      console.log("API Response:", response.data);
+
       if (response.status === 200 || response.status === 201) {
         const newOwner = response.data;
+        console.log("New owner has been added:", newOwner);
+
         return newOwner;
       } else {
         console.error("Failed to add new owner.");
@@ -141,8 +111,9 @@ function AddParcel() {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "เบอร์นี้ได้อยู่ในระบบอยู่แล้ว!",
+        text: "เบอร์โทรศัพท์นี้ได้มีอยู่ในระบบอยู่แล้ว!",
       });
+      return null;
     }
   };
 
@@ -152,8 +123,10 @@ function AddParcel() {
     let ownerId = selectedOwner.id;
     if (!ownerId) {
       const newOwner = await handleAddOwner(inputValue, phoneValue);
+      console.log("New owner:", newOwner);
       if (newOwner && newOwner.newOwner && newOwner.newOwner.own_id) {
         ownerId = newOwner.newOwner.own_id;
+        console.log("New owner ID:", ownerId);
       }
     }
 
@@ -161,15 +134,15 @@ function AddParcel() {
       Rid: parcelCode,
       owner: ownerId,
       staff: parseInt(selectedStaff),
-      sta_id: 1,
       company: parseInt(selectedCompany),
+      sta_id: 1,
     };
 
     try {
       const response = await axios.post("/api/parcel", parcelData);
-      console.log(parcelData.company);
 
       if (response.status === 200) {
+        console.log("Parcel data submitted successfully");
         reset();
         Swal.fire({
           position: "top",
@@ -187,10 +160,6 @@ function AddParcel() {
         console.error("Server Response:", error.response.data);
       }
     }
-    
-    fetchOwnData();
-    fetchStaffData();
-    fetchComData();
   };
 
   const reset = () => {
@@ -198,10 +167,14 @@ function AddParcel() {
     setPhoneValue("");
     setSelectedOwner({ id: "", phone: "" });
     setSelectedStaff("");
-    setParcelCode("");
-    setComInputValue("");
     setSelectedCompany("");
+    setParcelCode("");
+
+    fetchOwnData();
+    fetchStaffData();
+    fetchCompanyData();
   };
+
   return (
     <AuthWrapper>
       <div className="p-4 sm:p-6 bg-white border min-h-screen flex justify-center w-full">
@@ -232,40 +205,29 @@ function AddParcel() {
                   </div>
                 </div>
 
+
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
                     ชื่อบริษัท
                   </label>
-                  <div className="relative flex flex-col items-center">
-                    <input
-                      name="com_name"
-                      type="text"
-                      value={comInputValue}
-                      onChange={handleComInputChange}
-                      onFocus={handleComInputFocus}
-                      onBlur={handleComInputBlur}
-                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                      placeholder="กรอกชื่อบริษัท"
-                    />
-                    {isComDropdownVisible && filteredCompanies.length > 0 && (
-                      <ul className="flex flex-col z-10 w-full bg-white border border-gray-300 mt-1 rounded-md">
-                        {filteredCompanies.map((company) => (
-                          <li
-                            key={company.com_id}
-                            onClick={() =>
-                              handleSelectCompany(
-                                company.com_id,
-                                company.com_name
-                              )
-                            }
-                            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                          >
-                            {company.com_name}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
+                  <select
+                    id="company"
+                    name="companyList"
+                    form="companyForm"
+                    required
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    value={selectedCompany}
+                    onChange={(e) => setSelectedCompany(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      เลือกบริษัท
+                    </option>
+                    {companyData.datacompany.map((company) => (
+                        <option key={company.com_id} value={company.com_id}>
+                          {company.com_name}
+                        </option>
+                      ))}
+                  </select>
                 </div>
 
                 <div className="col-span-full sm:col-span-1">
@@ -276,6 +238,7 @@ function AddParcel() {
                     id="staff"
                     name="staffList"
                     form="staffForm"
+                    required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     value={selectedStaff}
                     onChange={(e) => setSelectedStaff(e.target.value)}
@@ -291,6 +254,8 @@ function AddParcel() {
                   </select>
                 </div>
 
+                
+
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
                     ชื่อเจ้าของ
@@ -299,6 +264,7 @@ function AddParcel() {
                     <input
                       name="own_name"
                       type="text"
+                      required
                       value={inputValue}
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
@@ -306,7 +272,7 @@ function AddParcel() {
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                       placeholder="กรอกชื่อเจ้าของ"
                     />
-                    {isOwnerDropdownVisible && filteredOwners.length > 0 && (
+                    {isDropdownVisible && filteredOwners.length > 0 && (
                       <ul className="flex flex-col z-10 w-full bg-white border border-gray-300 mt-1 rounded-md">
                         {filteredOwners.map((owner) => (
                           <li
@@ -328,6 +294,8 @@ function AddParcel() {
                   </div>
                 </div>
 
+                
+
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
                     เบอร์เจ้าของ
@@ -344,6 +312,10 @@ function AddParcel() {
                     />
                   </div>
                 </div>
+
+                
+
+                
 
                 <div className="col-span-full sm:col-span-1 mt-4 sm:mt-8">
                   <button

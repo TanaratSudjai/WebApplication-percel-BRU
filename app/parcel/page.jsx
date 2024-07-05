@@ -336,18 +336,18 @@ function page() {
                           </div>
                         </td>
 
+                        
                         <th
                           scope="row"
                           className="px-6 py-4 font-medium text-black whitespace-nowrap"
                         >
                           {parcel.par_real_id}
                         </th>
-
                         <th
                           scope="row"
                           className="px-6 py-4"
                         >
-                          {parcel.Company.com_name}
+                          {parcel.Company?.com_name}
                         </th>
 
                         <td className="px-6 py-4"> {parcel.Owner?.own_name}</td>
