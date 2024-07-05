@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 function page() {
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
   const [searchQuery, setSearchQuery] = useState("");
+  const [comData, setComData] = useState([]);
   const [showReceiveModal, setReceiveModal] = useState(false);
   const [receiverName, setReceiverName] = useState("");
   const [selectedParcelId, setSelectedParcelId] = useState(null);
@@ -16,6 +17,15 @@ function page() {
   const [showDetailReceiveModal, setDetailReceiveModal] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState("");
   const [ownerName, setOwnerName] = useState("");
+
+  const fetchComData = async () => {
+    try {
+      const response = await axios.get("/api/company");
+      setComData(response.data.datacompany);
+    } catch (error) {
+      console.error("Error fetching company data:", error);
+    }
+  };
 
   const fetchParcelData = async () => {
     try {
@@ -37,6 +47,7 @@ function page() {
   };
 
   useEffect(() => {
+    fetchComData();
     fetchParcelData();
     fetchDelivereData();
     const interval = setInterval(() => {
@@ -275,6 +286,9 @@ function page() {
                         รหัสพัสดุ
                       </th>
                       <th scope="col" className="px-6 py-3">
+                        ชื่อบริษัท
+                      </th>
+                      <th scope="col" className="px-6 py-3">
                         ชื่อเจ้าของ
                       </th>
                       <th scope="col" className="px-6 py-3">
@@ -327,6 +341,13 @@ function page() {
                           className="px-6 py-4 font-medium text-black whitespace-nowrap"
                         >
                           {parcel.par_real_id}
+                        </th>
+
+                        <th
+                          scope="row"
+                          className="px-6 py-4"
+                        >
+                          {parcel.Company.com_name}
                         </th>
 
                         <td className="px-6 py-4"> {parcel.Owner?.own_name}</td>

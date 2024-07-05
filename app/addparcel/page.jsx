@@ -1,42 +1,55 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useRouter } from "next/router";
 import AuthWrapper from "../components/authComponents";
 import Swal from "sweetalert2";
 
 function AddParcel() {
   const [ownData, setOwnData] = useState([]);
   const [staffData, setStaffData] = useState({ staff: [] });
+  const [comData, setComData] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [phoneValue, setPhoneValue] = useState(""); // State for phone number input
+  const [phoneValue, setPhoneValue] = useState("");
   const [filteredOwners, setFilteredOwners] = useState([]);
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [isOwnerDropdownVisible, setOwnerDropdownVisible] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
   const [selectedStaff, setSelectedStaff] = useState("");
   const [parcelCode, setParcelCode] = useState("");
+  const [comInputValue, setComInputValue] = useState("");
+  const [filteredCompanies, setFilteredCompanies] = useState([]);
+  const [isComDropdownVisible, setComDropdownVisible] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState("");
 
+  const fetchOwnData = async () => {
+    try {
+      const response = await axios.get("/api/owner");
+      setOwnData(response.data.owners);
+    } catch (error) {
+      console.error("Error fetching owner data:", error);
+    }
+  };
+
+  const fetchStaffData = async () => {
+    try {
+      const response = await axios.get("/api/staff");
+      setStaffData(response.data);
+    } catch (error) {
+      console.error("Error fetching staff data:", error);
+    }
+  };
+
+  const fetchComData = async () => {
+    try {
+      const response = await axios.get("/api/company");
+      setComData(response.data.datacompany);
+    } catch (error) {
+      console.error("Error fetching company data:", error);
+    }
+  };
   useEffect(() => {
-    const fetchOwnData = async () => {
-      try {
-        const response = await axios.get("/api/owner");
-        setOwnData(response.data.owners);
-      } catch (error) {
-        console.error("Error fetching owner data:", error);
-      }
-    };
-
-    const fetchStaffData = async () => {
-      try {
-        const response = await axios.get("/api/staff");
-        setStaffData(response.data);
-      } catch (error) {
-        console.error("Error fetching staff data:", error);
-      }
-    };
-
     fetchOwnData();
     fetchStaffData();
+    fetchComData();
   }, []);
 
   useEffect(() => {
@@ -50,6 +63,18 @@ function AddParcel() {
       );
     }
   }, [inputValue, ownData]);
+
+  useEffect(() => {
+    if (Array.isArray(comData)) {
+      setFilteredCompanies(
+        comData
+          .filter((company) =>
+            company.com_name.toLowerCase().includes(comInputValue.toLowerCase())
+          )
+          .slice(0, 3)
+      );
+    }
+  }, [comInputValue, comData]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -67,15 +92,35 @@ function AddParcel() {
     setPhoneValue(phone);
     setSelectedOwner({ id, phone });
     setFilteredOwners([]);
-    setDropdownVisible(false);
+    setOwnerDropdownVisible(false);
   };
 
   const handleInputFocus = () => {
-    setDropdownVisible(true);
+    setOwnerDropdownVisible(true);
   };
 
   const handleInputBlur = () => {
-    setTimeout(() => setDropdownVisible(false), 100);
+    setTimeout(() => setOwnerDropdownVisible(false), 100);
+  };
+
+  const handleComInputChange = (e) => {
+    setComInputValue(e.target.value);
+    setSelectedCompany("");
+  };
+
+  const handleSelectCompany = (id, name) => {
+    setComInputValue(name);
+    setSelectedCompany(id);
+    setFilteredCompanies([]);
+    setComDropdownVisible(false);
+  };
+
+  const handleComInputFocus = () => {
+    setComDropdownVisible(true);
+  };
+
+  const handleComInputBlur = () => {
+    setTimeout(() => setComDropdownVisible(false), 100);
   };
 
   const handleAddOwner = async (name, phone) => {
@@ -85,20 +130,19 @@ function AddParcel() {
         phone: phone,
       });
 
-      console.log("API Response:", response.data);
-
       if (response.status === 200 || response.status === 201) {
         const newOwner = response.data;
-        console.log("New owner has been added:", newOwner);
-
         return newOwner;
       } else {
         console.error("Failed to add new owner.");
         return null;
       }
     } catch (error) {
-      console.error("Error adding new owner:", error);
-      return null;
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "เบอร์นี้ได้อยู่ในระบบอยู่แล้ว!",
+      });
     }
   };
 
@@ -108,10 +152,8 @@ function AddParcel() {
     let ownerId = selectedOwner.id;
     if (!ownerId) {
       const newOwner = await handleAddOwner(inputValue, phoneValue);
-      console.log("New owner:", newOwner);
       if (newOwner && newOwner.newOwner && newOwner.newOwner.own_id) {
         ownerId = newOwner.newOwner.own_id;
-        console.log("New owner ID:", ownerId);
       }
     }
 
@@ -120,14 +162,22 @@ function AddParcel() {
       owner: ownerId,
       staff: parseInt(selectedStaff),
       sta_id: 1,
+      company: parseInt(selectedCompany),
     };
 
     try {
       const response = await axios.post("/api/parcel", parcelData);
+      console.log(parcelData.company);
 
       if (response.status === 200) {
-        console.log("Parcel data submitted successfully");
         reset();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 500,
+        });
       } else {
         console.error("Failed to submit parcel data");
       }
@@ -137,13 +187,10 @@ function AddParcel() {
         console.error("Server Response:", error.response.data);
       }
     }
-    Swal.fire({
-      position: "top",
-      icon: "success",
-      title: "Your work has been saved",
-      showConfirmButton: false,
-      timer: 500
-    });
+    
+    fetchOwnData();
+    fetchStaffData();
+    fetchComData();
   };
 
   const reset = () => {
@@ -152,8 +199,9 @@ function AddParcel() {
     setSelectedOwner({ id: "", phone: "" });
     setSelectedStaff("");
     setParcelCode("");
+    setComInputValue("");
+    setSelectedCompany("");
   };
-
   return (
     <AuthWrapper>
       <div className="p-4 sm:p-6 bg-white border min-h-screen flex justify-center w-full">
@@ -181,6 +229,42 @@ function AddParcel() {
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                       placeholder="แสกนหรือกรอกรหัสพัสดุ"
                     />
+                  </div>
+                </div>
+
+                <div className="col-span-full sm:col-span-1">
+                  <label className="text-gray-800 text-sm mb-2 block">
+                    ชื่อบริษัท
+                  </label>
+                  <div className="relative flex flex-col items-center">
+                    <input
+                      name="com_name"
+                      type="text"
+                      value={comInputValue}
+                      onChange={handleComInputChange}
+                      onFocus={handleComInputFocus}
+                      onBlur={handleComInputBlur}
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                      placeholder="กรอกชื่อบริษัท"
+                    />
+                    {isComDropdownVisible && filteredCompanies.length > 0 && (
+                      <ul className="flex flex-col z-10 w-full bg-white border border-gray-300 mt-1 rounded-md">
+                        {filteredCompanies.map((company) => (
+                          <li
+                            key={company.com_id}
+                            onClick={() =>
+                              handleSelectCompany(
+                                company.com_id,
+                                company.com_name
+                              )
+                            }
+                            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                          >
+                            {company.com_name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
 
@@ -222,7 +306,7 @@ function AddParcel() {
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                       placeholder="กรอกชื่อเจ้าของ"
                     />
-                    {isDropdownVisible && filteredOwners.length > 0 && (
+                    {isOwnerDropdownVisible && filteredOwners.length > 0 && (
                       <ul className="flex flex-col z-10 w-full bg-white border border-gray-300 mt-1 rounded-md">
                         {filteredOwners.map((owner) => (
                           <li
@@ -252,6 +336,7 @@ function AddParcel() {
                     <input
                       name="own_phone"
                       type="text"
+                      required
                       value={phoneValue}
                       onChange={handlePhoneChange}
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
