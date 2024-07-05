@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { useSession,signOut } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -240,7 +240,10 @@ const HelloOwnerPage = () => {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
           <p>เบอร์โทร: {session.user.phone}</p>
           <button
-            onClick={handleLogout}
+            onClick={async () => {
+              await signOut();
+              router.push("/ownerLogin");
+            }}
             className="text-white bg-red-400 hover:bg-red-600 px-3 py-1 rounded-lg focus:outline-none self-start sm:self-center"
           >
             ออกจากระบบ
