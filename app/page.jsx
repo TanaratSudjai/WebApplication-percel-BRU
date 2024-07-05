@@ -6,11 +6,20 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Swal from "sweetalert2";
+import { useSession, signOut } from "next-auth/react";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const { data: session, status } = useSession();
+
+
+  if(status === "authenticated"){
+    return(
+      router.push('/welcome') , alert('กรุณาออกจากระบบก่อน!')
+    );
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
