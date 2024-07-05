@@ -7,11 +7,12 @@ export async function GET() {
       include: {
         Owner: true,
         Staff: true,
+        Company: true,
         Status: true, // ระบุให้รวมข้อมูลจาก relation Owner
       },
       orderBy: {
-        par_id:'desc'
-      }
+        par_id: "desc",
+      },
     });
 
     const parcelsWithPhone = dataParcel.map((parcel) => {
@@ -19,27 +20,24 @@ export async function GET() {
         ...parcel,
         own_phone: parcel.Owner && parcel.Owner.own_phone,
         staff_name: parcel.Staff && parcel.Staff.staff_name,
-        sta_name: parcel.Status && parcel.Status.sta_name
+        sta_name: parcel.Status && parcel.Status.sta_name,
+        com_name: parcel.Company && parcel.Company.com_name,
       };
     });
 
     // console.table(parcelsWithPhone);
 
-    return Response.json({ dataParcel:parcelsWithPhone }, { status: 200 });
+    return Response.json({ dataParcel: parcelsWithPhone }, { status: 200 });
   } catch (error) {
     return Response.json({ error }, { status: 500 });
   }
 }
 
-
-
-
-
 export async function POST(req) {
   try {
     const date = new Date();
     const status = 1;
-    const { Rid, owner, staff } = await req.json();
+    const { Rid, owner, staff, company } = await req.json();
     // console.table({ Rid, owner, staff });
     const newParcel = await prisma.parcel.create({
       data: {
@@ -47,6 +45,7 @@ export async function POST(req) {
         own_id: owner,
         staff_id: staff,
         sta_id: status,
+        com_id: company,
         pickupsdate: date,
       },
     });

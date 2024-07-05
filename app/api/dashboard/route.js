@@ -13,12 +13,14 @@ export async function GET() {
     const status = await prisma.status.findMany();
     const parcels = await prisma.parcel.findMany();
     const delivers = await prisma.delivered.findMany();
+    const company = await prisma.company.findMany();
 
     const updatedParcels = parcels.map(parcel => ({
       ...parcel,
       sta_name:status.find(status => status.sta_id === parcel.sta_id)?.sta_name,
       own_name:owners.find(owner => owner.own_id === parcel.own_id)?.own_name,
       staff_name:staff.find(staff => staff.id === parcel.staff_id)?.staff_name,
+      com_name:company.find(company => company.com_id === parcel.com_id)?.com_name,
     }));
 
 
@@ -41,6 +43,7 @@ export async function GET() {
 
     const sumParcel = await prisma.parcel.count();
     const unitDelivers = await prisma.delivered.count();
+    const unitCompany = await prisma.company.count();
     
 
     // console.table({unitStaff,unitOwners,unitParcels,unitParcelsSuccess, unitDelivers})
@@ -58,11 +61,13 @@ export async function GET() {
       parcels:updatedParcels,
       delivers,
       sumParcel,
+      company,
       unitStaff,
       unitOwners,
       unitParcels,
       unitParcelsSuccess,
-      unitDelivers
+      unitDelivers,
+      unitCompany
     });
   } catch (error) {
     return Response.json(
