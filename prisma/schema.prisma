@@ -51,12 +51,21 @@ model Parcel {
   staff_id    Int?
   pickupsdate DateTime?
   sta_id      Int?
+  com_id      Int?
+  Company     Company?   @relation(fields: [com_id], references: [com_id])
   Owner       Owner?     @relation(fields: [own_id], references: [own_id])
   Staff       Staff?     @relation(fields: [staff_id], references: [id])
   Status      Status?    @relation(fields: [sta_id], references: [sta_id])
   Delivered   Delivered?
 
   @@map("parcel")
+}
+
+model Company{
+  com_id Int @id @default(autoincrement())
+  com_name String? @unique
+  Parcel    Parcel[]
+  @@map("company")
 }
 
 model Delivered {
