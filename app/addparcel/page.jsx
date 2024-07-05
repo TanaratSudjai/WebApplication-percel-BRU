@@ -1,44 +1,55 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useRouter } from "next/router";
 import AuthWrapper from "../components/authComponents";
 import Swal from "sweetalert2";
 
 function AddParcel() {
   const [ownData, setOwnData] = useState([]);
   const [staffData, setStaffData] = useState({ staff: [] });
+  const [companyData, setCompanyData] = useState({ datacompany: [] });
   const [inputValue, setInputValue] = useState("");
   const [phoneValue, setPhoneValue] = useState(""); // State for phone number input
   const [filteredOwners, setFilteredOwners] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
   const [selectedStaff, setSelectedStaff] = useState("");
+  const [selectedCompany, setSelectedCompany] = useState("");
   const [parcelCode, setParcelCode] = useState("");
 
-  useEffect(() => {
-    const fetchOwnData = async () => {
-      try {
-        const response = await axios.get("/api/owner");
-        setOwnData(response.data.owners);
-      } catch (error) {
-        console.error("Error fetching owner data:", error);
-      }
-    };
+  const fetchOwnData = async () => {
+    try {
+      const response = await axios.get("/api/owner");
+      setOwnData(response.data.owners);
+    } catch (error) {
+      console.error("Error fetching owner data:", error);
+    }
+  };
 
-    const fetchStaffData = async () => {
-      try {
-        const response = await axios.get("/api/staff");
-        setStaffData(response.data);
-      } catch (error) {
-        console.error("Error fetching staff data:", error);
-      }
-    };
+  const fetchStaffData = async () => {
+    try {
+      const response = await axios.get("/api/staff");
+      setStaffData(response.data);
+    } catch (error) {
+      console.error("Error fetching staff data:", error);
+    }
+  };
+
+  const fetchCompanyData = async () => {
+    try {
+      const response = await axios.get("/api/company");
+      setCompanyData(response.data);
+    } catch (error) {
+      console.error("Error fetching company data:", error);
+    }
+  };
+  useEffect(() => {
 
     fetchOwnData();
     fetchStaffData();
+    fetchCompanyData();
   }, []);
-
+  
   useEffect(() => {
     if (Array.isArray(ownData)) {
       setFilteredOwners(
@@ -97,7 +108,11 @@ function AddParcel() {
         return null;
       }
     } catch (error) {
-      console.error("Error adding new owner:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "เบอร์โทรศัพท์นี้ได้มีอยู่ในระบบอยู่แล้ว!",
+      });
       return null;
     }
   };
@@ -119,6 +134,7 @@ function AddParcel() {
       Rid: parcelCode,
       owner: ownerId,
       staff: parseInt(selectedStaff),
+      company: parseInt(selectedCompany),
       sta_id: 1,
     };
 
@@ -128,6 +144,13 @@ function AddParcel() {
       if (response.status === 200) {
         console.log("Parcel data submitted successfully");
         reset();
+        Swal.fire({
+          position: "top",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 500,
+        });
       } else {
         console.error("Failed to submit parcel data");
       }
@@ -137,13 +160,6 @@ function AddParcel() {
         console.error("Server Response:", error.response.data);
       }
     }
-    Swal.fire({
-      position: "top",
-      icon: "success",
-      title: "Your work has been saved",
-      showConfirmButton: false,
-      timer: 500
-    });
   };
 
   const reset = () => {
@@ -151,7 +167,12 @@ function AddParcel() {
     setPhoneValue("");
     setSelectedOwner({ id: "", phone: "" });
     setSelectedStaff("");
+    setSelectedCompany("");
     setParcelCode("");
+
+    fetchOwnData();
+    fetchStaffData();
+    fetchCompanyData();
   };
 
   return (
@@ -184,6 +205,31 @@ function AddParcel() {
                   </div>
                 </div>
 
+
+                <div className="col-span-full sm:col-span-1">
+                  <label className="text-gray-800 text-sm mb-2 block">
+                    ชื่อบริษัท
+                  </label>
+                  <select
+                    id="company"
+                    name="companyList"
+                    form="companyForm"
+                    required
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    value={selectedCompany}
+                    onChange={(e) => setSelectedCompany(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      เลือกบริษัท
+                    </option>
+                    {companyData.datacompany.map((company) => (
+                        <option key={company.com_id} value={company.com_id}>
+                          {company.com_name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
                     พนักงาน
@@ -192,6 +238,7 @@ function AddParcel() {
                     id="staff"
                     name="staffList"
                     form="staffForm"
+                    required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     value={selectedStaff}
                     onChange={(e) => setSelectedStaff(e.target.value)}
@@ -207,6 +254,8 @@ function AddParcel() {
                   </select>
                 </div>
 
+                
+
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
                     ชื่อเจ้าของ
@@ -215,6 +264,7 @@ function AddParcel() {
                     <input
                       name="own_name"
                       type="text"
+                      required
                       value={inputValue}
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
@@ -244,6 +294,8 @@ function AddParcel() {
                   </div>
                 </div>
 
+                
+
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
                     เบอร์เจ้าของ
@@ -252,6 +304,7 @@ function AddParcel() {
                     <input
                       name="own_phone"
                       type="text"
+                      required
                       value={phoneValue}
                       onChange={handlePhoneChange}
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
@@ -259,6 +312,10 @@ function AddParcel() {
                     />
                   </div>
                 </div>
+
+                
+
+                
 
                 <div className="col-span-full sm:col-span-1 mt-4 sm:mt-8">
                   <button
