@@ -110,7 +110,7 @@ function DashboardPage() {
             </div>
             <div className="bg-purple-200 mt-2 h-2 rounded"></div>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-md w-full">
+          {/* <div className="bg-white p-4 rounded-lg shadow-md w-full">
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start sm:items-center">
               <h2 className="text-xs sm:text-sm font-bold">
                 รายการพัสดุส่งคืนเจ้าของ
@@ -118,7 +118,7 @@ function DashboardPage() {
               <p className="text-sm sm:text-md">{unitDelivers}</p>
             </div>
             <div className="bg-orange-200 mt-2 h-2 rounded"></div>
-          </div>
+          </div> */}
         </div>
 
         <div className="mt-8">
