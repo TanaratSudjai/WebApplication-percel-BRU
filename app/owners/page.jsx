@@ -50,7 +50,6 @@ function Owners() {
         phone: owner.own_phone,
       });
       setEditShowModal(true);
-      
     }
   };
 
@@ -81,7 +80,7 @@ function Owners() {
         icon: "success",
         title: "รายชื่อได้ถูกแก้ไขแล้ว",
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
     } catch (err) {
       console.error("Error updating owner:", err);
@@ -108,11 +107,17 @@ function Owners() {
         icon: "success",
         title: "รายชื่อได้ถูกเพิ่มไปยังระบบแล้ว",
         showConfirmButton: false,
-        timer: 1500
+        timer: 1500,
       });
       fetchData(); // GET
     } catch (error) {
-      console.error("Error adding owner:", error);
+      Swal.fire({
+        position: "top-mid",
+        icon: "warning",
+        title: "เบอร์โทรนี้ได้มีบัญชีอยู่เเล้ว",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 
@@ -299,7 +304,7 @@ function Owners() {
                         htmlFor="name"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
                       >
-                       ชื่อ
+                        ชื่อ
                       </label>
                       <input
                         type="text"
