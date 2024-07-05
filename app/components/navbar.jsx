@@ -28,7 +28,6 @@ function classNames(...classes) {
 function navbar() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  console.log(status);
 
   if (status === "loading") {
     return <Disclosure as="nav" className="bg-white">
