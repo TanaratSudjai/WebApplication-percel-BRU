@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.3.0",
-    "@headlessui/react": "^2.1.1",
-    "@heroicons/react": "^2.1.4",
+    "@headlessui/react": "^2.1.2",
+    "@heroicons/react": "^2.1.5",
     "@material-tailwind/react": "^2.1.9",
     "@prisma/client": "^5.15.1",
     "axios": "^1.7.2",
@@ -23,7 +23,7 @@
     "react": "^18",
     "react-dom": "^18",
     "recharts": "^2.12.7",
-    "sweetalert2": "^11.12.1",
+    "sweetalert2": "^11.12.3",
     "twilio": "^5.2.1"
   },
   "devDependencies": {
