@@ -1,10 +1,11 @@
 "use client";
-import { useSession,signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import LoadingPage from "../components/lodding";
+import Image from "next/image";
 
 const HelloOwnerPage = () => {
   const { data: session, status } = useSession();
@@ -157,8 +158,8 @@ const HelloOwnerPage = () => {
 
         if (deliveredResponse.status === 200) {
           Swal.fire({
-            title: "Updated!",
-            text: "Parcel status and delivery record updated successfully.",
+            title: "รับสินค้าเรียบร้อย!",
+            text: "ท่านได้รับพัสดุไปเป้นที่เรียบร้อยแล้ว.",
             icon: "success",
             confirmButtonColor: "#60d0ac",
           });
@@ -167,10 +168,10 @@ const HelloOwnerPage = () => {
           const updatedData = parcelData.parcelOwner.map((parcel) =>
             parcel.par_id === selectedParcelId
               ? {
-                  ...parcel,
-                  Owner: { ...parcel.Owner, own_name: receiverName },
-                  Status: { ...parcel.Status, sta_id: 2 }, // Update the status in the local state
-                }
+                ...parcel,
+                Owner: { ...parcel.Owner, own_name: receiverName },
+                Status: { ...parcel.Status, sta_id: 2 }, // Update the status in the local state
+              }
               : parcel
           );
           setParcelData({ dataParcel: updatedData });
@@ -279,11 +280,10 @@ const HelloOwnerPage = () => {
                           ? () => handleReceiveDetail(parcel.par_id)
                           : () => handleReceiver(parcel.par_id)
                       }
-                      className={`px-3 py-1 text-sm tracking-wide  rounded-lg  focus:outline-none ${
-                        parcel.Status?.sta_id === 2
-                          ? "bg-green-100 text-black cursor-pointer select-none"
-                          : "bg-amber-100 text-rose-600 cursor-pointer select-none"
-                      }`}
+                      className={`px-3 py-1 text-sm tracking-wide  rounded-lg  focus:outline-none ${parcel.Status?.sta_id === 2
+                        ? "bg-green-100 text-black cursor-pointer select-none"
+                        : "bg-amber-100 text-rose-600 cursor-pointer select-none"
+                        }`}
                     >
                       {parcel.Status?.sta_id === 2 ? "รายละเอียด" : "รับสินค้า"}
                     </button>
@@ -303,13 +303,12 @@ const HelloOwnerPage = () => {
                     <p className="mb-1">
                       <strong>สถานะ:</strong>
                       <span
-                        className={`ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          parcel.Status?.sta_id === 1
-                            ? "bg-red-100 text-rose-600"
-                            : parcel.Status?.sta_id === 2
+                        className={`ml-2 px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${parcel.Status?.sta_id === 1
+                          ? "bg-red-100 text-rose-600"
+                          : parcel.Status?.sta_id === 2
                             ? "bg-green-100 text-[#60d0ac]"
                             : "bg-gray-100 text-gray-800"
-                        }`}
+                          }`}
                       >
                         {parcel.Status?.sta_name || "N/A"}
                       </span>
@@ -323,11 +322,11 @@ const HelloOwnerPage = () => {
       {/* Detail Receive Modal */}
       {showDetailReceiveModal && (
         <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
-          <div className="relative p-4 w-full max-w-[550px]">
-            <div className="relative bg-white rounded-lg shadow p-4">
+          <div className="relative p-4 w-full max-w-[550px] animate-sweetAlertPopUp">
+            <div className="p-3 rounded-2xl bg-white shadow-xl w-full max-w-md">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                  Receive Detail
+                  รายละเอียดการรับสินค้า
                 </h3>
                 <button
                   type="button"
@@ -357,15 +356,15 @@ const HelloOwnerPage = () => {
                   <div className="col-span-2">
                     <label
                       htmlFor="receiverName"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                      className="text-gray-800 text-sm mb-2 block"
                     >
-                      Receiver Name
+                      ชื่อผู้รับสินค้า
                     </label>
                     <input
                       type="text"
                       name="receiverName"
                       id="receiverName"
-                      className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                       placeholder="Receiver Name"
                       value={receiverName}
                       readOnly
@@ -374,15 +373,15 @@ const HelloOwnerPage = () => {
                   <div className="col-span-2">
                     <label
                       htmlFor="deliveryDate"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                      className="text-gray-800 text-sm mb-2 block"
                     >
-                      Delivery Date
+                      วันที่รับสินค้า
                     </label>
                     <input
                       type="text"
                       name="deliveryDate"
                       id="deliveryDate"
-                      className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                       placeholder="Delivery Date"
                       value={deliveryDate}
                       readOnly
@@ -391,15 +390,15 @@ const HelloOwnerPage = () => {
                   <div className="col-span-2">
                     <label
                       htmlFor="ownerName"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                      className="text-gray-800 text-sm mb-2 block"
                     >
-                      Owner Name
+                      ชื่อเจ้าของสินค้า
                     </label>
                     <input
                       type="text"
                       name="ownerName"
                       id="ownerName"
-                      className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                       placeholder="Owner Name"
                       value={ownerName}
                       readOnly
@@ -412,18 +411,34 @@ const HelloOwnerPage = () => {
         </div>
       )}
 
+<style jsx>{`
+    @keyframes sweetAlertPopUp {
+        0% {
+            transform: scale(0.5);
+            opacity: 0;
+        }
+        80% {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+    .animate-sweetAlertPopUp {
+        animation: sweetAlertPopUp 0.3s ease-out forwards;
+    }
+`}</style>
+
       {/* ReceiveModal modal */}
       {showReceiveModal && (
         <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
-          <div className="relative p-4 w-full max-w-[550px]">
-            <div className="relative bg-white rounded-lg shadow p-4">
-              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                  Receive Form
-                </h3>
+          <div className="relative p-4 w-full max-w-[550px] animate-sweetAlertPopUp">
+            <div className="p-3 rounded-2xl bg-white shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between rounded-t">
                 <button
                   type="button"
-                  className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
+                  className="text-gray-400 hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
                   onClick={() => setReceiveModal(false)}
                 >
                   <svg
@@ -444,44 +459,57 @@ const HelloOwnerPage = () => {
                   <span className="sr-only">Close modal</span>
                 </button>
               </div>
+            <div className="flex justify-center mt-[-40]">
+                  <Image
+                    src="/realogo.png"
+                    width={200}
+                    height={333}
+                    alt="Logo"
+                    className="w-48 sm:w-64"
+                  />
+                </div>
               <form className="p-4 md:p-5" onSubmit={handleSubmit}>
                 <div className="grid gap-4 mb-4 grid-cols-2">
                   <div className="col-span-2">
                     <label
                       htmlFor="name"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
+                      className="text-gray-800 text-sm mb-2 block"
                     >
-                      Name
+                      ชื่อผู้รับสินค้า
                     </label>
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                      placeholder="Type owner name"
-                      required
-                      value={receiverName}
-                      onChange={(e) => setReceiverName(e.target.value)}
-                    />
+                    <div className="relative flex items-center">
+                      <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                        placeholder="กรอกชื่อผู้รับ"
+                        required
+                        value={receiverName}
+                        onChange={(e) => setReceiverName(e.target.value)}
+                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="#bbb"
+                        stroke="#bbb"
+                        className="w-4 h-4 absolute right-4"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
+                        <path
+                          d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                          data-original="#000000"
+                        ></path>
+                      </svg>
+                    </div>
                   </div>
+
                 </div>
                 <button
                   type="submit"
-                  className="text-white inline-flex items-center bg-[#60d0ac] hover:bg-[#469e80] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  className="w-full bg-[#60d0ac] hover:bg-[#469e80] text-white py-3 rounded-md  transition duration-300 ease-in-out"
                 >
-                  <svg
-                    className="me-1 -ms-1 w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Update Owner
+                  ยืนยันการรับของ
                 </button>
               </form>
             </div>
@@ -489,7 +517,9 @@ const HelloOwnerPage = () => {
         </div>
       )}
     </div>
+    
   );
 };
+
 
 export default HelloOwnerPage;
