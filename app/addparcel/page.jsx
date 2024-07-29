@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import axios from "axios";
 import AuthWrapper from "../components/authComponents";
 import Swal from "sweetalert2";
@@ -16,6 +16,7 @@ function AddParcel() {
   const [selectedStaff, setSelectedStaff] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
   const [parcelCode, setParcelCode] = useState("");
+  const inputRef = useRef(null);
 
   const fetchOwnData = async () => {
     try {
@@ -44,11 +45,16 @@ function AddParcel() {
     }
   };
   useEffect(() => {
-
     fetchOwnData();
     fetchStaffData();
     fetchCompanyData();
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   }, []);
+
+  console.log(inputRef);
+  console.log(parcelCode);
   
   useEffect(() => {
     if (Array.isArray(ownData)) {
@@ -160,6 +166,9 @@ function AddParcel() {
         console.error("Server Response:", error.response.data);
       }
     }
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const reset = () => {
@@ -194,6 +203,7 @@ function AddParcel() {
                   </label>
                   <div className="relative flex items-center">
                     <input
+                      ref={inputRef}
                       name="parcel_code"
                       type="text"
                       value={parcelCode}

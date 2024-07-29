@@ -213,7 +213,6 @@ function page() {
           setParcelData({ dataParcel: updatedData });
           setReceiveModal(false);
           fetchParcelData();
-          
         } else {
           throw new Error("Failed to create delivery record");
         }
@@ -233,7 +232,6 @@ function page() {
     }
     fetchParcelData();
     fetchDelivereData();
-    
   };
 
   return (
@@ -336,17 +334,13 @@ function page() {
                           </div>
                         </td>
 
-                        
                         <th
                           scope="row"
                           className="px-6 py-4 font-medium text-black whitespace-nowrap"
                         >
                           {parcel.par_real_id}
                         </th>
-                        <th
-                          scope="row"
-                          className="px-6 py-4"
-                        >
+                        <th scope="row" className="px-6 py-4">
                           {parcel.Company?.com_name}
                         </th>
 
@@ -381,109 +375,128 @@ function page() {
           </div>
 
           {/* Detail Receive Modal */}
-          {showDetailReceiveModal && (
-            <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
-              <div className="relative p-4 w-full max-w-[550px]">
-                <div className="relative bg-white rounded-lg shadow p-4">
-                  <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                      Receive Detail
-                    </h3>
-                    <button
-                      type="button"
-                      className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
-                      onClick={() => setDetailReceiveModal(false)}
-                    >
-                      <svg
-                        className="w-3 h-3"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 14"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                        />
-                      </svg>
-                      <span className="sr-only">Close modal</span>
-                    </button>
-                  </div>
-                  <form className="p-4 md:p-5">
-                    <div className="grid gap-4 mb-4 grid-cols-2">
-                      <div className="col-span-2">
-                        <label
-                          htmlFor="receiverName"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                        >
-                          Receiver Name
-                        </label>
-                        <input
-                          type="text"
-                          name="receiverName"
-                          id="receiverName"
-                          className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Receiver Name"
-                          value={receiverName}
-                          readOnly
-                        />
-                      </div>
-                      <div className="col-span-2">
-                        <label
-                          htmlFor="deliveryDate"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                        >
-                          Delivery Date
-                        </label>
-                        <input
-                          type="text"
-                          name="deliveryDate"
-                          id="deliveryDate"
-                          className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Delivery Date"
-                          value={deliveryDate}
-                          readOnly
-                        />
-                      </div>
-                      <div className="col-span-2">
-                        <label
-                          htmlFor="ownerName"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                        >
-                          Owner Name
-                        </label>
-                        <input
-                          type="text"
-                          name="ownerName"
-                          id="ownerName"
-                          className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Owner Name"
-                          value={ownerName}
-                          readOnly
-                        />
-                      </div>
-                    </div>
-                  </form>
-                </div>
+      {showDetailReceiveModal && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
+          <div className="relative p-4 w-full max-w-[550px] animate-sweetAlertPopUp">
+            <div className="p-3 rounded-2xl bg-white shadow-xl w-full max-w-md">
+              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
+                  รายละเอียดการรับสินค้า
+                </h3>
+                <button
+                  type="button"
+                  className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
+                  onClick={() => setDetailReceiveModal(false)}
+                >
+                  <svg
+                    className="w-3 h-3"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 14 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                    />
+                  </svg>
+                  <span className="sr-only">Close modal</span>
+                </button>
               </div>
+              <form className="p-4 md:p-5">
+                <div className="grid gap-4 mb-4 grid-cols-2">
+                  <div className="col-span-2">
+                    <label
+                      htmlFor="receiverName"
+                      className="text-gray-800 text-sm mb-2 block"
+                    >
+                      ชื่อผู้รับสินค้า
+                    </label>
+                    <input
+                      type="text"
+                      name="receiverName"
+                      id="receiverName"
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                      placeholder="Receiver Name"
+                      value={receiverName}
+                      readOnly
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label
+                      htmlFor="deliveryDate"
+                      className="text-gray-800 text-sm mb-2 block"
+                    >
+                      วันที่รับสินค้า
+                    </label>
+                    <input
+                      type="text"
+                      name="deliveryDate"
+                      id="deliveryDate"
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                      placeholder="Delivery Date"
+                      value={deliveryDate}
+                      readOnly
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label
+                      htmlFor="ownerName"
+                      className="text-gray-800 text-sm mb-2 block"
+                    >
+                      ชื่อเจ้าของสินค้า
+                    </label>
+                    <input
+                      type="text"
+                      name="ownerName"
+                      id="ownerName"
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                      placeholder="Owner Name"
+                      value={ownerName}
+                      readOnly
+                    />
+                  </div>
+                </div>
+              </form>
             </div>
-          )}
+          </div>
+        </div>
+      )}
+
+          <style jsx>{`
+            @keyframes sweetAlertPopUp {
+              0% {
+                transform: scale(0.5);
+                opacity: 0;
+              }
+              80% {
+                transform: scale(1.05);
+                opacity: 1;
+              }
+              100% {
+                transform: scale(1);
+              }
+            }
+            .animate-sweetAlertPopUp {
+              animation: sweetAlertPopUp 0.3s ease-out forwards;
+            }
+          `}</style>
 
           {/* ReceiveModal modal */}
           {showReceiveModal && (
             <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
-              <div className="relative p-4 w-full max-w-[550px]">
-                <div className="relative bg-white rounded-lg shadow p-4">
-                  <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+              <div className="relative p-4 w-full max-w-[550px] animate-sweetAlertPopUp">
+                <div className="p-3 rounded-2xl bg-white shadow-xl w-full max-w-md">
+                  <div className="flex items-center justify-between rounded-t">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
                       ฟอร์มการรับสินค้า
                     </h3>
                     <button
                       type="button"
-                      className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
+                      className="text-gray-400 hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
                       onClick={() => setReceiveModal(false)}
                     >
                       <svg
@@ -505,45 +518,49 @@ function page() {
                     </button>
                   </div>
                   <form className="p-4 md:p-5" onSubmit={handleSubmit}>
-                    <div className="grid gap-4 mb-4 grid-cols-2">
-                      <div className="col-span-2">
-                        <label
-                          htmlFor="name"
-                          className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                        >
-                          ชื่อผู้รับ
-                        </label>
-                        <input
-                          type="text"
-                          name="name"
-                          id="name"
-                          className="bg-white border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white dark:border-gray-500 dark:placeholder-gray-400 dark:text-black dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Type owner name"
-                          required
-                          value={receiverName}
-                          onChange={(e) => setReceiverName(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <button
-                      type="submit"
-                      className="text-white inline-flex items-center bg-[#60d0ac] hover:bg-[#469e80] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                <div className="grid gap-4 mb-4 grid-cols-2">
+                  <div className="col-span-2">
+                    <label
+                      htmlFor="name"
+                      className="text-gray-800 text-sm mb-2 block"
                     >
+                      ชื่อผู้รับสินค้า
+                    </label>
+                    <div className="relative flex items-center">
+                      <input
+                        type="text"
+                        name="name"
+                        id="name"
+                        className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                        placeholder="กรอกชื่อผู้รับ"
+                        required
+                        value={receiverName}
+                        onChange={(e) => setReceiverName(e.target.value)}
+                      />
                       <svg
-                        className="me-1 -ms-1 w-5 h-5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
+                        fill="#bbb"
+                        stroke="#bbb"
+                        className="w-4 h-4 absolute right-4"
+                        viewBox="0 0 24 24"
                       >
+                        <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
                         <path
-                          fillRule="evenodd"
-                          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                          clipRule="evenodd"
-                        />
+                          d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                          data-original="#000000"
+                        ></path>
                       </svg>
-                      ยืนยันการรับ
-                    </button>
-                  </form>
+                    </div>
+                  </div>
+
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-[#60d0ac] hover:bg-[#469e80] text-white py-3 rounded-md  transition duration-300 ease-in-out"
+                >
+                  ยืนยันการรับของ
+                </button>
+              </form>
                 </div>
               </div>
             </div>
