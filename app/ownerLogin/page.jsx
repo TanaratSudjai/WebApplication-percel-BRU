@@ -36,7 +36,7 @@ const OwnerLoginPage = () => {
   };
 
   return (
-    <div className="mx-auto mt-4 sm:mt-10 min-h-screen w-full px-4 flex flex-col items-center justify-center font-sans bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen px-4 py-12 sm:px-6 lg:px-8">
       <div className="p-6 sm:p-8 rounded-2xl bg-white shadow-xl w-full max-w-md">
         <div className="flex justify-center mb-6">
           <Image

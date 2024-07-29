@@ -376,7 +376,7 @@ function page() {
 
           {/* Detail Receive Modal */}
       {showDetailReceiveModal && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-300 bg-opacity-75">
+        <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-900 bg-opacity-45">
           <div className="relative p-4 w-full max-w-[550px] animate-sweetAlertPopUp">
             <div className="p-3 rounded-2xl bg-white shadow-xl w-full max-w-md">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
