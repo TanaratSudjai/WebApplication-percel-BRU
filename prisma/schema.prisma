@@ -79,3 +79,11 @@ model Delivered {
 
   @@map("delivered")
 }
+
+model OTP {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}

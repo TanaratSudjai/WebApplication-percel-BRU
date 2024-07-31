@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 
 const OwnerLoginPage = () => {
   const [phone, setPhone] = useState("");
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

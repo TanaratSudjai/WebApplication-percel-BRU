@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 
 const authOptions = {
   providers: [
+    //Staff login
     CredentialsProvider({
       name: "Staff",
       id: "staff-login",
@@ -36,27 +37,28 @@ const authOptions = {
       },
     }),
 
+    //owner login
     CredentialsProvider({
-      name: "Owner",
-      id: "owner-login",
+      name: "OTP",
       credentials: {
-        phone: { label: "Phone", type: "tel", placeholder: "+1234567890" },
+        phone: { label: "Phone", type: "text" },
+        otp: { label: "OTP", type: "text" },
       },
-      async authorize(credentials, req) {
-        if (!credentials) return null;
-        const owner = await prisma.owner.findFirst({
-          where: { own_phone: credentials.phone },
-        });
+      async authorize(credentials) {
+        if (!credentials?.phone || !credentials?.otp) return null;
 
-        if (owner) {
-          return {
-            id: owner.own_id,
-            name: owner.own_name,
-            phone: owner.own_phone,
-          };
-        } else {
-          throw new Error("Invalid phone number");
+        // ตรวจสอบ OTP
+        const isValid = await verifyOTP(credentials.phone, credentials.otp);
+        if (isValid) {
+          // หาหรือสร้าง user
+          const user = await prisma.user.upsert({
+            where: { phone: credentials.phone },
+            update: {},
+            create: { phone: credentials.phone },
+          });
+          return user;
         }
+        return null;
       },
     }),
   ],
