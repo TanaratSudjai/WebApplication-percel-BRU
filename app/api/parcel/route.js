@@ -8,7 +8,9 @@ export async function GET() {
         Owner: true,
         Staff: true,
         Company: true,
-        Status: true, // ระบุให้รวมข้อมูลจาก relation Owner
+        Status: true,
+        CategoryParcel:true,
+        Statusowner:true
       },
       orderBy: {
         par_id: "desc",
@@ -22,10 +24,12 @@ export async function GET() {
         staff_name: parcel.Staff && parcel.Staff.staff_name,
         sta_name: parcel.Status && parcel.Status.sta_name,
         com_name: parcel.Company && parcel.Company.com_name,
+        owner_status_name: parcel.Statusowner && parcel.Statusowner.owner_status_name,
+        caategoryparcel_name: parcel.CategoryParcel && parcel.CategoryParcel.caategoryparcel_name
       };
     });
 
-    // console.table(parcelsWithPhone);
+    //console.table(parcelsWithPhone);
 
     return Response.json({ dataParcel: parcelsWithPhone }, { status: 200 });
   } catch (error) {
@@ -37,8 +41,8 @@ export async function POST(req) {
   try {
     const date = new Date();
     const status = 1;
-    const { Rid, owner, staff, company } = await req.json();
-    // console.table({ Rid, owner, staff });
+    const { Rid, owner, staff, company, owner_status, category_parcel } = await req.json();
+    //console.table({ Rid, owner, staff,company, owner_status,category_parcel});
     const newParcel = await prisma.parcel.create({
       data: {
         par_real_id: Rid,
@@ -47,10 +51,12 @@ export async function POST(req) {
         sta_id: status,
         com_id: company,
         pickupsdate: date,
+        owner_status_id: owner_status,
+        parcel_category_id:category_parcel
       },
     });
 
-    return Response.json( 
+    return Response.json(
       {
         newParcel,
       },

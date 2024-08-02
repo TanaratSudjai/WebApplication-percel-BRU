@@ -18,6 +18,8 @@ function page() {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [ownerName, setOwnerName] = useState("");
 
+ 
+
   const fetchComData = async () => {
     try {
       const response = await axios.get("/api/company");
@@ -375,96 +377,96 @@ function page() {
           </div>
 
           {/* Detail Receive Modal */}
-      {showDetailReceiveModal && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-900 bg-opacity-45">
-          <div className="relative p-4 w-full max-w-[550px] animate-sweetAlertPopUp">
-            <div className="p-3 rounded-2xl bg-white shadow-xl w-full max-w-md">
-              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
-                  รายละเอียดการรับสินค้า
-                </h3>
-                <button
-                  type="button"
-                  className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
-                  onClick={() => setDetailReceiveModal(false)}
-                >
-                  <svg
-                    className="w-3 h-3"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 14 14"
-                  >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                    />
-                  </svg>
-                  <span className="sr-only">Close modal</span>
-                </button>
-              </div>
-              <form className="p-4 md:p-5">
-                <div className="grid gap-4 mb-4 grid-cols-2">
-                  <div className="col-span-2">
-                    <label
-                      htmlFor="receiverName"
-                      className="text-gray-800 text-sm mb-2 block"
+          {showDetailReceiveModal && (
+            <div className="fixed inset-0 z-50 flex justify-center items-center w-full overflow-x-hidden overflow-y-auto bg-neutral-900 bg-opacity-45">
+              <div className="relative p-4 w-full max-w-[550px] animate-sweetAlertPopUp">
+                <div className="p-3 rounded-2xl bg-white shadow-xl w-full max-w-md">
+                  <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-black">
+                      รายละเอียดการรับสินค้า
+                    </h3>
+                    <button
+                      type="button"
+                      className="text-gray-400 bg-transparent hover:bg-orange-700 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-orange-600 dark:hover:text-white"
+                      onClick={() => setDetailReceiveModal(false)}
                     >
-                      ชื่อผู้รับสินค้า
-                    </label>
-                    <input
-                      type="text"
-                      name="receiverName"
-                      id="receiverName"
-                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                      placeholder="Receiver Name"
-                      value={receiverName}
-                      readOnly
-                    />
+                      <svg
+                        className="w-3 h-3"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 14 14"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                        />
+                      </svg>
+                      <span className="sr-only">Close modal</span>
+                    </button>
                   </div>
-                  <div className="col-span-2">
-                    <label
-                      htmlFor="deliveryDate"
-                      className="text-gray-800 text-sm mb-2 block"
-                    >
-                      วันที่รับสินค้า
-                    </label>
-                    <input
-                      type="text"
-                      name="deliveryDate"
-                      id="deliveryDate"
-                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                      placeholder="Delivery Date"
-                      value={deliveryDate}
-                      readOnly
-                    />
-                  </div>
-                  <div className="col-span-2">
-                    <label
-                      htmlFor="ownerName"
-                      className="text-gray-800 text-sm mb-2 block"
-                    >
-                      ชื่อเจ้าของสินค้า
-                    </label>
-                    <input
-                      type="text"
-                      name="ownerName"
-                      id="ownerName"
-                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                      placeholder="Owner Name"
-                      value={ownerName}
-                      readOnly
-                    />
-                  </div>
+                  <form className="p-4 md:p-5">
+                    <div className="grid gap-4 mb-4 grid-cols-2">
+                      <div className="col-span-2">
+                        <label
+                          htmlFor="receiverName"
+                          className="text-gray-800 text-sm mb-2 block"
+                        >
+                          ชื่อผู้รับสินค้า
+                        </label>
+                        <input
+                          type="text"
+                          name="receiverName"
+                          id="receiverName"
+                          className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                          placeholder="Receiver Name"
+                          value={receiverName}
+                          readOnly
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <label
+                          htmlFor="deliveryDate"
+                          className="text-gray-800 text-sm mb-2 block"
+                        >
+                          วันที่รับสินค้า
+                        </label>
+                        <input
+                          type="text"
+                          name="deliveryDate"
+                          id="deliveryDate"
+                          className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                          placeholder="Delivery Date"
+                          value={deliveryDate}
+                          readOnly
+                        />
+                      </div>
+                      <div className="col-span-2">
+                        <label
+                          htmlFor="ownerName"
+                          className="text-gray-800 text-sm mb-2 block"
+                        >
+                          ชื่อเจ้าของสินค้า
+                        </label>
+                        <input
+                          type="text"
+                          name="ownerName"
+                          id="ownerName"
+                          className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                          placeholder="Owner Name"
+                          value={ownerName}
+                          readOnly
+                        />
+                      </div>
+                    </div>
+                  </form>
                 </div>
-              </form>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
 
           <style jsx>{`
             @keyframes sweetAlertPopUp {
@@ -518,49 +520,53 @@ function page() {
                     </button>
                   </div>
                   <form className="p-4 md:p-5" onSubmit={handleSubmit}>
-                <div className="grid gap-4 mb-4 grid-cols-2">
-                  <div className="col-span-2">
-                    <label
-                      htmlFor="name"
-                      className="text-gray-800 text-sm mb-2 block"
-                    >
-                      ชื่อผู้รับสินค้า
-                    </label>
-                    <div className="relative flex items-center">
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                        placeholder="กรอกชื่อผู้รับ"
-                        required
-                        value={receiverName}
-                        onChange={(e) => setReceiverName(e.target.value)}
-                      />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="#bbb"
-                        stroke="#bbb"
-                        className="w-4 h-4 absolute right-4"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle cx="10" cy="7" r="6" data-original="#000000"></circle>
-                        <path
-                          d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
-                          data-original="#000000"
-                        ></path>
-                      </svg>
+                    <div className="grid gap-4 mb-4 grid-cols-2">
+                      <div className="col-span-2">
+                        <label
+                          htmlFor="name"
+                          className="text-gray-800 text-sm mb-2 block"
+                        >
+                          ชื่อผู้รับสินค้า
+                        </label>
+                        <div className="relative flex items-center">
+                          <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                            placeholder="กรอกชื่อผู้รับ"
+                            required
+                            value={receiverName}
+                            onChange={(e) => setReceiverName(e.target.value)}
+                          />
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#bbb"
+                            stroke="#bbb"
+                            className="w-4 h-4 absolute right-4"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              cx="10"
+                              cy="7"
+                              r="6"
+                              data-original="#000000"
+                            ></circle>
+                            <path
+                              d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                              data-original="#000000"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-[#60d0ac] hover:bg-[#469e80] text-white py-3 rounded-md  transition duration-300 ease-in-out"
-                >
-                  ยืนยันการรับของ
-                </button>
-              </form>
+                    <button
+                      type="submit"
+                      className="w-full bg-[#60d0ac] hover:bg-[#469e80] text-white py-3 rounded-md  transition duration-300 ease-in-out"
+                    >
+                      ยืนยันการรับของ
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>

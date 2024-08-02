@@ -32,8 +32,13 @@ model Owner {
   own_phone String      @unique
   Parcel    Parcel[]
   Delivered Delivered[]
-
   @@map("owner")
+}
+
+model Statusowner {
+    owner_status_id Int @id @default(autoincrement())
+    owner_status_name String 
+    Parcel    Parcel[]
 }
 
 model Status {
@@ -47,7 +52,9 @@ model Status {
 model Parcel {
   par_id      Int        @id @default(autoincrement())
   par_real_id String
+  parcel_category_id Int?
   own_id      Int?
+  owner_status_id Int?
   staff_id    Int?
   pickupsdate DateTime?
   sta_id      Int?
@@ -57,8 +64,18 @@ model Parcel {
   Staff       Staff?     @relation(fields: [staff_id], references: [id])
   Status      Status?    @relation(fields: [sta_id], references: [sta_id])
   Delivered   Delivered?
+  Statusowner  Statusowner?     @relation(fields: [owner_status_id], references: [owner_status_id])
+  CategoryParcel  CategoryParcel?     @relation(fields: [parcel_category_id], references: [parcel_category_id])
 
   @@map("parcel")
+}
+
+model CategoryParcel{
+  parcel_category_id Int @id @default(autoincrement())
+  categoryparcel_name String
+  Parcel Parcel[]
+
+  @@map("categoryparcel")
 }
 
 model Company{
