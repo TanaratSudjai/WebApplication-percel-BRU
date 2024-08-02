@@ -29,7 +29,7 @@ export async function GET() {
       };
     });
 
-    console.table(parcelsWithPhone);
+    //console.table(parcelsWithPhone);
 
     return Response.json({ dataParcel: parcelsWithPhone }, { status: 200 });
   } catch (error) {
@@ -42,7 +42,7 @@ export async function POST(req) {
     const date = new Date();
     const status = 1;
     const { Rid, owner, staff, company, owner_status, category_parcel } = await req.json();
-    console.table({ Rid, owner, staff,company, owner_status,category_parcel});
+    //console.table({ Rid, owner, staff,company, owner_status,category_parcel});
     const newParcel = await prisma.parcel.create({
       data: {
         par_real_id: Rid,

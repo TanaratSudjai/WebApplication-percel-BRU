@@ -4,13 +4,13 @@ const prisma = new PrismaClient();
 export async function GET() {
   try {
     const dataDelivernd = await prisma.delivered.findMany();
-    // console.table(dataDelivernd);
+    console.table(dataDelivernd);
 
     const owners = await prisma.owner.findMany();
 
     // สร้าง queryDeli โดยรวมข้อมูลจาก owner
     const queryDeli = dataDelivernd.map(delivered => ({
-      ...delivered, // ต้องเป็น delivered ไม่ใช่ dataDelivernd
+      ...delivered,
       own_name: owners.find(owner => owner.own_id === delivered.own_id)?.own_name,
     }));
 
