@@ -30,18 +30,15 @@ model Owner {
   own_id    Int         @id @default(autoincrement())
   own_name  String
   own_phone String      @unique
-  owner_status_id Int 
   Parcel    Parcel[]
   Delivered Delivered[]
-  Statusowner  Statusowner?     @relation(fields: [owner_status_id], references: [owner_status_id])
-
   @@map("owner")
 }
 
 model Statusowner {
     owner_status_id Int @id @default(autoincrement())
     owner_status_name String 
-    Owner Owner[]
+    Parcel    Parcel[]
 }
 
 model Status {
@@ -56,6 +53,7 @@ model Parcel {
   par_id      Int        @id @default(autoincrement())
   par_real_id String
   own_id      Int?
+  owner_status_id Int?
   staff_id    Int?
   pickupsdate DateTime?
   sta_id      Int?
@@ -65,6 +63,7 @@ model Parcel {
   Staff       Staff?     @relation(fields: [staff_id], references: [id])
   Status      Status?    @relation(fields: [sta_id], references: [sta_id])
   Delivered   Delivered?
+  Statusowner  Statusowner?     @relation(fields: [owner_status_id], references: [owner_status_id])
 
   @@map("parcel")
 }

@@ -37,8 +37,8 @@ export async function POST(req) {
   try {
     const date = new Date();
     const status = 1;
-    const { Rid, owner, staff, company } = await req.json();
-    // console.table({ Rid, owner, staff });
+    const { Rid, owner, staff, company, owner_status } = await req.json();
+    console.table({ Rid, owner, staff,company, owner_status});
     const newParcel = await prisma.parcel.create({
       data: {
         par_real_id: Rid,
@@ -47,10 +47,11 @@ export async function POST(req) {
         sta_id: status,
         com_id: company,
         pickupsdate: date,
+        owner_status_id: owner_status,
       },
     });
 
-    return Response.json( 
+    return Response.json(
       {
         newParcel,
       },
