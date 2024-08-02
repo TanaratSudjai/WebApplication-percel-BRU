@@ -30,10 +30,18 @@ model Owner {
   own_id    Int         @id @default(autoincrement())
   own_name  String
   own_phone String      @unique
+  owner_status_id Int 
   Parcel    Parcel[]
   Delivered Delivered[]
+  Statusowner  Statusowner?     @relation(fields: [owner_status_id], references: [owner_status_id])
 
   @@map("owner")
+}
+
+model Statusowner {
+    owner_status_id Int @id @default(autoincrement())
+    owner_status_name String 
+    Owner Owner[]
 }
 
 model Status {
