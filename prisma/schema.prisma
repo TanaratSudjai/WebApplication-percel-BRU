@@ -72,7 +72,7 @@ model Parcel {
 
 model CategoryParcel{
   parcel_category_id Int @id @default(autoincrement())
-  caategoryparcel_name String
+  categoryparcel_name String
   Parcel Parcel[]
 
   @@map("categoryparcel")
