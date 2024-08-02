@@ -52,6 +52,7 @@ model Status {
 model Parcel {
   par_id      Int        @id @default(autoincrement())
   par_real_id String
+  parcel_category_id Int?
   own_id      Int?
   owner_status_id Int?
   staff_id    Int?
@@ -64,8 +65,17 @@ model Parcel {
   Status      Status?    @relation(fields: [sta_id], references: [sta_id])
   Delivered   Delivered?
   Statusowner  Statusowner?     @relation(fields: [owner_status_id], references: [owner_status_id])
+  CategoryParcel  CategoryParcel?     @relation(fields: [parcel_category_id], references: [parcel_category_id])
 
   @@map("parcel")
+}
+
+model CategoryParcel{
+  parcel_category_id Int @id @default(autoincrement())
+  caategoryparcel_name String
+  Parcel Parcel[]
+
+  @@map("categoryparcel")
 }
 
 model Company{

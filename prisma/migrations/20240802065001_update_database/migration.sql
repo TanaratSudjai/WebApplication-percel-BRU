@@ -38,6 +38,7 @@ CREATE TABLE "status" (
 CREATE TABLE "parcel" (
     "par_id" SERIAL NOT NULL,
     "par_real_id" TEXT NOT NULL,
+    "parcel_category_id" INTEGER,
     "own_id" INTEGER,
     "owner_status_id" INTEGER,
     "staff_id" INTEGER,
@@ -46,6 +47,14 @@ CREATE TABLE "parcel" (
     "com_id" INTEGER,
 
     CONSTRAINT "parcel_pkey" PRIMARY KEY ("par_id")
+);
+
+-- CreateTable
+CREATE TABLE "CategoryParcel" (
+    "parcel_category_id" SERIAL NOT NULL,
+    "caategoryparcel_name" TEXT NOT NULL,
+
+    CONSTRAINT "CategoryParcel_pkey" PRIMARY KEY ("parcel_category_id")
 );
 
 -- CreateTable
