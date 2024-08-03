@@ -5,12 +5,16 @@ export async function GET() {
   try {
     const dataParcel = await prisma.parcel.findMany({
       include: {
-        Owner: true,
+        Owner: {
+          include: {
+            ownertype: true,
+          },
+        },
+
         Staff: true,
         Company: true,
         Status: true,
-        CategoryParcel:true,
-        Statusowner:true
+        CategoryParcel: true,
       },
       orderBy: {
         par_id: "desc",
@@ -20,12 +24,14 @@ export async function GET() {
     const parcelsWithPhone = dataParcel.map((parcel) => {
       return {
         ...parcel,
+        own_name: parcel.Owner && parcel.Owner.own_name,
         own_phone: parcel.Owner && parcel.Owner.own_phone,
+        ownertype_name: parcel.Owner?.ownertype?.ownertype_name,
         staff_name: parcel.Staff && parcel.Staff.staff_name,
         sta_name: parcel.Status && parcel.Status.sta_name,
         com_name: parcel.Company && parcel.Company.com_name,
-        owner_status_name: parcel.Statusowner && parcel.Statusowner.owner_status_name,
-        caategoryparcel_name: parcel.CategoryParcel && parcel.CategoryParcel.caategoryparcel_name
+        caategoryparcel_name:
+          parcel.CategoryParcel && parcel.CategoryParcel.categoryparcel_name,
       };
     });
 
@@ -41,7 +47,7 @@ export async function POST(req) {
   try {
     const date = new Date();
     const status = 1;
-    const { Rid, owner, staff, company, owner_status, category_parcel } = await req.json();
+    const { Rid, owner, staff, company, category_parcel } = await req.json();
     //console.table({ Rid, owner, staff,company, owner_status,category_parcel});
     const newParcel = await prisma.parcel.create({
       data: {
@@ -51,8 +57,7 @@ export async function POST(req) {
         sta_id: status,
         com_id: company,
         pickupsdate: date,
-        owner_status_id: owner_status,
-        parcel_category_id:category_parcel
+        parcel_category_id: category_parcel,
       },
     });
 

@@ -16,7 +16,7 @@ export async function GET() {
 
 export async function POST(req) {
   try {
-    const { name, phone } = await req.json();
+    const { name, phone, type } = await req.json();
 
     const checkphone = await prisma.owner.count({
       where: {
@@ -29,6 +29,7 @@ export async function POST(req) {
         data: {
           own_name: name,
           own_phone: phone,
+          ownertype_id: type,
         },
       });
       return Response.json({ message: "POST Api Owner !", newOwner });
