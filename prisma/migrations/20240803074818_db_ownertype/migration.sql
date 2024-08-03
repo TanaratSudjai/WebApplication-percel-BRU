@@ -14,16 +14,17 @@ CREATE TABLE "owner" (
     "own_id" SERIAL NOT NULL,
     "own_name" TEXT NOT NULL,
     "own_phone" TEXT NOT NULL,
+    "ownertype_id" INTEGER NOT NULL,
 
     CONSTRAINT "owner_pkey" PRIMARY KEY ("own_id")
 );
 
 -- CreateTable
-CREATE TABLE "Statusowner" (
-    "owner_status_id" SERIAL NOT NULL,
-    "owner_status_name" TEXT NOT NULL,
+CREATE TABLE "ownertype" (
+    "ownertype_id" SERIAL NOT NULL,
+    "ownertype_name" TEXT NOT NULL,
 
-    CONSTRAINT "Statusowner_pkey" PRIMARY KEY ("owner_status_id")
+    CONSTRAINT "ownertype_pkey" PRIMARY KEY ("ownertype_id")
 );
 
 -- CreateTable
@@ -40,7 +41,6 @@ CREATE TABLE "parcel" (
     "par_real_id" TEXT NOT NULL,
     "parcel_category_id" INTEGER,
     "own_id" INTEGER,
-    "owner_status_id" INTEGER,
     "staff_id" INTEGER,
     "pickupsdate" TIMESTAMP(3),
     "sta_id" INTEGER,
@@ -50,11 +50,11 @@ CREATE TABLE "parcel" (
 );
 
 -- CreateTable
-CREATE TABLE "CategoryParcel" (
+CREATE TABLE "categoryparcel" (
     "parcel_category_id" SERIAL NOT NULL,
-    "caategoryparcel_name" TEXT NOT NULL,
+    "categoryparcel_name" TEXT NOT NULL,
 
-    CONSTRAINT "CategoryParcel_pkey" PRIMARY KEY ("parcel_category_id")
+    CONSTRAINT "categoryparcel_pkey" PRIMARY KEY ("parcel_category_id")
 );
 
 -- CreateTable
@@ -89,6 +89,9 @@ CREATE UNIQUE INDEX "company_com_name_key" ON "company"("com_name");
 CREATE UNIQUE INDEX "delivered_par_id_key" ON "delivered"("par_id");
 
 -- AddForeignKey
+ALTER TABLE "owner" ADD CONSTRAINT "owner_ownertype_id_fkey" FOREIGN KEY ("ownertype_id") REFERENCES "ownertype"("ownertype_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "parcel" ADD CONSTRAINT "parcel_com_id_fkey" FOREIGN KEY ("com_id") REFERENCES "company"("com_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -101,7 +104,7 @@ ALTER TABLE "parcel" ADD CONSTRAINT "parcel_staff_id_fkey" FOREIGN KEY ("staff_i
 ALTER TABLE "parcel" ADD CONSTRAINT "parcel_sta_id_fkey" FOREIGN KEY ("sta_id") REFERENCES "status"("sta_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "parcel" ADD CONSTRAINT "parcel_owner_status_id_fkey" FOREIGN KEY ("owner_status_id") REFERENCES "Statusowner"("owner_status_id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "parcel" ADD CONSTRAINT "parcel_parcel_category_id_fkey" FOREIGN KEY ("parcel_category_id") REFERENCES "categoryparcel"("parcel_category_id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "delivered" ADD CONSTRAINT "delivered_par_id_fkey" FOREIGN KEY ("par_id") REFERENCES "parcel"("par_id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -16,7 +16,7 @@ export async function POST(req, res) {
     const {name} = await req.json();
     const newcategory = await prisma.categoryParcel.create({
       data: {
-        caategoryparcel_name: name,
+        categoryparcel_name: name,
       },
     });
     return Response.json({ newcategory }, { status: 200 });
