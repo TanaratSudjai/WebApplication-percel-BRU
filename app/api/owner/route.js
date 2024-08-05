@@ -7,7 +7,11 @@ export async function GET() {
       orderBy: {
         own_id: "desc",
       },
+      include:{
+        ownertype:true
+      }
     });
+    
     return Response.json({ message: "Get Api Owner !", owners });
   } catch (error) {
     return Response.json({ error }, { status: 500 });
