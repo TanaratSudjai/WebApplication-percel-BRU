@@ -8,6 +8,7 @@ function page() {
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
   const [searchQuery, setSearchQuery] = useState("");
   const [comData, setComData] = useState([]);
+  const [cateData, setCateData] = useState({dataparcel_category: []});
   const [showReceiveModal, setReceiveModal] = useState(false);
   const [receiverName, setReceiverName] = useState("");
   const [selectedParcelId, setSelectedParcelId] = useState(null);
@@ -18,7 +19,14 @@ function page() {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [ownerName, setOwnerName] = useState("");
 
- 
+  const fetchCategoryParcel = async () => {
+    try {
+      const response = await axios.get("/api/parcel_category");
+      setCateData(response.data);
+    } catch (error) {
+      console.error("Error fetching owner data:", error);
+    }
+  };
 
   const fetchComData = async () => {
     try {
@@ -52,6 +60,7 @@ function page() {
     fetchComData();
     fetchParcelData();
     fetchDelivereData();
+    fetchCategoryParcel();
     const interval = setInterval(() => {
       fetchParcelData();
       fetchDelivereData();
@@ -289,6 +298,9 @@ function page() {
                         ชื่อบริษัท
                       </th>
                       <th scope="col" className="px-6 py-3">
+                        รหัสประเภทพัสดุประเภท
+                      </th>
+                      <th scope="col" className="px-6 py-3">
                         ชื่อเจ้าของ
                       </th>
                       <th scope="col" className="px-6 py-3">
@@ -342,8 +354,14 @@ function page() {
                         >
                           {parcel.par_real_id}
                         </th>
+                        
+
                         <th scope="row" className="px-6 py-4">
                           {parcel.Company?.com_name}
+                        </th>
+
+                        <th scope="row" className="px-6 py-4">
+                          {parcel.CategoryParcel?.categoryparcel_name}
                         </th>
 
                         <td className="px-6 py-4"> {parcel.Owner?.own_name}</td>

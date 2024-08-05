@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 
 function AddParcel() {
   const [ownData, setOwnData] = useState([]);
+  const [cateData, setCateData] = useState({dataparcel_category: []});
   const [staffData, setStaffData] = useState({ staff: [] });
   const [companyData, setCompanyData] = useState({ datacompany: [] });
   const [inputValue, setInputValue] = useState("");
@@ -14,6 +15,7 @@ function AddParcel() {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
   const [selectedStaff, setSelectedStaff] = useState("");
+  const [selectedCateData, setSelectedCateData] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
   const [parcelCode, setParcelCode] = useState("");
   const inputRef = useRef(null);
@@ -22,6 +24,15 @@ function AddParcel() {
     try {
       const response = await axios.get("/api/owner");
       setOwnData(response.data.owners);
+    } catch (error) {
+      console.error("Error fetching owner data:", error);
+    }
+  };
+
+  const fetchCategoryParcel = async () => {
+    try {
+      const response = await axios.get("/api/parcel_category");
+      setCateData(response.data);
     } catch (error) {
       console.error("Error fetching owner data:", error);
     }
@@ -44,18 +55,17 @@ function AddParcel() {
       console.error("Error fetching company data:", error);
     }
   };
+
   useEffect(() => {
     fetchOwnData();
     fetchStaffData();
     fetchCompanyData();
+    fetchCategoryParcel();
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
 
-  console.log(inputRef);
-  console.log(parcelCode);
-  
   useEffect(() => {
     if (Array.isArray(ownData)) {
       setFilteredOwners(
@@ -142,6 +152,7 @@ function AddParcel() {
       staff: parseInt(selectedStaff),
       company: parseInt(selectedCompany),
       sta_id: 1,
+      category_parcel:parseInt(selectedCateData)
     };
 
     try {
@@ -264,8 +275,6 @@ function AddParcel() {
                   </select>
                 </div>
 
-                
-
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
                     ชื่อเจ้าของ
@@ -304,8 +313,6 @@ function AddParcel() {
                   </div>
                 </div>
 
-                
-
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
                     เบอร์เจ้าของ
@@ -321,6 +328,55 @@ function AddParcel() {
                       placeholder="กรอกเบอร์โทรเจ้าของ"
                     />
                   </div>
+                </div>
+
+                <div className="col-span-full sm:col-span-1">
+                  <label className="text-gray-800 text-sm mb-2 block">
+                    รหัสประเภทพัสดุ
+                  </label>
+                  <select
+                    id="staff"
+                    name="staffList"
+                    form="staffForm"
+                    required
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    value={selectedCateData}
+                    onChange={(e) => setSelectedCateData(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      เลือกรหัสประเภทพัสดุ
+                    </option>
+                    {cateData.dataparcel_category.map((cateData) => (
+                      <option key={cateData.parcel_category_id} value={cateData.parcel_category_id}>
+                        {cateData.categoryparcel_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+
+                <div className="col-span-full sm:col-span-1">
+                  <label className="text-gray-800 text-sm mb-2 block">
+                    สถานะของเจ้าของ
+                  </label>
+                  <select
+                    id="staff"
+                    name="staffList"
+                    form="staffForm"
+                    required
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    
+                    onChange={(e) => (e.target.value)}
+                  >
+                    <option value="" disabled>
+                      เลือกสถานะ
+                    </option>
+                    
+                      <option>
+                        นักศึกษา
+                      </option>
+                    
+                  </select>
                 </div>
 
                 
