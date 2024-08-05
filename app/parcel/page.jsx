@@ -298,7 +298,7 @@ function page() {
                         ชื่อบริษัท
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        รหัสประเภทพัสดุประเภท
+                        รหัสประเภทพัสดุ
                       </th>
                       <th scope="col" className="px-6 py-3">
                         ชื่อเจ้าของ
