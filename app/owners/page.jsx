@@ -210,7 +210,7 @@ function Owners() {
               </div>
               <div className="relative">
                 <a
-                  className="font-medium bg-green-300 text-white rounded-full w-full sm:w-[150px] cursor-pointer select-none px-3 py-1"
+                  className="font-medium bg-green-600 text-white rounded-full w-full sm:w-[150px] cursor-pointer select-none px-3 py-1"
                   onClick={() => setAddShowModal(true)}
                 >
                   เพิ่มรายชื่อ
@@ -220,8 +220,8 @@ function Owners() {
 
             <div className="md:container md:mx-auto">
               <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-white text-center">
+                <table className="w-full text-sm text-left rtl:text-right text-black dark:text-gray-400">
+                  <thead className="text-sm text-black uppercase bg-white text-center">
                     <tr>
                       <th scope="col" className="px-2 py-3">
                         จัดการ
@@ -240,21 +240,21 @@ function Owners() {
                         <td className="text-center p-2 px-2 gap-2 w-3/12 ">
                           <div className="flex w-[175px] items-center justify-between px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                             <a
-                              className="font-medium bg-green-100 text-[#60d0ac] rounded-full w-[75px] cursor-pointer select-none"
+                              className="font-medium bg-yellow-600 text-[#fff] rounded-full w-[75px] cursor-pointer select-none"
                               onClick={() => handleEditOwner(owner.own_id)}
                             >
                               แก้ไขรายชื่อ
                             </a>
                             <a
-                              className="font-medium bg-red-100 text-rose-600 rounded-full w-[75px] cursor-pointer select-none"
+                              className="font-medium bg-red-700 text-[#fff] rounded-full w-[75px] cursor-pointer select-none"
                               onClick={() => deleteOwner(owner.own_id)}
                             >
                               ลบรายชื่อ
                             </a>
                           </div>
                         </td>
-                        <td className="px-4 py-2 ">{owner.own_name}</td>
-                        <td className="px-4 py-2 ">{owner.own_phone}</td>
+                        <td className="px-4 py-2 text-black text-bold">{owner.own_name}</td>
+                        <td className="px-4 py-2 text-black text-bold">{owner.own_phone}</td>
                       </tr>
                     ))}
                   </tbody>
