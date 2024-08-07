@@ -1,24 +1,38 @@
 "use client";
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import AuthWrapper from "../components/authComponents";
 import Swal from "sweetalert2";
 
 function AddParcel() {
   const [ownData, setOwnData] = useState([]);
-  const [cateData, setCateData] = useState({dataparcel_category: []});
+  const [cateData, setCateData] = useState({ dataparcel_category: [] });
   const [staffData, setStaffData] = useState({ staff: [] });
   const [companyData, setCompanyData] = useState({ datacompany: [] });
+  const [ownerTypeData, setOwnerTypeData] = useState({ typedata: [] });
+
   const [inputValue, setInputValue] = useState("");
+  const [typeValue, setTypeValue] = useState("");
   const [phoneValue, setPhoneValue] = useState(""); // State for phone number input
   const [filteredOwners, setFilteredOwners] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
-  const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" });
+
+  const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" ,ownertype_id: ""});
   const [selectedStaff, setSelectedStaff] = useState("");
   const [selectedCateData, setSelectedCateData] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
+
   const [parcelCode, setParcelCode] = useState("");
   const inputRef = useRef(null);
+  
+  const fetchOwnerType = async () => {
+    try {
+      const res = await axios.get("/api/ownertype");
+      setOwnerTypeData(res.data);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
 
   const fetchOwnData = async () => {
     try {
@@ -61,6 +75,7 @@ function AddParcel() {
     fetchStaffData();
     fetchCompanyData();
     fetchCategoryParcel();
+    fetchOwnerType();
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -80,19 +95,25 @@ function AddParcel() {
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
-    setSelectedOwner({ id: "", phone: "" });
+    setSelectedOwner({ id: "", phone: "" , ownertype_id: "" });
     setPhoneValue("");
+    setTypeValue("");
   };
 
   const handlePhoneChange = (e) => {
     setPhoneValue(e.target.value);
-    setSelectedOwner({ id: "", phone: "" });
+    setSelectedOwner({ id: "", phone: "", ownertype_id: "" });
   };
 
-  const handleSelectOwner = (id, name, phone) => {
+  const handleTypeChange = (e) => {
+    setTypeValue(e.target.value);
+  };
+
+  const handleSelectOwner = (id, name, phone, ownertype_id) => {
     setInputValue(name);
     setPhoneValue(phone);
-    setSelectedOwner({ id, phone });
+    setTypeValue(ownertype_id);
+    setSelectedOwner({ id, phone, ownertype_id: ""});
     setFilteredOwners([]);
     setDropdownVisible(false);
   };
@@ -105,11 +126,12 @@ function AddParcel() {
     setTimeout(() => setDropdownVisible(false), 100);
   };
 
-  const handleAddOwner = async (name, phone) => {
+  const handleAddOwner = async (name, phone, ownertype_id) => {
     try {
       const response = await axios.post("/api/owner", {
         name: name,
         phone: phone,
+        type: parseInt(ownertype_id),
       });
 
       console.log("API Response:", response.data);
@@ -138,7 +160,7 @@ function AddParcel() {
 
     let ownerId = selectedOwner.id;
     if (!ownerId) {
-      const newOwner = await handleAddOwner(inputValue, phoneValue);
+      const newOwner = await handleAddOwner(inputValue, phoneValue, typeValue);
       console.log("New owner:", newOwner);
       if (newOwner && newOwner.newOwner && newOwner.newOwner.own_id) {
         ownerId = newOwner.newOwner.own_id;
@@ -152,7 +174,7 @@ function AddParcel() {
       staff: parseInt(selectedStaff),
       company: parseInt(selectedCompany),
       sta_id: 1,
-      category_parcel:parseInt(selectedCateData)
+      category_parcel: parseInt(selectedCateData),
     };
 
     try {
@@ -168,6 +190,9 @@ function AddParcel() {
           showConfirmButton: false,
           timer: 500,
         });
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
       } else {
         console.error("Failed to submit parcel data");
       }
@@ -177,18 +202,18 @@ function AddParcel() {
         console.error("Server Response:", error.response.data);
       }
     }
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    
   };
 
   const reset = () => {
     setInputValue("");
     setPhoneValue("");
-    setSelectedOwner({ id: "", phone: "" });
+    setSelectedOwner({ id: "", phone: "" , ownertype_id: ""});
     setSelectedStaff("");
     setSelectedCompany("");
     setParcelCode("");
+    setTypeValue("");
+    setSelectedCateData("");
 
     fetchOwnData();
     fetchStaffData();
@@ -209,6 +234,9 @@ function AddParcel() {
                 className="grid gap-4 gap-y-2 text-sm grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
               >
                 <div className="col-span-full">
+                <label className="text-black text-xl mb-2 block font-bold">
+                    กรอกข้อมูลพัสดุ
+                  </label>
                   <label className="text-gray-800 text-sm mb-2 block">
                     รหัสพัสดุ
                   </label>
@@ -226,6 +254,32 @@ function AddParcel() {
                   </div>
                 </div>
 
+                <div className="col-span-full sm:col-span-1">
+                  <label className="text-gray-800 text-sm mb-2 block">
+                    รหัสประเภทพัสดุ
+                  </label>
+                  <select
+                    id="staff"
+                    name="staffList"
+                    form="staffForm"
+                    required
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    value={selectedCateData}
+                    onChange={(e) => setSelectedCateData(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      เลือกรหัสประเภทพัสดุ
+                    </option>
+                    {cateData.dataparcel_category.map((cateData) => (
+                      <option
+                        key={cateData.parcel_category_id}
+                        value={cateData.parcel_category_id}
+                      >
+                        {cateData.categoryparcel_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
@@ -244,22 +298,29 @@ function AddParcel() {
                       เลือกบริษัท
                     </option>
                     {companyData.datacompany.map((company) => (
-                        <option key={company.com_id} value={company.com_id}>
-                          {company.com_name}
-                        </option>
-                      ))}
+                      <option key={company.com_id} value={company.com_id}>
+                        {company.com_name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
-                <div className="col-span-full sm:col-span-1">
+                <div className="col-span-full">
+                  <hr />
+                </div>
+
+                <div className="col-span-full ">
+                <label className="text-black text-xl mb-2 block font-bold">
+                    เลือกพนักงาน
+                  </label>
                   <label className="text-gray-800 text-sm mb-2 block">
                     พนักงาน
                   </label>
                   <select
+                    required
                     id="staff"
                     name="staffList"
                     form="staffForm"
-                    required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     value={selectedStaff}
                     onChange={(e) => setSelectedStaff(e.target.value)}
@@ -275,7 +336,26 @@ function AddParcel() {
                   </select>
                 </div>
 
-                <div className="col-span-full sm:col-span-1">
+                <div className="col-span-full">
+                  <hr />
+                </div>
+
+                <style jsx>
+                  {`
+                    hr {
+                      border: none;
+                      height: 1px;
+                      /* Set the hr color */
+                      color: #333; /* old IE */
+                      background-color: #333; /* Modern Browsers */
+                    }
+                  `}
+                </style>
+
+                <div className="col-span-full ">
+                <label className="text-black text-xl mb-2 block font-bold">
+                    กรอกข้อมูลเจ้าของ
+                  </label>
                   <label className="text-gray-800 text-sm mb-2 block">
                     ชื่อเจ้าของ
                   </label>
@@ -300,7 +380,8 @@ function AddParcel() {
                               handleSelectOwner(
                                 owner.own_id,
                                 owner.own_name,
-                                owner.own_phone
+                                owner.own_phone,
+                                owner.ownertype_id
                               )
                             }
                             className="px-4 py-2 cursor-pointer hover:bg-gray-200"
@@ -332,56 +413,29 @@ function AddParcel() {
 
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
-                    รหัสประเภทพัสดุ
-                  </label>
-                  <select
-                    id="staff"
-                    name="staffList"
-                    form="staffForm"
-                    required
-                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    value={selectedCateData}
-                    onChange={(e) => setSelectedCateData(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      เลือกรหัสประเภทพัสดุ
-                    </option>
-                    {cateData.dataparcel_category.map((cateData) => (
-                      <option key={cateData.parcel_category_id} value={cateData.parcel_category_id}>
-                        {cateData.categoryparcel_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-
-                <div className="col-span-full sm:col-span-1">
-                  <label className="text-gray-800 text-sm mb-2 block">
                     สถานะของเจ้าของ
                   </label>
                   <select
-                    id="staff"
-                    name="staffList"
-                    form="staffForm"
-                    required
-                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    
-                    onChange={(e) => (e.target.value)}
-                  >
-                    <option value="" disabled>
-                      เลือกสถานะ
-                    </option>
-                    
-                      <option>
-                        นักศึกษา
-                      </option>
-                    
-                  </select>
+                        name="type"
+                        id="type"
+                        className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                        required
+                        value={typeValue}
+                        onChange={handleTypeChange}
+                      >
+                        <option value="" disabled>
+                          เลือกสถานะ
+                        </option>
+                        {ownerTypeData.typedata.map((typedata) => (
+                          <option
+                            key={typedata.ownertype_id}
+                            value={typedata.ownertype_id}
+                          >
+                            {typedata.ownertype_name}
+                          </option>
+                        ))}
+                      </select>
                 </div>
-
-                
-
-                
 
                 <div className="col-span-full sm:col-span-1 mt-4 sm:mt-8">
                   <button

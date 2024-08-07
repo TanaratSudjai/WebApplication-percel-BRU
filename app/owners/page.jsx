@@ -6,9 +6,11 @@ import AuthWrapper from "../components/authComponents";
 
 function Owners() {
   const [ownerData, setOwnerData] = useState({ owners: [] });
+  const [ownerTypeData, setOwnerTypeData] = useState({ typedata: [] });
   const [showAddModal, setAddShowModal] = useState(false);
   const [showEditModal, setEditShowModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTypeData, setSelectedTypeData] = useState("");
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -16,25 +18,36 @@ function Owners() {
 
   const filteredOwners = Array.isArray(ownerData.owners)
     ? ownerData.owners.filter((owner) =>
-      owner.own_name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+        owner.own_name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
     : [];
 
   const [newOwner, setNewOwner] = useState({
     name: "",
     phone: "",
+    type: parseInt,
   });
 
   const [editOwner, setEditOwner] = useState({
     id: "",
     ownerName: "",
     phone: "",
+    type: parseInt,
   });
 
   const fetchData = async () => {
     try {
       const res = await axios.get("/api/owner");
       setOwnerData(res.data);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
+  const fetchOwnerType = async () => {
+    try {
+      const res = await axios.get("/api/ownertype");
+      setOwnerTypeData(res.data);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -48,6 +61,7 @@ function Owners() {
         id: owner.own_id,
         name: owner.own_name,
         phone: owner.own_phone,
+        type: owner.ownertype_id
       });
       setEditShowModal(true);
     }
@@ -71,6 +85,7 @@ function Owners() {
       await axios.put(`/api/owner/${ownerId}`, {
         ownerName: editOwner.name,
         phone: editOwner.phone,
+        type: parseInt(editOwner.type)
       });
 
       fetchData(); // Refresh the owner data
@@ -89,11 +104,19 @@ function Owners() {
 
   useEffect(() => {
     fetchData();
+    fetchOwnerType();
   }, []);
 
   const addOwner = async (newOwnerData) => {
+    console.log(newOwner);
     try {
-      const response = await axios.post("/api/owner", newOwnerData);
+      // Convert type from string to int
+      const newOwnerDataWithIntType = {
+        ...newOwnerData,
+        type: parseInt(newOwnerData.type, 10),
+      };
+      
+      const response = await axios.post("/api/owner", newOwnerDataWithIntType);
       setOwnerData((prevData) =>
         Array.isArray(prevData) ? [...prevData, response.data] : [response.data]
       );
@@ -101,6 +124,7 @@ function Owners() {
       setNewOwner({
         name: "",
         phone: "",
+        type: "",
       });
       Swal.fire({
         position: "top-mid",
@@ -210,7 +234,7 @@ function Owners() {
               </div>
               <div className="relative">
                 <a
-                  className="font-medium bg-green-600 text-white rounded-full w-full sm:w-[150px] cursor-pointer select-none px-3 py-1"
+                  className="font-medium bg-[#60d0ac] text-white rounded-full w-full sm:w-[150px] cursor-pointer select-none px-3 py-1"
                   onClick={() => setAddShowModal(true)}
                 >
                   เพิ่มรายชื่อ
@@ -231,6 +255,9 @@ function Owners() {
                       </th>
                       <th scope="col" className="px-6 py-3">
                         เบอร์ติดต่อ
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        สถานะเจ้าของ
                       </th>
                     </tr>
                   </thead>
@@ -253,8 +280,15 @@ function Owners() {
                             </a>
                           </div>
                         </td>
-                        <td className="px-4 py-2 text-black text-bold">{owner.own_name}</td>
-                        <td className="px-4 py-2 text-black text-bold">{owner.own_phone}</td>
+                        <td className="px-4 py-2 text-black text-bold">
+                          {owner.own_name}
+                        </td>
+                        <td className="px-4 py-2 text-black text-bold">
+                          {owner.own_phone}
+                        </td>
+                        <td className="px-4 py-2 text-black text-bold">
+                          {owner.ownertype_id}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -334,12 +368,40 @@ function Owners() {
                         onChange={handleInputChange}
                       />
                     </div>
+
+                    <div className="col-span-2">
+                      <label
+                        htmlFor="type"
+                        className="text-gray-800 text-sm mb-2 block"
+                      >
+                        สถานะเจ้าของ
+                      </label>
+                      <select
+                        name="type"
+                        id="type"
+                        className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                        required
+                        value={editOwner.type}
+                        onChange={handleInputChange}
+                      >
+                        <option value="" disabled>
+                          เลือกสถานะ
+                        </option>
+                        {ownerTypeData.typedata.map((typedata) => (
+                          <option
+                            key={typedata.ownertype_id}
+                            value={typedata.ownertype_id}
+                          >
+                            {typedata.ownertype_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                   <button
                     type="submit"
                     className="w-full bg-[#60d0ac] hover:bg-[#469e80] text-white py-3 rounded-md  transition duration-300 ease-in-out"
                   >
-
                     ยืนยันการแก้ไข
                   </button>
                 </form>
@@ -348,23 +410,23 @@ function Owners() {
           </div>
         )}
         <style jsx>{`
-    @keyframes sweetAlertPopUp {
-        0% {
-            transform: scale(0.5);
-            opacity: 0;
-        }
-        80% {
-            transform: scale(1.05);
-            opacity: 1;
-        }
-        100% {
-            transform: scale(1);
-        }
-    }
-    .animate-sweetAlertPopUp {
-        animation: sweetAlertPopUp 0.3s ease-out forwards;
-    }
-`}</style>
+          @keyframes sweetAlertPopUp {
+            0% {
+              transform: scale(0.5);
+              opacity: 0;
+            }
+            80% {
+              transform: scale(1.05);
+              opacity: 1;
+            }
+            100% {
+              transform: scale(1);
+            }
+          }
+          .animate-sweetAlertPopUp {
+            animation: sweetAlertPopUp 0.3s ease-out forwards;
+          }
+        `}</style>
         {/*add modal*/}
         {showAddModal && (
           <div
@@ -443,6 +505,36 @@ function Owners() {
                           setNewOwner({ ...newOwner, phone: e.target.value })
                         }
                       />
+                    </div>
+                    <div className="col-span-2">
+                      <label
+                        htmlFor="type"
+                        className="text-gray-800 text-sm mb-2 block"
+                      >
+                        สถานะเจ้าของ
+                      </label>
+                      <select
+                        name="type"
+                        id="type"
+                        className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                        required
+                        value={newOwner.type}
+                        onChange={(e) =>
+                          setNewOwner({ ...newOwner, type: e.target.value })
+                        }
+                      >
+                        <option value="" disabled>
+                          เลือกสถานะ
+                        </option>
+                        {ownerTypeData.typedata.map((typedata) => (
+                          <option
+                            key={typedata.ownertype_id}
+                            value={typedata.ownertype_id}
+                          >
+                            {typedata.ownertype_name}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                   <button
