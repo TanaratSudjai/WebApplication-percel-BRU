@@ -2,7 +2,7 @@ import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 export async function GET() {
   try {
-    const personnel = await prisma.parcel.findMany({
+    const student = await prisma.parcel.findMany({
       where: {
         Owner: {
           ownertype_id: 1,
@@ -22,8 +22,9 @@ export async function GET() {
     });
 
     //select แบบนี้ ดีสุด
-    const parcelstypeowner = personnel.map((parcel) => {
+    const students = student.map((parcel) => {
       return {
+        par_id : parcel.par_id,
         par_name: parcel.par_name,
         own_name: parcel.Owner?.own_name,
         own_phone: parcel.Owner?.own_phone,
@@ -32,10 +33,11 @@ export async function GET() {
         sta_name: parcel.Status?.sta_name,
         com_name: parcel.Company?.com_name,
         categoryparcel_name: parcel.CategoryParcel?.categoryparcel_name,
+        pickupsdate : parcel.pickupsdate
       };
     });
 
-    return Response.json({ personnel: parcelstypeowner });
+    return Response.json({ student: students });
   } catch (err) {
     return Response.json({ massage: err }, { status: 500 });
   }
