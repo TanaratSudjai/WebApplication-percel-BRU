@@ -6,6 +6,22 @@ import Swal from "sweetalert2";
 
 function page() {
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  const handleChangePage = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  // Calculate the index range for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentParcels = parcelData.dataParcel.slice(startIndex, endIndex);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(parcelData.dataParcel.length / itemsPerPage);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [comData, setComData] = useState([]);
   const [cateData, setCateData] = useState({ dataparcel_category: [] });
@@ -321,9 +337,9 @@ function page() {
                     </tr>
                   </thead>
                   <tbody className="text-center">
-                    {filteredParcels.map((parcel) => (
+                    {currentParcels.map((parcel) => (
                       <tr key={parcel.par_id}>
-                        <td className="px-6 py-4 ">
+                        <td className="px-6 py-4">
                           <div className="flex w-[150px] items-center justify-between px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                             <a
                               className="font-medium bg-red-100 text-rose-600 rounded-full w-[50px] cursor-pointer select-none"
@@ -331,7 +347,6 @@ function page() {
                             >
                               ลบ
                             </a>
-
                             <a
                               className={`font-medium rounded-full w-[75px] ${
                                 parcel.Status?.sta_id === 2
@@ -350,36 +365,42 @@ function page() {
                             </a>
                           </div>
                         </td>
-
                         <th
                           scope="row"
                           className="px-6 py-4 font-medium text-black whitespace-nowrap text-black"
                         >
                           {parcel.par_real_id}
                         </th>
-
-                        <td scope="row" className="px-6 py-4 text-black text-bold">
+                        <td
+                          scope="row"
+                          className="px-6 py-4 text-black text-bold"
+                        >
                           {parcel.Company?.com_name}
                         </td>
-
-                        <td scope="row" className="px-6 py-4 text-black text-bold">
+                        <td
+                          scope="row"
+                          className="px-6 py-4 text-black text-bold"
+                        >
                           {parcel.CategoryParcel?.categoryparcel_name}
                         </td>
-
                         <td className="px-6 py-4 text-black text-bold">
                           {parcel.Staff?.staff_name || "N/A"}
                         </td>
-
-                        <td className="px-6 py-4 text-black text-bold"> {parcel.Owner?.own_name}</td>
-                        <td scope="row" className="px-6 py-4 text-black text-bold">
+                        <td className="px-6 py-4 text-black text-bold">
+                          {parcel.Owner?.own_name}
+                        </td>
+                        <td
+                          scope="row"
+                          className="px-6 py-4 text-black text-bold"
+                        >
                           {parcel.Owner?.ownertype?.ownertype_name}
                         </td>
-                        <td className="px-6 py-4 text-black text-bold">{parcel.Owner?.own_phone}</td>
                         <td className="px-6 py-4 text-black text-bold">
-                          {" "}
+                          {parcel.Owner?.own_phone}
+                        </td>
+                        <td className="px-6 py-4 text-black text-bold">
                           {formatDateTime(parcel.pickupsdate)}
                         </td>
-
                         <td className="px-6 py-4">
                           <div
                             className={`flex w-[75px] items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -397,7 +418,38 @@ function page() {
                     ))}
                   </tbody>
                 </table>
+
               </div>
+                {/* Pagination Controls */}
+                <div className="flex justify-center mt-4">
+                  <button
+                    className="mx-1 px-3 py-1 bg-gray-300 rounded"
+                    onClick={() => handleChangePage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                      key={index}
+                      className={`mx-1 px-3 py-1 rounded ${
+                        currentPage === index + 1
+                          ? "bg-blue-500 text-white"
+                          : "bg-gray-300"
+                      }`}
+                      onClick={() => handleChangePage(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                  <button
+                    className="mx-1 px-3 py-1 bg-gray-300 rounded"
+                    onClick={() => handleChangePage(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </button>
+                </div>
             </div>
           </div>
 
