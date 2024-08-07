@@ -7,21 +7,6 @@ import Swal from "sweetalert2";
 function page() {
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
-
-  const handleChangePage = (newPage) => {
-    setCurrentPage(newPage);
-  };
-
-  // Calculate the index range for the current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentParcels = parcelData.dataParcel.slice(startIndex, endIndex);
-
-  // Calculate total pages
-  const totalPages = Math.ceil(parcelData.dataParcel.length / itemsPerPage);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [comData, setComData] = useState([]);
   const [cateData, setCateData] = useState({ dataparcel_category: [] });
@@ -106,12 +91,6 @@ function page() {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
-
-  const filteredParcels = Array.isArray(parcelData.dataParcel)
-    ? parcelData.dataParcel.filter((parcel) =>
-        parcel.Owner?.own_name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
 
   const deleteParcel = async (parcelId) => {
     Swal.fire({
@@ -261,6 +240,61 @@ function page() {
     fetchDelivereData();
   };
 
+  const filteredParcels = Array.isArray(parcelData.dataParcel)
+    ? parcelData.dataParcel.filter((parcel) =>
+        parcel.Owner?.own_name.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const handleChangePage = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  // Calculate the index range for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentParcels = filteredParcels.slice(startIndex, endIndex);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredParcels.length / itemsPerPage);
+
+  
+    const [studentData, setStudentData] = useState([]);
+    const [personnelData, setPersonnelData] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState('student');
+  
+    useEffect(() => {
+      fetchStudentData();
+      fetchPersonnelData();
+    }, []);
+  
+    const fetchStudentData = async () => {
+      try {
+        const response = await axios.get('/api/student_get_owner');
+        setStudentData(response.data);
+      } catch (error) {
+        console.error('Error fetching student data:', error);
+      }
+    };
+  
+    const fetchPersonnelData = async () => {
+      try {
+        const response = await axios.get('/api/personnel_get_owner');
+        setPersonnelData(response.data);
+      } catch (error) {
+        console.error('Error fetching personnel data:', error);
+      }
+    };
+  
+    const handleCategoryChange = (category) => {
+      setSelectedCategory(category);
+    };
+  
+    const filteredData = selectedCategory === 'student' ? studentData : personnelData;
+  
   return (
     <AuthWrapper>
       <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
@@ -269,6 +303,30 @@ function page() {
             <h1 className="text-center text-2xl font-bold">
               จัดการพัสดุในระบบ
             </h1>
+
+            <div className="flex justify-end mb-4">
+              <button
+                className={`px-4 py-2 mr-2 ${
+                  selectedCategory === "student"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-300"
+                }`}
+                onClick={() => handleCategoryChange("student")}
+              >
+                นักศึกษา
+              </button>
+              <button
+                className={`px-4 py-2 ${
+                  selectedCategory === "personnel"
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-300"
+                }`}
+                onClick={() => handleCategoryChange("personnel")}
+              >
+                อาจารย์
+              </button>
+            </div>
+            
             <div className="relative mt-4">
               <input
                 type="search"
@@ -314,7 +372,7 @@ function page() {
                         ชื่อบริษัท
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        รหัสประเภทพัสดุ
+                        ประเภทพัสดุ
                       </th>
                       <th scope="col" className="px-6 py-3">
                         ชื่อพนักงาน
@@ -339,7 +397,7 @@ function page() {
                   <tbody className="text-center">
                     {currentParcels.map((parcel) => (
                       <tr key={parcel.par_id}>
-                        <td className="px-6 py-4">
+                        <td className="px-5 py-4 ">
                           <div className="flex w-[150px] items-center justify-between px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                             <a
                               className="font-medium bg-red-100 text-rose-600 rounded-full w-[50px] cursor-pointer select-none"
@@ -347,6 +405,7 @@ function page() {
                             >
                               ลบ
                             </a>
+
                             <a
                               className={`font-medium rounded-full w-[75px] ${
                                 parcel.Status?.sta_id === 2
@@ -418,38 +477,37 @@ function page() {
                     ))}
                   </tbody>
                 </table>
-
               </div>
-                {/* Pagination Controls */}
-                <div className="flex justify-center mt-4">
+              {/* Pagination Controls */}
+              <div className="flex justify-center mt-4">
+                <button
+                  className="mx-1 px-3 py-1 bg-gray-300 rounded"
+                  onClick={() => handleChangePage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => (
                   <button
-                    className="mx-1 px-3 py-1 bg-gray-300 rounded"
-                    onClick={() => handleChangePage(currentPage - 1)}
-                    disabled={currentPage === 1}
+                    key={index}
+                    className={`mx-1 px-3 py-1 rounded ${
+                      currentPage === index + 1
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-300"
+                    }`}
+                    onClick={() => handleChangePage(index + 1)}
                   >
-                    Previous
+                    {index + 1}
                   </button>
-                  {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                      key={index}
-                      className={`mx-1 px-3 py-1 rounded ${
-                        currentPage === index + 1
-                          ? "bg-blue-500 text-white"
-                          : "bg-gray-300"
-                      }`}
-                      onClick={() => handleChangePage(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                  <button
-                    className="mx-1 px-3 py-1 bg-gray-300 rounded"
-                    onClick={() => handleChangePage(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </button>
-                </div>
+                ))}
+                <button
+                  className="mx-1 px-3 py-1 bg-gray-300 rounded"
+                  onClick={() => handleChangePage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
 

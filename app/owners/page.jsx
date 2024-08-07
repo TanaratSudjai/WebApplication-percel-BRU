@@ -287,7 +287,7 @@ function Owners() {
                           {owner.own_phone}
                         </td>
                         <td className="px-4 py-2 text-black text-bold">
-                          {owner.ownertype_id}
+                          {owner.ownertype.ownertype_name}
                         </td>
                       </tr>
                     ))}
