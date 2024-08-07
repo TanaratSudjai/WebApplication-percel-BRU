@@ -24,7 +24,7 @@ export async function GET() {
     //select แบบนี้ ดีสุด
     const students = student.map((parcel) => {
       return {
-        par_id : parcel.par_id,
+        par_real_id : parcel.par_real_id,
         par_name: parcel.par_name,
         own_name: parcel.Owner?.own_name,
         own_phone: parcel.Owner?.own_phone,
