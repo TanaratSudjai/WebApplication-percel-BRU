@@ -8,7 +8,7 @@ function page() {
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
   const [searchQuery, setSearchQuery] = useState("");
   const [comData, setComData] = useState([]);
-  const [cateData, setCateData] = useState({dataparcel_category: []});
+  const [cateData, setCateData] = useState({ dataparcel_category: [] });
   const [showReceiveModal, setReceiveModal] = useState(false);
   const [receiverName, setReceiverName] = useState("");
   const [selectedParcelId, setSelectedParcelId] = useState(null);
@@ -286,7 +286,7 @@ function page() {
             <div className="md:container md:mx-auto">
               <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-white text-center">
+                  <thead className="text-sm text-black uppercase bg-white text-center">
                     <tr>
                       <th scope="col" className="px-2 py-3">
                         จัดการ
@@ -298,13 +298,16 @@ function page() {
                         ชื่อบริษัท
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        รหัสประเภทพัสดุประเภท
+                        รหัสประเภทพัสดุ
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        ชื่อพนักงาน
                       </th>
                       <th scope="col" className="px-6 py-3">
                         ชื่อเจ้าของ
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        ชื่อพนักงาน
+                        สถานะเจ้าของ
                       </th>
                       <th scope="col" className="px-6 py-3">
                         เบอร์ติดต่อ
@@ -350,29 +353,33 @@ function page() {
 
                         <th
                           scope="row"
-                          className="px-6 py-4 font-medium text-black whitespace-nowrap"
+                          className="px-6 py-4 font-medium text-black whitespace-nowrap text-black"
                         >
                           {parcel.par_real_id}
                         </th>
-                        
 
-                        <th scope="row" className="px-6 py-4">
+                        <td scope="row" className="px-6 py-4 text-black text-bold">
                           {parcel.Company?.com_name}
-                        </th>
+                        </td>
 
-                        <th scope="row" className="px-6 py-4">
+                        <td scope="row" className="px-6 py-4 text-black text-bold">
                           {parcel.CategoryParcel?.categoryparcel_name}
-                        </th>
+                        </td>
 
-                        <td className="px-6 py-4"> {parcel.Owner?.own_name}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 text-black text-bold">
                           {parcel.Staff?.staff_name || "N/A"}
                         </td>
-                        <td className="px-6 py-4">{parcel.Owner?.own_phone}</td>
-                        <td className="px-6 py-4">
+
+                        <td className="px-6 py-4 text-black text-bold"> {parcel.Owner?.own_name}</td>
+                        <td scope="row" className="px-6 py-4 text-black text-bold">
+                          {parcel.Owner?.ownertype?.ownertype_name}
+                        </td>
+                        <td className="px-6 py-4 text-black text-bold">{parcel.Owner?.own_phone}</td>
+                        <td className="px-6 py-4 text-black text-bold">
                           {" "}
                           {formatDateTime(parcel.pickupsdate)}
                         </td>
+
                         <td className="px-6 py-4">
                           <div
                             className={`flex w-[75px] items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
