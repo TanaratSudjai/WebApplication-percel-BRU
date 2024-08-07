@@ -3,19 +3,10 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    
     const typedata = await prisma.ownertype.findMany();
     return Response.json({ typedata });
-
   } catch (err) {
-    return Response.json(
-      {
-        message: "success get type owner",
-      },
-      {
-        status: 200,
-      }
-    );
+    return Response.json({ massage: err }, { status: 500 });
   }
 }
 
