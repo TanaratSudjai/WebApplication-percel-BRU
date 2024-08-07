@@ -241,6 +241,8 @@ function page() {
   };
 
   const [filterState, setFilterState] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const handleFilterChange = () => {
     setFilterState((prev) => {
@@ -248,6 +250,8 @@ function page() {
       if (prev === "notReceived") return "received";
       return "all";
     });
+
+    setCurrentPage(1);
   };
 
   const filteredParcels = Array.isArray(parcelData.dataParcel)
@@ -265,9 +269,7 @@ function page() {
         })
     : [];
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
+  
   const handleChangePage = (newPage) => {
     setCurrentPage(newPage);
   };
