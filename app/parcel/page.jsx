@@ -240,10 +240,29 @@ function page() {
     fetchDelivereData();
   };
 
+  const [filterState, setFilterState] = useState('all');
+
+  const handleFilterChange = () => {
+    setFilterState((prev) => {
+      if (prev === "all") return "notReceived";
+      if (prev === "notReceived") return "received";
+      return "all";
+    });
+  };
+
   const filteredParcels = Array.isArray(parcelData.dataParcel)
-    ? parcelData.dataParcel.filter((parcel) =>
-        parcel.Owner?.own_name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    ? parcelData.dataParcel
+        .filter((parcel) =>
+          parcel.Owner?.own_name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+        )
+        .filter((parcel) => {
+          if (filterState === "all") return true;
+          if (filterState === "notReceived") return parcel.Status?.sta_id === 1;
+          if (filterState === "received") return parcel.Status?.sta_id === 2;
+          return true;
+        })
     : [];
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -261,40 +280,6 @@ function page() {
   // Calculate total pages
   const totalPages = Math.ceil(filteredParcels.length / itemsPerPage);
 
-  
-    const [studentData, setStudentData] = useState([]);
-    const [personnelData, setPersonnelData] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('student');
-  
-    useEffect(() => {
-      fetchStudentData();
-      fetchPersonnelData();
-    }, []);
-  
-    const fetchStudentData = async () => {
-      try {
-        const response = await axios.get('/api/student_get_owner');
-        setStudentData(response.data);
-      } catch (error) {
-        console.error('Error fetching student data:', error);
-      }
-    };
-  
-    const fetchPersonnelData = async () => {
-      try {
-        const response = await axios.get('/api/personnel_get_owner');
-        setPersonnelData(response.data);
-      } catch (error) {
-        console.error('Error fetching personnel data:', error);
-      }
-    };
-  
-    const handleCategoryChange = (category) => {
-      setSelectedCategory(category);
-    };
-  
-    const filteredData = selectedCategory === 'student' ? studentData : personnelData;
-  
   return (
     <AuthWrapper>
       <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
@@ -303,31 +288,7 @@ function page() {
             <h1 className="text-center text-2xl font-bold">
               จัดการพัสดุในระบบ
             </h1>
-
-            <div className="flex justify-end mb-4">
-              <button
-                className={`px-4 py-2 mr-2 ${
-                  selectedCategory === "student"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-300"
-                }`}
-                onClick={() => handleCategoryChange("student")}
-              >
-                นักศึกษา
-              </button>
-              <button
-                className={`px-4 py-2 ${
-                  selectedCategory === "personnel"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-300"
-                }`}
-                onClick={() => handleCategoryChange("personnel")}
-              >
-                อาจารย์
-              </button>
-            </div>
-            
-            <div className="relative mt-4">
+            <div className="relative justify-between mt-4">
               <input
                 type="search"
                 className="w-[250px] focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
@@ -338,24 +299,17 @@ function page() {
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
-              <span
-                className="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
-                id="button-addon2"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="2"
-                  stroke="currentColor"
+              
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={handleFilterChange}
+                  className="px-4 py-2 text-black"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
-                </svg>
-              </span>
+                  {filterState === "all" && "แสดงทั้งหมด"}
+                  {filterState === "notReceived" && "ยังไม่ได้รับ"}
+                  {filterState === "received" && "รับแล้ว"}
+                </button>
+              </div>
             </div>
             <div className="md:container md:mx-auto">
               <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
