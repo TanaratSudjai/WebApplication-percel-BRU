@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 
 function page() {
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
-  const [stuData, setStuData] = useState({ student: [] });
+  const [teacherData, setTeacherData] = useState({ personnel: [] });
 
   const [searchQuery, setSearchQuery] = useState("");
   const [comData, setComData] = useState([]);
@@ -21,7 +21,7 @@ function page() {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [ownerName, setOwnerName] = useState("");
   const [filteredParcels, setFilteredParcels] = useState([]);
-  
+
   const fetchCategoryParcel = async () => {
     try {
       const response = await axios.get("/api/parcel_category");
@@ -31,10 +31,10 @@ function page() {
     }
   };
 
-  const fetchStudent = async () => {
+  const fetchTeacher = async () => {
     try {
-      const response = await axios.get("/api/student_get_owner");
-      setStuData(response.data);
+      const response = await axios.get("/api/personnel_get_owner");
+      setTeacherData(response.data);
     } catch (error) {
       console.error("Error fetching owner data:", error);
     }
@@ -69,7 +69,7 @@ function page() {
   };
 
   useEffect(() => {
-    fetchStudent();
+    fetchTeacher();
     fetchComData();
     fetchParcelData();
     fetchDelivereData();
@@ -222,10 +222,10 @@ function page() {
           const updatedData = parcelData.dataParcel.map((parcel) =>
             parcel.par_id === selectedParcelId
               ? {
-                  ...parcel,
-                  Owner: { ...parcel.Owner, own_name: receiverName },
-                  Status: { ...parcel.Status, sta_id: 2 }, // Update the status in the local state
-                }
+                ...parcel,
+                Owner: { ...parcel.Owner, own_name: receiverName },
+                Status: { ...parcel.Status, sta_id: 2 }, // Update the status in the local state
+              }
               : parcel
           );
           setParcelData({ dataParcel: updatedData });
@@ -280,21 +280,21 @@ function page() {
           if (filterState === "received") return parcel.Status?.sta_id === 2;
           return true;
         });
-  
+
       // Now filter the parcels where the owner matches a student with ownertype_id = 1
-      const filteredOwners = stuData.student
+      const filteredOwners = teacherData.personnel
         .map((owner) => owner.own_name.toLowerCase());
-  
+
       const finalFilteredParcels = filtered.filter((parcel) =>
         filteredOwners.includes(parcel.Owner?.own_name.toLowerCase())
       );
-  
+
       setFilteredParcels(finalFilteredParcels);
     }
-  }, [parcelData.dataParcel, stuData, searchQuery, filterState]);
+  }, [parcelData.dataParcel, teacherData, searchQuery, filterState]);
 
 
-  
+
   const handleChangePage = (newPage) => {
     setCurrentPage(newPage);
   };
@@ -315,10 +315,10 @@ function page() {
             <h1 className="text-center text-2xl font-bold">
               จัดการพัสดุในระบบ
             </h1>
-            <div className="relative justify-between mt-4">
+            <div className="flex justify-between mt-4">
               <input
                 type="search"
-                className="w-[250px] focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                className="focus:border-[#60d0ac] px-[-2px] focus:border-2 relative m-0 block vh-[20%] rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
                 placeholder="ค้นหาชื่อเจ้าของพัสดุ"
                 aria-label="Search"
                 id="exampleFormControlInput2"
@@ -326,8 +326,8 @@ function page() {
                 value={searchQuery}
                 onChange={handleSearchChange}
               />
-              
-              <div className="flex justify-end mb-4">
+
+              <div className="flex mb-4 ">
                 <button
                   onClick={handleFilterChange}
                   className={`px-4 py-2 text-black ${filterState === "all" ? "text-gray-500" :
@@ -391,11 +391,10 @@ function page() {
                             </a>
 
                             <a
-                              className={`font-medium rounded-full w-[75px] ${
-                                parcel.Status?.sta_id === 2
+                              className={`font-medium rounded-full w-[75px] ${parcel.Status?.sta_id === 2
                                   ? "bg-green-100 text-[#60d0ac] cursor-pointer select-none"
                                   : "bg-amber-100 text-amber-500 cursor-pointer select-none"
-                              }`}
+                                }`}
                               onClick={
                                 parcel.Status?.sta_id === 2
                                   ? () => handleReceiveDetail(parcel.par_id)
@@ -446,13 +445,12 @@ function page() {
                         </td>
                         <td className="px-6 py-4">
                           <div
-                            className={`flex w-[75px] items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              parcel.Status?.sta_id === 1
+                            className={`flex w-[75px] items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${parcel.Status?.sta_id === 1
                                 ? "bg-red-100 text-rose-600 select-none"
                                 : parcel.Status?.sta_id === 2
-                                ? "bg-green-100 text-[#60d0ac] select-none"
-                                : "bg-gray-100 text-gray-800 select-none"
-                            }`}
+                                  ? "bg-green-100 text-[#60d0ac] select-none"
+                                  : "bg-gray-100 text-gray-800 select-none"
+                              }`}
                           >
                             {parcel.Status?.sta_name || "N/A"}
                           </div>
@@ -474,11 +472,10 @@ function page() {
                 {Array.from({ length: totalPages }, (_, index) => (
                   <button
                     key={index}
-                    className={`mx-1 px-3 py-1 rounded ${
-                      currentPage === index + 1
+                    className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1
                         ? "bg-[#60d0ac] text-white"
                         : "bg-gray-300"
-                    }`}
+                      }`}
                     onClick={() => handleChangePage(index + 1)}
                   >
                     {index + 1}

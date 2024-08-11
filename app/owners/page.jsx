@@ -150,6 +150,20 @@ function Owners() {
     addOwner(newOwner);
   };
 
+  const handleChangePage = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  // Calculate the index range for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentParcels = filteredOwners.slice(startIndex, endIndex);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredOwners.length / itemsPerPage);
+
   const deleteOwner = async (ownerId) => {
     Swal.fire({
       title: "คุณแน่ใจว่าจะลบหรือไม่?",
@@ -262,7 +276,7 @@ function Owners() {
                     </tr>
                   </thead>
                   <tbody className="text-center">
-                    {filteredOwners.map((owner) => (
+                    {currentParcels.map((owner) => (
                       <tr key={owner.own_id} className="even:bg-gray-50">
                         <td className="text-center p-2 px-2 gap-2 w-3/12 ">
                           <div className="flex w-[175px] items-center justify-between px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
@@ -293,6 +307,34 @@ function Owners() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="flex justify-center mt-4">
+                <button
+                  className="mx-1 px-3 py-1 bg-gray-300 rounded"
+                  onClick={() => handleChangePage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index}
+                    className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1
+                        ? "bg-[#60d0ac] text-white"
+                        : "bg-gray-300"
+                      }`}
+                    onClick={() => handleChangePage(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                <button
+                  className="mx-1 px-3 py-1 bg-gray-300 rounded"
+                  onClick={() => handleChangePage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
               </div>
             </div>
           </div>
