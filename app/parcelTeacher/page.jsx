@@ -307,33 +307,57 @@ function page() {
   // Calculate total pages
   const totalPages = Math.ceil(filteredParcels.length / itemsPerPage);
 
+  function formatPhoneNumber(phoneNumber) {
+    if (!phoneNumber) return '';
+    
+    // Assuming the phone number is a string of 10 digits
+    const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+  
+    if (match) {
+      return `${match[1]}-${match[2]}-${match[3]}`;
+    }
+  
+    return phoneNumber; // return the original if not a 10-digit number
+  }
+
+  const resetTableToPage1 = () => {
+    setCurrentPage(1);
+  };
+
   return (
     <AuthWrapper>
       <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
         <div className="container mx-auto">
           <div className="bg-white rounded p-4 px-4 md:p-8 mb-6 h-[80vh]">
             <h1 className="text-center text-2xl font-bold">
-              จัดการพัสดุในระบบ
+              จัดการพัสดุสำหรับอาจารย์
             </h1>
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-between items-center mt-4 mb-4">
               <input
                 type="search"
-                className="focus:border-[#60d0ac] px-[-2px] focus:border-2 relative m-0 block vh-[20%] rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                className="w-[200px] focus:border-[#60d0ac] focus:border-2 block rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
                 placeholder="ค้นหาชื่อเจ้าของพัสดุ"
                 aria-label="Search"
                 id="exampleFormControlInput2"
                 aria-describedby="button-addon2"
                 value={searchQuery}
                 onChange={handleSearchChange}
+                onClick={resetTableToPage1}
               />
 
-              <div className="flex mb-4 ">
+              <div className="flex justify-end ml-4">
                 <button
                   onClick={handleFilterChange}
-                  className={`px-4 py-2 text-black ${filterState === "all" ? "text-gray-500" :
-                      filterState === "notReceived" ? "text-red-500" :
-                        filterState === "received" ? "text-green-500" : ""
-                    }`}
+                  className={`px-4 py-2 text-black ${
+                    filterState === "all"
+                      ? "text-gray-500"
+                      : filterState === "notReceived"
+                      ? "text-red-500"
+                      : filterState === "received"
+                      ? "text-green-500"
+                      : ""
+                  }`}
                 >
                   {filterState === "all" && "แสดงทั้งหมด"}
                   {filterState === "notReceived" && "ยังไม่ได้รับ"}
@@ -438,7 +462,7 @@ function page() {
                           {parcel.Owner?.ownertype?.ownertype_name}
                         </td>
                         <td className="px-6 py-4 text-black text-bold">
-                          {parcel.Owner?.own_phone}
+                          {formatPhoneNumber(parcel.Owner?.own_phone)}
                         </td>
                         <td className="px-6 py-4 text-black text-bold">
                           {formatDateTime(parcel.pickupsdate)}
