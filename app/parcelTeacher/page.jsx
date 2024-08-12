@@ -101,6 +101,7 @@ function page() {
   };
 
   const handleSearchChange = (e) => {
+    setCurrentPage(1);
     setSearchQuery(e.target.value);
   };
 
@@ -321,10 +322,6 @@ function page() {
     return phoneNumber; // return the original if not a 10-digit number
   }
 
-  const resetTableToPage1 = () => {
-    setCurrentPage(1);
-  };
-
   return (
     <AuthWrapper>
       <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
@@ -343,7 +340,7 @@ function page() {
                 aria-describedby="button-addon2"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                onClick={resetTableToPage1}
+                
               />
 
               <div className="flex justify-end ml-4">

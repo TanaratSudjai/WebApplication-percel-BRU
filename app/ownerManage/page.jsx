@@ -236,7 +236,10 @@ const HelloOwnerPage = () => {
     <div className="min-h-screen w-full flex items-center justify-center">
       <div className="p-8 rounded w-full max-w-screen-lg">
         <h1 className="text-2xl font-bold mb-4">
-          สวัสดีครับ : {session.user.name}
+          สวัสดีครับ 
+        </h1>
+        <h1 className="text-2xl font-bold mb-4">
+          {session.user.name}
         </h1>
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
           <p>เบอร์โทร: {session.user.phone}</p>

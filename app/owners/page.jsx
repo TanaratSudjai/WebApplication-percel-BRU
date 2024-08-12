@@ -13,6 +13,7 @@ function Owners() {
   const [selectedTypeData, setSelectedTypeData] = useState("");
 
   const handleSearchChange = (e) => {
+    setCurrentPage(1);
     setSearchQuery(e.target.value);
   };
 
@@ -207,9 +208,6 @@ function Owners() {
     });
   };
 
-  const resetTableToPage1 = () => {
-    setCurrentPage(1);
-  };
 
   function formatPhoneNumber(phoneNumber) {
     if (!phoneNumber) return '';
@@ -243,7 +241,7 @@ function Owners() {
                 aria-describedby="button-addon2"
                 value={searchQuery}
                 onChange={handleSearchChange}
-                onClick={resetTableToPage1}
+               
               />
 
               
