@@ -13,6 +13,7 @@ function Owners() {
   const [selectedTypeData, setSelectedTypeData] = useState("");
 
   const handleSearchChange = (e) => {
+    setCurrentPage(1);
     setSearchQuery(e.target.value);
   };
 
@@ -150,6 +151,20 @@ function Owners() {
     addOwner(newOwner);
   };
 
+  const handleChangePage = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  // Calculate the index range for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentParcels = filteredOwners.slice(startIndex, endIndex);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredOwners.length / itemsPerPage);
+
   const deleteOwner = async (ownerId) => {
     Swal.fire({
       title: "คุณแน่ใจว่าจะลบหรือไม่?",
@@ -193,6 +208,21 @@ function Owners() {
     });
   };
 
+
+  function formatPhoneNumber(phoneNumber) {
+    if (!phoneNumber) return '';
+    
+    // Assuming the phone number is a string of 10 digits
+    const cleaned = ('' + phoneNumber).replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+  
+    if (match) {
+      return `${match[1]}-${match[2]}-${match[3]}`;
+    }
+  
+    return phoneNumber; // return the original if not a 10-digit number
+  }
+
   return (
     <AuthWrapper>
       <div className="p-6 bg-white border h-[100vh] flex justify-center w-full">
@@ -201,46 +231,30 @@ function Owners() {
             <h1 className="text-center text-2xl font-bold">
               จัดการรายชื่อเจ้าของ
             </h1>
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 mb-[-5] space-y-2 sm:space-y-0 mb-4">
-              <div className="relative flex items-center">
-                <input
-                  type="search"
-                  className="w-[250px] sm:w-[250px] focus:border-[#60d0ac] focus:border-2 relative m-0 block flex-auto rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
-                  placeholder="ค้นหาชื่อเจ้าของ"
-                  aria-label="Search"
-                  id="exampleFormControlInput2"
-                  aria-describedby="button-addon2"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                />
-                <span
-                  className="flex items-center whitespace-nowrap px-3 py-[0.25rem] text-surface dark:border-neutral-400 dark:text-white [&>svg]:h-5 [&>svg]:w-5"
-                  id="button-addon2"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                    />
-                  </svg>
-                </span>
-              </div>
-              <div className="relative">
+            <div className="flex justify-between items-center mt-4 mb-4">
+              <input
+                type="search"
+                className="w-[200px] focus:border-[#60d0ac] focus:border-2 block rounded-full border border-solid border-neutral-200 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-surface outline-none transition duration-200 ease-in-out placeholder:text-neutral-500 focus:z-[3] focus:border-primary focus:shadow-inset focus:outline-none motion-reduce:transition-none"
+                placeholder="ค้นหาชื่อเจ้าของพัสดุ"
+                aria-label="Search"
+                id="exampleFormControlInput2"
+                aria-describedby="button-addon2"
+                value={searchQuery}
+                onChange={handleSearchChange}
+               
+              />
+
+              
+              <div className="flex justify-end ml-4">
                 <a
-                  className="font-medium bg-[#60d0ac] text-white rounded-full w-full sm:w-[150px] cursor-pointer select-none px-3 py-1"
+                  className="font-medium bg-[#60d0ac] text-white rounded-full cursor-pointer select-none px-3 py-1"
                   onClick={() => setAddShowModal(true)}
                 >
                   เพิ่มรายชื่อ
                 </a>
               </div>
             </div>
+
 
             <div className="md:container md:mx-auto">
               <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -262,7 +276,7 @@ function Owners() {
                     </tr>
                   </thead>
                   <tbody className="text-center">
-                    {filteredOwners.map((owner) => (
+                    {currentParcels.map((owner) => (
                       <tr key={owner.own_id} className="even:bg-gray-50">
                         <td className="text-center p-2 px-2 gap-2 w-3/12 ">
                           <div className="flex w-[175px] items-center justify-between px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
@@ -284,7 +298,7 @@ function Owners() {
                           {owner.own_name}
                         </td>
                         <td className="px-4 py-2 text-black text-bold">
-                          {owner.own_phone}
+                          {formatPhoneNumber(owner.own_phone)}
                         </td>
                         <td className="px-4 py-2 text-black text-bold">
                           {owner.ownertype.ownertype_name}
@@ -293,6 +307,34 @@ function Owners() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="flex justify-center mt-4">
+                <button
+                  className="mx-1 px-3 py-1 bg-gray-300 rounded"
+                  onClick={() => handleChangePage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index}
+                    className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1
+                        ? "bg-[#60d0ac] text-white"
+                        : "bg-gray-300"
+                      }`}
+                    onClick={() => handleChangePage(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                <button
+                  className="mx-1 px-3 py-1 bg-gray-300 rounded"
+                  onClick={() => handleChangePage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
               </div>
             </div>
           </div>

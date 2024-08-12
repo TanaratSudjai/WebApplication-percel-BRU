@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 
 function page() {
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
-  const [stuData, setStuData] = useState({ student: [] });
+  const [teacherData, setTeacherData] = useState({ personnel: [] });
 
   const [searchQuery, setSearchQuery] = useState("");
   const [comData, setComData] = useState([]);
@@ -31,10 +31,10 @@ function page() {
     }
   };
 
-  const fetchStudent = async () => {
+  const fetchTeacher = async () => {
     try {
-      const response = await axios.get("/api/student_get_owner");
-      setStuData(response.data);
+      const response = await axios.get("/api/personnel_get_owner");
+      setTeacherData(response.data);
     } catch (error) {
       console.error("Error fetching owner data:", error);
     }
@@ -69,7 +69,7 @@ function page() {
   };
 
   useEffect(() => {
-    fetchStudent();
+    fetchTeacher();
     fetchComData();
     fetchParcelData();
     fetchDelivereData();
@@ -223,10 +223,10 @@ function page() {
           const updatedData = parcelData.dataParcel.map((parcel) =>
             parcel.par_id === selectedParcelId
               ? {
-                  ...parcel,
-                  Owner: { ...parcel.Owner, own_name: receiverName },
-                  Status: { ...parcel.Status, sta_id: 2 }, // Update the status in the local state
-                }
+                ...parcel,
+                Owner: { ...parcel.Owner, own_name: receiverName },
+                Status: { ...parcel.Status, sta_id: 2 }, // Update the status in the local state
+              }
               : parcel
           );
           setParcelData({ dataParcel: updatedData });
@@ -253,7 +253,7 @@ function page() {
     fetchDelivereData();
   };
 
-  const [filterState, setFilterState] = useState("all");
+  const [filterState, setFilterState] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -283,9 +283,8 @@ function page() {
         });
 
       // Now filter the parcels where the owner matches a student with ownertype_id = 1
-      const filteredOwners = stuData.student.map((owner) =>
-        owner.own_name.toLowerCase()
-      );
+      const filteredOwners = teacherData.personnel
+        .map((owner) => owner.own_name.toLowerCase());
 
       const finalFilteredParcels = filtered.filter((parcel) =>
         filteredOwners.includes(parcel.Owner?.own_name.toLowerCase())
@@ -293,7 +292,9 @@ function page() {
 
       setFilteredParcels(finalFilteredParcels);
     }
-  }, [parcelData.dataParcel, stuData, searchQuery, filterState]);
+  }, [parcelData.dataParcel, teacherData, searchQuery, filterState]);
+
+
 
   const handleChangePage = (newPage) => {
     setCurrentPage(newPage);
@@ -308,19 +309,18 @@ function page() {
   const totalPages = Math.ceil(filteredParcels.length / itemsPerPage);
 
   function formatPhoneNumber(phoneNumber) {
-    if (!phoneNumber) return "";
-
+    if (!phoneNumber) return '';
+    
     // Assuming the phone number is a string of 10 digits
-    const cleaned = ("" + phoneNumber).replace(/\D/g, "");
+    const cleaned = ('' + phoneNumber).replace(/\D/g, '');
     const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-
+  
     if (match) {
       return `${match[1]}-${match[2]}-${match[3]}`;
     }
-
+  
     return phoneNumber; // return the original if not a 10-digit number
   }
-
 
   return (
     <AuthWrapper>
@@ -328,7 +328,7 @@ function page() {
         <div className="container mx-auto">
           <div className="bg-white rounded p-4 px-4 md:p-8 mb-6 h-[80vh]">
             <h1 className="text-center text-2xl font-bold">
-              จัดการพัสดุสำหรับนักศึกษา
+              จัดการพัสดุสำหรับอาจารย์
             </h1>
             <div className="flex justify-between items-center mt-4 mb-4">
               <input
@@ -362,7 +362,6 @@ function page() {
                 </button>
               </div>
             </div>
-
             <div className="md:container md:mx-auto">
               <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -413,11 +412,10 @@ function page() {
                             </a>
 
                             <a
-                              className={`font-medium rounded-full w-[75px] ${
-                                parcel.Status?.sta_id === 2
+                              className={`font-medium rounded-full w-[75px] ${parcel.Status?.sta_id === 2
                                   ? "bg-green-100 text-[#60d0ac] cursor-pointer select-none"
                                   : "bg-amber-100 text-amber-500 cursor-pointer select-none"
-                              }`}
+                                }`}
                               onClick={
                                 parcel.Status?.sta_id === 2
                                   ? () => handleReceiveDetail(parcel.par_id)
@@ -468,13 +466,12 @@ function page() {
                         </td>
                         <td className="px-6 py-4">
                           <div
-                            className={`flex w-[75px] items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              parcel.Status?.sta_id === 1
+                            className={`flex w-[75px] items-center justify-center px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${parcel.Status?.sta_id === 1
                                 ? "bg-red-100 text-rose-600 select-none"
                                 : parcel.Status?.sta_id === 2
-                                ? "bg-green-100 text-[#60d0ac] select-none"
-                                : "bg-gray-100 text-gray-800 select-none"
-                            }`}
+                                  ? "bg-green-100 text-[#60d0ac] select-none"
+                                  : "bg-gray-100 text-gray-800 select-none"
+                              }`}
                           >
                             {parcel.Status?.sta_name || "N/A"}
                           </div>
@@ -496,11 +493,10 @@ function page() {
                 {Array.from({ length: totalPages }, (_, index) => (
                   <button
                     key={index}
-                    className={`mx-1 px-3 py-1 rounded ${
-                      currentPage === index + 1
+                    className={`mx-1 px-3 py-1 rounded ${currentPage === index + 1
                         ? "bg-[#60d0ac] text-white"
                         : "bg-gray-300"
-                    }`}
+                      }`}
                     onClick={() => handleChangePage(index + 1)}
                   >
                     {index + 1}

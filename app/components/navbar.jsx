@@ -17,7 +17,8 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 const navigation = [
   { name: "หน้าแรก", href: "/welcome" },
   { name: "เพิ่มรายการพัสดุ", href: "/addparcel" },
-  { name: "จัดการพัสดุ", href: "/parcel" },
+  { name: "จัดการพัสดุนักศึกษา", href: "/parcel" },
+  { name: "จัดการพัสดุอาจารย์", href: "/parcelTeacher" },
   { name: "รายชื่อเจ้าของ", href: "/owners" },
   { name: "แผงควบคุม", href: "/mock-table" },
 ];
