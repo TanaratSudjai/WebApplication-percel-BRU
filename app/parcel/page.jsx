@@ -406,7 +406,7 @@ function page() {
                         <td className="px-5 py-4 ">
                           <div className="flex w-[150px] items-center justify-between px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                             <a
-                              className="font-medium bg-red-100 text-rose-600 rounded-full w-[50px] cursor-pointer select-none"
+                              className="font-medium bg-red-700 text-[#fff] rounded-full w-[50px] cursor-pointer select-none"
                               onClick={() => deleteParcel(parcel.par_id)}
                             >
                               ลบ
@@ -415,8 +415,8 @@ function page() {
                             <a
                               className={`font-medium rounded-full w-[75px] ${
                                 parcel.Status?.sta_id === 2
-                                  ? "bg-green-100 text-[#60d0ac] cursor-pointer select-none"
-                                  : "bg-amber-100 text-amber-500 cursor-pointer select-none"
+                                  ? "bg-green-600 text-[#fff] cursor-pointer select-none"
+                                  : "bg-yellow-600 text-[#fff] cursor-pointer select-none"
                               }`}
                               onClick={
                                 parcel.Status?.sta_id === 2
