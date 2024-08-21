@@ -1,6 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import AuthWrapper from "../components/authComponents";
+
+
 import {
   BarChart,
   Bar,
@@ -63,6 +68,98 @@ function DashboardPage() {
     },
   ];
 
+  function arrayBufferToBase64(buffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+  }
+  
+  function Dailyreport() {
+    const { dataParcel } = parcelData;
+  
+    const doc = new jsPDF();
+  
+    // Fetch the font from the public directory
+    const fontUrl = "/THSarabunNew.ttf";
+  
+    fetch(fontUrl)
+      .then((response) => response.arrayBuffer())
+      .then((font) => {
+        const base64Font = arrayBufferToBase64(font);
+        doc.addFileToVFS("THSarabunNew.ttf", base64Font);
+        doc.addFont("THSarabunNew.ttf", "THSarabun", "normal");
+        doc.setFont("THSarabun");
+  
+        // Add the current date and time
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString();
+        const formattedTime = currentDate.toLocaleTimeString();
+        const dateTimeString = `${formattedDate} ${formattedTime}`;
+  
+        doc.setFontSize(10);
+        doc.text(dateTimeString, 190, 10, { align: "right" });
+  
+        // Add the title
+        doc.setFontSize(16);
+        doc.text("Daily Parcel Report", 20, 20);
+  
+        // Define table headers and rows
+        const tableColumn = ["Parcel ID", "Company Name", "Owner Name", "Status", "Phone Number"];
+        const tableRows = [];
+  
+        parcelData.dataParcel.forEach((parcel) => {
+          const parcelData = [
+            parcel.par_real_id || "N/A",
+            parcel.Company?.com_name || "N/A",
+            parcel.Owner?.own_name || "N/A",
+            parcel.Owner?.ownertype?.ownertype_name || "N/A",
+            parcel.Owner?.own_phone || "N/A",
+          ];
+          tableRows.push(parcelData);
+        });
+  
+        // Generate the table
+        doc.autoTable({
+          head: [tableColumn],
+          body: tableRows,
+          startY: 30,
+          headStyles: {
+            fillColor: [255, 255, 255], // Black background
+            textColor: [0, 0, 0], // White text
+          },
+          styles: {
+            font: "THSarabun", // Set the Thai font
+            fontSize: 12, // Adjust font size
+            cellPadding: 3, // Optional: Adjust padding
+          },
+        });
+  
+        doc.save("daily_parcel_report.pdf");
+      })
+      .catch((error) => {
+        console.error("Error loading font or generating PDF:", error);
+      });
+  }
+
+  const [parcelData, setParcelData] = useState({ dataParcel: [] });
+
+  const fetchParcelData = async () => {
+    try {
+      const response = await axios.get("/api/parcel"); // Replace with your API endpoint
+      const data = response.data;
+      setParcelData(data); // Ensure data matches the structure of your response
+    } catch (error) {
+      console.error("Error fetching parcel data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchParcelData();
+  }, []);
   return (
     <AuthWrapper>
       <div className="container mx-auto p-4 w-full min-h-screen border">
@@ -137,6 +234,10 @@ function DashboardPage() {
               </BarChart>
             </ResponsiveContainer>
           </div>
+        </div>
+
+        <div>
+          <button onClick={Dailyreport}>พิมพ์รายงานประจำวัน</button>
         </div>
       </div>
     </AuthWrapper>

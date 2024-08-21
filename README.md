@@ -43,3 +43,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 5.npx prisma db push  
 6.npm install recharts
 7.npm install @headlessui/react
+8.npm install jspdf
+9.npm install jspdf-autotable
+
