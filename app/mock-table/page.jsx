@@ -77,6 +77,22 @@ function DashboardPage() {
     return window.btoa(binary);
   }
 
+  const [parcelData, setParcelData] = useState({ dataParcel: [] });
+
+  const fetchParcelData = async () => {
+    try {
+      const response = await axios.get("/api/make_report"); // Replace with your API endpoint
+      const data = response.data;
+      setParcelData(data); // Ensure data matches the structure of your response
+    } catch (error) {
+      console.error("Error fetching parcel data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchParcelData();
+  }, []);
+  
   function Dailyreport() {
     const { dataParcel } = parcelData;
 
@@ -154,21 +170,6 @@ function DashboardPage() {
   ////
  
   /////
-  const [parcelData, setParcelData] = useState({ dataParcel: [] });
-
-  const fetchParcelData = async () => {
-    try {
-      const response = await axios.get("/api/make_report"); // Replace with your API endpoint
-      const data = response.data;
-      setParcelData(data); // Ensure data matches the structure of your response
-    } catch (error) {
-      console.error("Error fetching parcel data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchParcelData();
-  }, []);
   return (
     <AuthWrapper>
       <div className="container mx-auto p-4 w-full min-h-screen border">
