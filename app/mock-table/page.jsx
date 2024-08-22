@@ -5,7 +5,6 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import AuthWrapper from "../components/authComponents";
 
-
 import {
   BarChart,
   Bar,
@@ -69,7 +68,7 @@ function DashboardPage() {
   ];
 
   function arrayBufferToBase64(buffer) {
-    let binary = '';
+    let binary = "";
     const bytes = new Uint8Array(buffer);
     const len = bytes.byteLength;
     for (let i = 0; i < len; i++) {
@@ -77,15 +76,15 @@ function DashboardPage() {
     }
     return window.btoa(binary);
   }
-  
+
   function Dailyreport() {
     const { dataParcel } = parcelData;
-  
+
     const doc = new jsPDF();
-  
+
     // Fetch the font from the public directory
     const fontUrl = "/THSarabunNew.ttf";
-  
+
     fetch(fontUrl)
       .then((response) => response.arrayBuffer())
       .then((font) => {
@@ -93,24 +92,30 @@ function DashboardPage() {
         doc.addFileToVFS("THSarabunNew.ttf", base64Font);
         doc.addFont("THSarabunNew.ttf", "THSarabun", "normal");
         doc.setFont("THSarabun");
-  
+
         // Add the current date and time
         const currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString();
         const formattedTime = currentDate.toLocaleTimeString();
         const dateTimeString = `${formattedDate} ${formattedTime}`;
-  
+
         doc.setFontSize(10);
         doc.text(dateTimeString, 190, 10, { align: "right" });
-  
+
         // Add the title
         doc.setFontSize(16);
         doc.text("Daily Parcel Report", 20, 20);
-  
+
         // Define table headers and rows
-        const tableColumn = ["Parcel ID", "Company Name", "Owner Name", "Status", "Phone Number"];
+        const tableColumn = [
+          "Parcel ID",
+          "Company Name",
+          "Owner Name",
+          "Status",
+          "Phone Number",
+        ];
         const tableRows = [];
-  
+
         parcelData.dataParcel.forEach((parcel) => {
           const parcelData = [
             parcel.par_real_id || "N/A",
@@ -121,7 +126,7 @@ function DashboardPage() {
           ];
           tableRows.push(parcelData);
         });
-  
+
         // Generate the table
         doc.autoTable({
           head: [tableColumn],
@@ -137,14 +142,32 @@ function DashboardPage() {
             cellPadding: 3, // Optional: Adjust padding
           },
         });
-  
+
         doc.save("daily_parcel_report.pdf");
+        const pdfData = doc.save("daily_parcel_report.pdf");
+        savePdf(pdfData);
       })
       .catch((error) => {
         console.error("Error loading font or generating PDF:", error);
       });
   }
+  ////
+  const savePdf = async (pdfData) => {
+    const response = await fetch("/api/pdf", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pdfData }),
+    });
 
+    if (response.ok) {
+      console.log("PDF saved successfully!");
+    } else {
+      console.error("Failed to save PDF.");
+    }
+  };
+  /////
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
 
   const fetchParcelData = async () => {
