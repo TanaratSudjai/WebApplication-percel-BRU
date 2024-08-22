@@ -1,21 +1,29 @@
+// pages/api/save-pdf.js
 import fs from "fs";
 import path from "path";
 
-export async function POST(req, res) {
-  try {
-    const publicPath = path.join(
-      process.cwd(),
-      "public",
-      "daily_parcel_report.pdf"
-    );
-    const pdfData = req.body.pdfData;
-    fs.writeFile(publicPath, pdfData, (err) => {
-      if (err) {
-        return res.status(500).json({ error: "Error writing file" });
-      }
-      res.status(200).json({ message: "File saved successfully" });
-    });
-  } catch (err) {
-    res.status(405).json({ message: "Method not allowed" });
+export default async function handler(req, res) {
+  if (req.method === "POST") {
+    try {
+      // Extract PDF data from the request body
+      const { pdfData, filename } = req.body;
+
+      // Convert base64 data to binary buffer
+      const buffer = Buffer.from(pdfData, "base64");
+
+      // Define the path where the PDF should be saved in the public directory
+      const filePath = path.join(process.cwd(), "public", filename);
+
+      // Save the file
+      fs.writeFileSync(filePath, buffer);
+
+      // Return the public URL of the saved PDF
+      res.status(200).json({ url: `/public/${filename}` });
+    } catch (error) {
+      console.error("Error saving PDF:", error);
+      res.status(500).json({ error: "Failed to save PDF" });
+    }
+  } else {
+    res.status(405).json({ error: "Method not allowed" });
   }
 }
