@@ -99,20 +99,21 @@ function DashboardPage() {
         const formattedTime = currentDate.toLocaleTimeString();
         const dateTimeString = `${formattedDate} ${formattedTime}`;
 
-        doc.setFontSize(10);
+        doc.setFontSize(16);
+        doc.text("วันที่/เวลา", 133, 10);
         doc.text(dateTimeString, 190, 10, { align: "right" });
 
         // Add the title
-        doc.setFontSize(16);
-        doc.text("Daily Parcel Report", 20, 20);
+        doc.setFontSize(20);
+        doc.text("รายงานประจำวัน", 100, 20,{ align: "center" });
 
         // Define table headers and rows
         const tableColumn = [
-          "Parcel ID",
-          "Company Name",
-          "Owner Name",
-          "Status",
-          "Phone Number",
+          "รหัสพัสดุ",
+          "ชื่อบริษัท",
+          "ชื่อเจ้าของ",
+          "สถานะ",
+          "เบอร์โทร",
         ];
         const tableRows = [];
 
@@ -131,7 +132,7 @@ function DashboardPage() {
         doc.autoTable({
           head: [tableColumn],
           body: tableRows,
-          startY: 30,
+          startY: 25,
           headStyles: {
             fillColor: [255, 255, 255], // Black background
             textColor: [0, 0, 0], // White text
@@ -144,35 +145,20 @@ function DashboardPage() {
         });
 
         doc.save("daily_parcel_report.pdf");
-        const pdfData = doc.save("daily_parcel_report.pdf");
-        savePdf(pdfData);
+        fetchParcelData();
       })
       .catch((error) => {
         console.error("Error loading font or generating PDF:", error);
       });
   }
   ////
-  const savePdf = async (pdfData) => {
-    const response = await fetch("/api/pdf", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ pdfData }),
-    });
-
-    if (response.ok) {
-      console.log("PDF saved successfully!");
-    } else {
-      console.error("Failed to save PDF.");
-    }
-  };
+ 
   /////
   const [parcelData, setParcelData] = useState({ dataParcel: [] });
 
   const fetchParcelData = async () => {
     try {
-      const response = await axios.get("/api/parcel"); // Replace with your API endpoint
+      const response = await axios.get("/api/make_report"); // Replace with your API endpoint
       const data = response.data;
       setParcelData(data); // Ensure data matches the structure of your response
     } catch (error) {
