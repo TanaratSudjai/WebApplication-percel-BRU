@@ -246,7 +246,7 @@ const HelloOwnerPage = () => {
 
   return (
     <div className="container-sm w-full mt-4">
-      <div className="min-h-screen w-full flex flex-col items-center justify-center">
+      <div className="min-h-screen w-full flex flex-col items-center">
       <div className="flex justify-end">
         <button
           onClick={async () => {
