@@ -242,13 +242,13 @@ function AddParcel() {
 
   return (
     <AuthWrapper>
-      <div className="p-4 sm:p-6 bg-white border min-h-screen flex justify-center w-full">
-        <div className="container mx-auto">
-          <div className="bg-white rounded p-4 sm:p-6 md:p-8 mb-6 min-h-[80vh]">
+      <div className="p-8 sm:p-6 bg-white border min-h-screen flex justify-center w-full">
+        <div className="container mx-auto w-full sm:w-full md:w-full lg:w-full xl:w-[60%] 2xl:">
+          <div className="bg-white rounded p-8 sm:p-6 md:p-8 mb-6 min-h-[80vh]">
             <h1 className="text-center text-xl sm:text-2xl font-bold mb-6">
               รับพัสดุเข้าสู่ระบบ
             </h1>
-            <div className="w-full">
+            <div className="w-full container mx-auto max-w-md sm:max-w-full md:max-w-full">
               <form
                 onSubmit={handleSubmit}
                 className="grid gap-4 gap-y-2 text-sm grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
@@ -274,7 +274,7 @@ function AddParcel() {
                   </div>
                 </div>
 
-                <div className="col-span-full sm:col-span-1">
+                <div className="col-span-full sm:col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">
                   <label className="text-gray-800 text-sm mb-2 block">
                     รหัสประเภทพัสดุ
                   </label>
@@ -316,7 +316,7 @@ function AddParcel() {
                   </div>
                 </div>
 
-                <div className="col-span-full sm:col-span-1">
+                <div className="col-span-full sm:col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">
                   <label className="text-gray-800 text-sm mb-2 block">
                     ชื่อบริษัท
                   </label>
@@ -461,7 +461,7 @@ function AddParcel() {
                   </div>
                 </div>
 
-                <div className="col-span-full sm:col-span-1">
+                <div className="col-span-full sm:col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">
                   <label className="text-gray-800 text-sm mb-2 block">
                     เบอร์เจ้าของ
                   </label>
@@ -478,7 +478,7 @@ function AddParcel() {
                   </div>
                 </div>
 
-                <div className="col-span-full sm:col-span-1">
+                <div className="col-span-full sm:col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">
                   <label className="text-gray-800 text-sm mb-2 block">
                     สถานะของเจ้าของ
                   </label>
