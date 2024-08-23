@@ -130,10 +130,23 @@ function AddParcel() {
     setDropdownVisible(true);
   };
 
-  const handleInputBlur = () => {
+  const handleinputBlurforOwner = () => {
     setTimeout(() => setDropdownVisible(false), 100);
   };
 
+  const handleInputBlur = () => {
+    setTimeout(() => setDropdownOpen(false), 100);
+    
+  };
+  const handleInputBlurC = () => {
+    
+    setTimeout(() => setDropdownOpenC(false), 100);
+    
+  };
+  const handleInputBlurS = () => {
+    setTimeout(() => setDropdownOpenS(false), 100);
+  };
+  
   const handleAddOwner = async (name, phone, ownertype_id) => {
     try {
       const response = await axios.post("/api/owner", {
@@ -267,6 +280,8 @@ function AddParcel() {
                   </label>
                   <div className="relative">
                     <button
+                      type="button"
+                      onBlur={handleInputBlur}
                       onClick={() => setDropdownOpen(!dropdownOpen)}
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-none focus:ring-2 focus:ring-blue-600"
                     >
@@ -307,6 +322,8 @@ function AddParcel() {
                   </label>
                   <div className="relative">
                     <button
+                      type="button"
+                      onBlur={handleInputBlurC}
                       onClick={() => setDropdownOpenC(!dropdownOpenC)}
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-none focus:ring-2 focus:ring-blue-600"
                     >
@@ -353,6 +370,8 @@ function AddParcel() {
                   </label>
                   <div className="relative">
                     <button
+                      type="button"
+                      onBlur={handleInputBlurS}
                       onClick={() => setDropdownOpenS(!dropdownOpenS)}
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-none focus:ring-2 focus:ring-blue-600"
                     >
@@ -415,7 +434,7 @@ function AddParcel() {
                       value={inputValue}
                       onChange={handleInputChange}
                       onFocus={handleInputFocus}
-                      onBlur={handleInputBlur}
+                      onBlur={handleinputBlurforOwner}
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                       placeholder="กรอกชื่อเจ้าของ"
                     />
