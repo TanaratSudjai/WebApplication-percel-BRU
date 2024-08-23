@@ -131,20 +131,20 @@ function AddParcel() {
   };
 
   const handleinputBlurforOwner = () => {
-    setTimeout(() => setDropdownVisible(false), 100);
+    setTimeout(() => setDropdownVisible(false), 300);
   };
 
   const handleInputBlur = () => {
-    setTimeout(() => setDropdownOpen(false), 100);
+    setTimeout(() => setDropdownOpen(false), 300);
     
   };
   const handleInputBlurC = () => {
     
-    setTimeout(() => setDropdownOpenC(false), 100);
+    setTimeout(() => setDropdownOpenC(false), 300);
     
   };
   const handleInputBlurS = () => {
-    setTimeout(() => setDropdownOpenS(false), 100);
+    setTimeout(() => setDropdownOpenS(false), 300);
   };
   
   const handleAddOwner = async (name, phone, ownertype_id) => {
