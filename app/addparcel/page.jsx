@@ -17,14 +17,22 @@ function AddParcel() {
   const [filteredOwners, setFilteredOwners] = useState([]);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
-  const [selectedOwner, setSelectedOwner] = useState({ id: "", phone: "" ,ownertype_id: ""});
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpenC, setDropdownOpenC] = useState(false);
+  const [dropdownOpenS, setDropdownOpenS] = useState(false);
+
+  const [selectedOwner, setSelectedOwner] = useState({
+    id: "",
+    phone: "",
+    ownertype_id: "",
+  });
   const [selectedStaff, setSelectedStaff] = useState("");
   const [selectedCateData, setSelectedCateData] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
 
   const [parcelCode, setParcelCode] = useState("");
   const inputRef = useRef(null);
-  
+
   const fetchOwnerType = async () => {
     try {
       const res = await axios.get("/api/ownertype");
@@ -95,7 +103,7 @@ function AddParcel() {
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
-    setSelectedOwner({ id: "", phone: "" , ownertype_id: "" });
+    setSelectedOwner({ id: "", phone: "", ownertype_id: "" });
     setPhoneValue("");
     setTypeValue("");
   };
@@ -113,7 +121,7 @@ function AddParcel() {
     setInputValue(name);
     setPhoneValue(phone);
     setTypeValue(ownertype_id);
-    setSelectedOwner({ id, phone, ownertype_id: ""});
+    setSelectedOwner({ id, phone, ownertype_id: "" });
     setFilteredOwners([]);
     setDropdownVisible(false);
   };
@@ -202,13 +210,12 @@ function AddParcel() {
         console.error("Server Response:", error.response.data);
       }
     }
-    
   };
 
   const reset = () => {
     setInputValue("");
     setPhoneValue("");
-    setSelectedOwner({ id: "", phone: "" , ownertype_id: ""});
+    setSelectedOwner({ id: "", phone: "", ownertype_id: "" });
     setSelectedStaff("");
     setSelectedCompany("");
     setParcelCode("");
@@ -234,7 +241,7 @@ function AddParcel() {
                 className="grid gap-4 gap-y-2 text-sm grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
               >
                 <div className="col-span-full">
-                <label className="text-black text-xl mb-2 block font-bold">
+                  <label className="text-black text-xl mb-2 block font-bold">
                     กรอกข้อมูลพัสดุ
                   </label>
                   <label className="text-gray-800 text-sm mb-2 block">
@@ -258,82 +265,123 @@ function AddParcel() {
                   <label className="text-gray-800 text-sm mb-2 block">
                     รหัสประเภทพัสดุ
                   </label>
-                  <select
-                    id="staff"
-                    name="staffList"
-                    form="staffForm"
-                    required
-                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    value={selectedCateData}
-                    onChange={(e) => setSelectedCateData(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      เลือกรหัสประเภทพัสดุ
-                    </option>
-                    {cateData.dataparcel_category.map((cateData) => (
-                      <option
-                        key={cateData.parcel_category_id}
-                        value={cateData.parcel_category_id}
-                      >
-                        {cateData.categoryparcel_name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <button
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                      {selectedCateData
+                        ? cateData.dataparcel_category.find(
+                            (cateItem) =>
+                              cateItem.parcel_category_id === selectedCateData
+                          )?.categoryparcel_name
+                        : "เลือกรหัสประเภทพัสดุ"}
+                    </button>
+
+                    {dropdownOpen && (
+                      <ul className="absolute w-full mt-1 border border-gray-300 rounded-md bg-white shadow-lg z-10 max-h-60 overflow-y-auto">
+                        {cateData.dataparcel_category.map((cateItem) => (
+                          <li
+                            key={cateItem.parcel_category_id}
+                            className={`px-4 py-3 cursor-pointer hover:bg-gray-100 ${
+                              selectedCateData === cateItem.parcel_category_id
+                                ? "bg-gray-200"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setSelectedCateData(cateItem.parcel_category_id);
+                              setDropdownOpen(false);
+                            }}
+                          >
+                            {cateItem.categoryparcel_name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
 
                 <div className="col-span-full sm:col-span-1">
                   <label className="text-gray-800 text-sm mb-2 block">
                     ชื่อบริษัท
                   </label>
-                  <select
-                    id="company"
-                    name="companyList"
-                    form="companyForm"
-                    required
-                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    value={selectedCompany}
-                    onChange={(e) => setSelectedCompany(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      เลือกบริษัท
-                    </option>
-                    {companyData.datacompany.map((company) => (
-                      <option key={company.com_id} value={company.com_id}>
-                        {company.com_name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <button
+                      onClick={() => setDropdownOpenC(!dropdownOpenC)}
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                      {selectedCompany
+                        ? companyData.datacompany.find(
+                            (company) => company.com_id === selectedCompany
+                          )?.com_name
+                        : "เลือกบริษัท"}
+                    </button>
+
+                    {dropdownOpenC && (
+                      <ul className="absolute w-full mt-1 border border-gray-300 rounded-md bg-white shadow-lg z-10 max-h-60 overflow-y-auto">
+                        {companyData.datacompany.map((company) => (
+                          <li
+                            key={company.com_id}
+                            className={`px-4 py-3 cursor-pointer hover:bg-gray-100 ${
+                              selectedCompany === company.com_id
+                                ? "bg-gray-200"
+                                : ""
+                            }`}
+                            onClick={() => {
+                              setSelectedCompany(company.com_id);
+                              setDropdownOpenC(false);
+                            }}
+                          >
+                            {company.com_name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
 
                 <div className="col-span-full">
                   <hr />
                 </div>
 
-                <div className="col-span-full ">
-                <label className="text-black text-xl mb-2 block font-bold">
+                <div className="col-span-full">
+                  <label className="text-black text-xl mb-2 block font-bold">
                     เลือกพนักงาน
                   </label>
                   <label className="text-gray-800 text-sm mb-2 block">
                     พนักงาน
                   </label>
-                  <select
-                    required
-                    id="staff"
-                    name="staffList"
-                    form="staffForm"
-                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    value={selectedStaff}
-                    onChange={(e) => setSelectedStaff(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      เลือกพนักงาน
-                    </option>
-                    {staffData.staff.map((staff) => (
-                      <option key={staff.id} value={staff.id}>
-                        {staff.staff_name}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <button
+                      onClick={() => setDropdownOpenS(!dropdownOpenS)}
+                      className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-none focus:ring-2 focus:ring-blue-600"
+                    >
+                      {selectedStaff
+                        ? staffData.staff.find(
+                            (staff) => staff.id === selectedStaff
+                          )?.staff_name
+                        : "เลือกพนักงาน"}
+                    </button>
+
+                    {dropdownOpenS && (
+                      <ul className="absolute w-full mt-1 border border-gray-300 rounded-md bg-white shadow-lg z-10 max-h-60 overflow-y-auto">
+                        {staffData.staff.map((staff) => (
+                          <li
+                            key={staff.id}
+                            className={`px-4 py-3 cursor-pointer hover:bg-gray-100 ${
+                              selectedStaff === staff.id ? "bg-gray-200" : ""
+                            }`}
+                            onClick={() => {
+                              setSelectedStaff(staff.id);
+                              setDropdownOpenS(false);
+                            }}
+                          >
+                            {staff.staff_name}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
 
                 <div className="col-span-full">
@@ -353,7 +401,7 @@ function AddParcel() {
                 </style>
 
                 <div className="col-span-full ">
-                <label className="text-black text-xl mb-2 block font-bold">
+                  <label className="text-black text-xl mb-2 block font-bold">
                     กรอกข้อมูลเจ้าของ
                   </label>
                   <label className="text-gray-800 text-sm mb-2 block">
@@ -416,25 +464,25 @@ function AddParcel() {
                     สถานะของเจ้าของ
                   </label>
                   <select
-                        name="type"
-                        id="type"
-                        className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                        required
-                        value={typeValue}
-                        onChange={handleTypeChange}
+                    name="type"
+                    id="type"
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    required
+                    value={typeValue}
+                    onChange={handleTypeChange}
+                  >
+                    <option value="" disabled>
+                      เลือกสถานะ
+                    </option>
+                    {ownerTypeData.typedata.map((typedata) => (
+                      <option
+                        key={typedata.ownertype_id}
+                        value={typedata.ownertype_id}
                       >
-                        <option value="" disabled>
-                          เลือกสถานะ
-                        </option>
-                        {ownerTypeData.typedata.map((typedata) => (
-                          <option
-                            key={typedata.ownertype_id}
-                            value={typedata.ownertype_id}
-                          >
-                            {typedata.ownertype_name}
-                          </option>
-                        ))}
-                      </select>
+                        {typedata.ownertype_name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="col-span-full sm:col-span-1 mt-4 sm:mt-8">
