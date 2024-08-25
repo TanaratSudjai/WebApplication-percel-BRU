@@ -211,9 +211,7 @@ function AddParcel() {
           showConfirmButton: false,
           timer: 500,
         });
-        if (inputRef.current) {
-          inputRef.current.focus();
-        }
+        
       } else {
         console.error("Failed to submit parcel data");
       }
@@ -223,6 +221,10 @@ function AddParcel() {
         console.error("Server Response:", error.response.data);
       }
     }
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+    
   };
 
   const reset = () => {
@@ -238,6 +240,9 @@ function AddParcel() {
     fetchOwnData();
     fetchStaffData();
     fetchCompanyData();
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   return (
