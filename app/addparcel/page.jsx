@@ -136,17 +136,14 @@ function AddParcel() {
 
   const handleInputBlur = () => {
     setTimeout(() => setDropdownOpen(false), 300);
-    
   };
   const handleInputBlurC = () => {
-    
     setTimeout(() => setDropdownOpenC(false), 300);
-    
   };
   const handleInputBlurS = () => {
     setTimeout(() => setDropdownOpenS(false), 300);
   };
-  
+
   const handleAddOwner = async (name, phone, ownertype_id) => {
     try {
       const response = await axios.post("/api/owner", {

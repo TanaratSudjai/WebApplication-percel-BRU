@@ -92,7 +92,7 @@ function DashboardPage() {
   useEffect(() => {
     fetchParcelData();
   }, []);
-  
+
   function Dailyreport() {
     const { dataParcel } = parcelData;
 
@@ -121,7 +121,7 @@ function DashboardPage() {
 
         // Add the title
         doc.setFontSize(20);
-        doc.text("รายงานประจำวัน", 100, 20,{ align: "center" });
+        doc.text("รายงานประจำวัน", 100, 20, { align: "center" });
 
         // Define table headers and rows
         const tableColumn = [
@@ -168,7 +168,7 @@ function DashboardPage() {
       });
   }
   ////
- 
+
   /////
   return (
     <AuthWrapper>
@@ -247,7 +247,12 @@ function DashboardPage() {
         </div>
 
         <div>
-          <button onClick={Dailyreport}>พิมพ์รายงานประจำวัน</button>
+          <button
+            onClick={Dailyreport}
+            className="p-2 bg-green-300 rounded-md hover:bg-green-200 hover:scale-105 transform transition-transform duration-200 ease-in-out shadow-lg hover:shadow-xl active:bg-green-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            พิมพ์รายงานประจำวัน
+          </button>
         </div>
       </div>
     </AuthWrapper>
