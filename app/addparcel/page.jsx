@@ -257,7 +257,7 @@ function AddParcel() {
               >
                 <div className="col-span-full">
                   <label className="text-black text-xl mb-2 block font-bold">
-                    กรอกข้อมูลพัสดุ
+                    ข้อมูลพัสดุ
                   </label>
                   <label className="text-gray-800 text-sm mb-2 block">
                     รหัสพัสดุ
@@ -278,7 +278,7 @@ function AddParcel() {
 
                 <div className="col-span-full sm:col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">
                   <label className="text-gray-800 text-sm mb-2 block">
-                    รหัสประเภทพัสดุ
+                    เลือกประเภทพัสดุ
                   </label>
                   <div className="relative">
                     <button
@@ -320,7 +320,7 @@ function AddParcel() {
 
                 <div className="col-span-full sm:col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">
                   <label className="text-gray-800 text-sm mb-2 block">
-                    ชื่อบริษัท
+                    บริษัทผู้ให้บริการ
                   </label>
                   <div className="relative">
                     <button
@@ -333,7 +333,7 @@ function AddParcel() {
                         ? companyData.datacompany.find(
                             (company) => company.com_id === selectedCompany
                           )?.com_name
-                        : "เลือกบริษัท"}
+                        : "เลือกผู้ให้บริการ"}
                     </button>
 
                     {dropdownOpenC && (
@@ -365,10 +365,10 @@ function AddParcel() {
 
                 <div className="col-span-full">
                   <label className="text-black text-xl mb-2 block font-bold">
-                    เลือกพนักงาน
+                    บุคลากรผู้ให้บริการ
                   </label>
                   <label className="text-gray-800 text-sm mb-2 block">
-                    พนักงาน
+                    เลือกบุคลากร
                   </label>
                   <div className="relative">
                     <button
@@ -381,7 +381,7 @@ function AddParcel() {
                         ? staffData.staff.find(
                             (staff) => staff.id === selectedStaff
                           )?.staff_name
-                        : "เลือกพนักงาน"}
+                        : "เลือกบุคลากร"}
                     </button>
 
                     {dropdownOpenS && (
@@ -423,10 +423,10 @@ function AddParcel() {
 
                 <div className="col-span-full ">
                   <label className="text-black text-xl mb-2 block font-bold">
-                    กรอกข้อมูลเจ้าของ
+                    ข้อมูลพัสดุ/เอกสาร
                   </label>
                   <label className="text-gray-800 text-sm mb-2 block">
-                    ชื่อเจ้าของ
+                    ชื่อ-สกุล
                   </label>
                   <div className="relative flex flex-col items-center">
                     <input
@@ -438,7 +438,7 @@ function AddParcel() {
                       onFocus={handleInputFocus}
                       onBlur={handleinputBlurforOwner}
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                      placeholder="กรอกชื่อเจ้าของ"
+                      placeholder="กรอกชื่อ-สกุล"
                     />
                     {isDropdownVisible && filteredOwners.length > 0 && (
                       <ul className="flex flex-col z-10 w-full bg-white border border-gray-300 mt-1 rounded-md">
@@ -465,7 +465,7 @@ function AddParcel() {
 
                 <div className="col-span-full sm:col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-2">
                   <label className="text-gray-800 text-sm mb-2 block">
-                    เบอร์เจ้าของ
+                    หมายเลขโทรศัพท์
                   </label>
                   <div className="relative flex items-center">
                     <input
@@ -475,7 +475,7 @@ function AddParcel() {
                       value={phoneValue}
                       onChange={handlePhoneChange}
                       className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                      placeholder="กรอกเบอร์โทรเจ้าของ"
+                      placeholder="กรอกหมายเลขโทรศัพท์"
                     />
                   </div>
                 </div>
