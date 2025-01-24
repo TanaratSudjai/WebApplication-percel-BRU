@@ -47,6 +47,7 @@ const authOptions = {
         const owner = await prisma.owner.findFirst({
           where: { own_phone: credentials.phone },
         });
+        
 
         if (owner) {
           return {

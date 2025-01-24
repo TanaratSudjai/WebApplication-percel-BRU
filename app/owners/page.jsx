@@ -211,17 +211,26 @@ function Owners() {
 
   function formatPhoneNumber(phoneNumber) {
     if (!phoneNumber) return '';
-    
-    // Assuming the phone number is a string of 10 digits
+
+    //เอาตัวอักษรออก
     const cleaned = ('' + phoneNumber).replace(/\D/g, '');
-    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
-  
-    if (match) {
-      return `${match[1]}-${match[2]}-${match[3]}`;
+    
+    // สำหรับ 10 ตัว
+    const match10 = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    if (match10) {
+        return `${match10[1]}-${match10[2]}-${match10[3]}`;
     }
-  
-    return phoneNumber; // return the original if not a 10-digit number
-  }
+
+    // สำหรับ 9 ตัว
+    const match9 = cleaned.match(/^(\d{3})(\d{3})(\d{3})$/);
+    if (match9) {
+        return `${match9[1]}-${match9[2]}-${match9[3]}`;
+    }
+
+    // ถ้าไมุ่ 9 หรือ 10 จะส่งค่าเดิมกลับ
+    return phoneNumber;
+}
+
 
   return (
     <AuthWrapper>

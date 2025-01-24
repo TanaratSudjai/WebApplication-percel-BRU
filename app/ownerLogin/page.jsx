@@ -11,12 +11,15 @@ const OwnerLoginPage = () => {
   const router = useRouter();
 
   const handleSubmit = async (e) => {
+    console.log(phone);
     e.preventDefault();
     try {
       const result = await signIn("owner-login", {
         redirect: false,
         phone,
       });
+
+      
 
       if (result.error) {
         console.error(result.error);
